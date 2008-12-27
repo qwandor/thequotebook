@@ -1,0 +1,26 @@
+<h1>Listing quotes</h1>
+
+<table>
+  <tr>
+    <th>Quote text</th>
+    <th>Context</th>
+    <th>Quoter</th>
+    <th>Quotee</th>
+  </tr>
+
+<% for quote in @quotes %>
+  <tr>
+    <td><%=h quote.quote_text %></td>
+    <td><%=h quote.context %></td>
+    <td><%=h quote.quoter %></td>
+    <td><%=h quote.quotee %></td>
+    <td><%= link_to 'Show', quote %></td>
+    <td><%= link_to 'Edit', edit_quote_path(quote) %></td>
+    <td><%= link_to 'Destroy', quote, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New quote', new_quote_path %>

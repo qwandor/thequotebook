@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  quote_text: MyText
+  context: 
+  quoter: 
+  quotee: 
+
+two:
+  quote_text: MyText
+  context: 
+  quoter: 
+  quotee: 
