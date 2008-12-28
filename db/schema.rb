@@ -9,11 +9,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081227105616) do
+ActiveRecord::Schema.define(:version => 20081227111643) do
 
   create_table "contexts", :force => true do |t|
     t.string   "name"
     t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "quotes", :force => true do |t|
+    t.text     "quote_text"
+    t.integer  "context_id"
+    t.integer  "quoter_id"
+    t.integer  "quotee_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

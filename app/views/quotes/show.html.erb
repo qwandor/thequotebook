@@ -5,17 +5,17 @@
 
 <p>
   <b>Context:</b>
-  <%=h @quote.context %>
+  <%=h @quote.context.name %> (<%=h @quote.context.description %>)
 </p>
 
 <p>
   <b>Quoter:</b>
-  <%=h @quote.quoter %>
+  <%=h @quote.quoter.username %> (<%=h @quote.quoter.fullname %>)
 </p>
 
 <p>
   <b>Quotee:</b>
-  <%=h @quote.quotee %>
+  <%=h @quote.quotee.username %> (<%=h @quote.quotee.fullname %>)
 </p>
 
 

@@ -11,9 +11,9 @@
 <% for quote in @quotes %>
   <tr>
     <td><%=h quote.quote_text %></td>
-    <td><%=h quote.context %></td>
-    <td><%=h quote.quoter %></td>
-    <td><%=h quote.quotee %></td>
+    <td><%=h quote.context.name %></td>
+    <td><%=h quote.quoter.username %></td>
+    <td><%=h quote.quotee.username %></td>
     <td><%= link_to 'Show', quote %></td>
     <td><%= link_to 'Edit', edit_quote_path(quote) %></td>
     <td><%= link_to 'Destroy', quote, :confirm => 'Are you sure?', :method => :delete %></td>
