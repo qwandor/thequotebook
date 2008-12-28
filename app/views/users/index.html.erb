@@ -4,14 +4,14 @@
   <tr>
     <th>Username</th>
     <th>Fullname</th>
-    <th>Openid</th>
+    <th>OpenID</th>
   </tr>
 
 <% for user in @users %>
   <tr>
     <td><%=h user.username %></td>
     <td><%=h user.fullname %></td>
-    <td><%=h user.openid %></td>
+    <td><%= link_to (h user.openid), (h user.openid) %></td>
     <td><%= link_to 'Show', user %></td>
     <td><%= link_to 'Edit', edit_user_path(user) %></td>
     <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>
