@@ -1,11 +1,8 @@
+<h1><%=h @user.fullname %></h1>
+
 <p>
   <b>Username:</b>
   <%=h @user.username %>
-</p>
-
-<p>
-  <b>Fullname:</b>
-  <%=h @user.fullname %>
 </p>
 
 <p>
@@ -13,6 +10,12 @@
   <%= link_to (h @user.openid), (h @user.openid) %>
 </p>
 
+<h2>Quotes</h2>
+<% for quote in @user.said_quotes %>
+  <p>
+    On <%=h quote.created_at %>, <%= link_to h(quote.quoter.username), quote.quoter %> quoted <%=h quote.quotee.username %> as saying "<%=h quote.quote_text %>" in <%= link_to h(quote.context.name), quote.context %>.
+  </p>
+<% end %>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

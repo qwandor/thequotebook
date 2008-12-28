@@ -8,9 +8,8 @@
 
 <% for context in @contexts %>
   <tr>
-    <td><%=h context.name %></td>
+    <td><%= link_to h(context.name), context %></td>
     <td><%=h context.description %></td>
-    <td><%= link_to 'Show', context %></td>
     <td><%= link_to 'Edit', edit_context_path(context) %></td>
     <td><%= link_to 'Destroy', context, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>

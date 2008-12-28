@@ -1,13 +1,13 @@
-<p>
-  <b>Name:</b>
-  <%=h @context.name %>
-</p>
+<h1><%=h @context.name %></h1>
 
-<p>
-  <b>Description:</b>
-  <%=h @context.description %>
-</p>
+<p><%=h @context.description %></p>
 
+<h2>Quotes</h2>
+<% for quote in @context.quotes %>
+  <p>
+    On <%=h quote.created_at %>, <%= link_to h(quote.quoter.username), quote.quoter %> quoted <%= link_to h(quote.quotee.username), quote.quotee %> as saying "<%=h quote.quote_text %>".
+  </p>
+<% end %>
 
 <%= link_to 'Edit', edit_context_path(@context) %> |
 <%= link_to 'Back', contexts_path %>
