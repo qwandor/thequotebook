@@ -21,8 +21,8 @@ ActiveRecord::Schema.define(:version => 20081227111643) do
   create_table "quotes", :force => true do |t|
     t.text     "quote_text"
     t.integer  "context_id"
-    t.integer  "quoter_id"
-    t.integer  "quotee_id"
+    t.integer  "quoter_id",  :null => false
+    t.integer  "quotee_id",  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -34,5 +34,9 @@ ActiveRecord::Schema.define(:version => 20081227111643) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_foreign_key "quotes", ["context_id"], "contexts", ["id"], :name => "quotes_context_id_fkey"
+  add_foreign_key "quotes", ["quoter_id"], "users", ["id"], :name => "quotes_quoter_id_fkey"
+  add_foreign_key "quotes", ["quotee_id"], "users", ["id"], :name => "quotes_quotee_id_fkey"
 
 end
