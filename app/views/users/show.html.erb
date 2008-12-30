@@ -13,7 +13,7 @@
 <h2>Quotes</h2>
 <% for quote in @user.said_quotes %>
   <p>
-    On <%=h quote.created_at %>, <%= link_to h(quote.quoter.username), quote.quoter %> quoted <%=h quote.quotee.username %> as saying "<%=h quote.quote_text %>" in <%= link_to h(quote.context.name), quote.context %>.
+    On <%=h quote.created_at %>, <%= link_to h(quote.quoter.username), quote.quoter %> quoted <%=h quote.quotee.fullname %> as saying "<%=h quote.quote_text %>" in <%= link_to h(quote.context.name), quote.context %>.
   </p>
 <% end %>
 
