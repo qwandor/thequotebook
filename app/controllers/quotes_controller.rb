@@ -40,7 +40,17 @@ class QuotesController < ApplicationController
   # POST /quotes
   # POST /quotes.xml
   def create
-    @quote = Quote.new(params[:quote])
+    properties = params[:quote]
+    properties[:quoter] = User.first(:conditions => ['username = ?', properties[:quoter]])
+
+    # TODO: Move this to a method on User
+    quotee_string = properties[:quotee]
+    properties[:quotee] = User.first(:conditions => ['username = ?', quotee_string])
+    properties[:quotee] = User.first(:conditions => ['fullname = ?', quotee_string]) if properties[:quotee].nil?
+
+    properties[:context] = Context.first(:conditions => ['name = ?', properties[:context]])
+
+    @quote = Quote.new(properties)
 
     respond_to do |format|
       if @quote.save
