@@ -1,23 +1,7 @@
 <p>
-  <b>Quote text:</b>
-  <%=h @quote.quote_text %>
+  On <%=h @quote.created_at %>, <%= link_to h(@quote.quoter.username), @quote.quoter %> quoted <%= link_to h(@quote.quotee.username), @quote.quotee %> as saying "<%=h @quote.quote_text %>" in <%= link_to h(@quote.context.name), @quote.context %>.
 </p>
-
-<p>
-  <b>Context:</b>
-  <%=h @quote.context.name %> (<%=h @quote.context.description %>)
-</p>
-
-<p>
-  <b>Quoter:</b>
-  <%=h @quote.quoter.username %> (<%=h @quote.quoter.fullname %>)
-</p>
-
-<p>
-  <b>Quotee:</b>
-  <%=h @quote.quotee.username %> (<%=h @quote.quotee.fullname %>)
-</p>
-
 
 <%= link_to 'Edit', edit_quote_path(@quote) %> |
+<%= link_to 'Destroy', @quote, :confirm => 'Are you sure?', :method => :delete %> |
 <%= link_to 'Back', quotes_path %>

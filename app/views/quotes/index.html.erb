@@ -15,8 +15,6 @@
     <td><%=h quote.quoter.username %></td>
     <td><%=h quote.quotee.username %></td>
     <td><%= link_to 'Show', quote %></td>
-    <td><%= link_to 'Edit', edit_quote_path(quote) %></td>
-    <td><%= link_to 'Destroy', quote, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
