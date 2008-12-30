@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+  # Be sure to include AuthenticationSystem in Application Controller instead
+  include AuthenticatedSystem
+
   # GET /users
   # GET /users.xml
   def index
@@ -40,14 +43,22 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.xml
   def create
-    @user = User.new(params[:user])
+    #params[:user][:username] = nil if params[:user][:username].empty? # TODO: This does not seem to work. How to allow null usernames?
 
+    logout_keeping_session!
+    @user = User.new(params[:user])
     respond_to do |format|
-      if @user.save
-        flash[:notice] = 'User was successfully created.'
-        format.html { redirect_to(@user) }
+      if @user && @user.save && @user.errors.empty?
+        # Protects against session fixation attacks, causes request forgery
+        # protection if visitor resubmits an earlier form using back
+        # button. Uncomment if you understand the tradeoffs.
+        # reset session
+        self.current_user = @user # !! now logged in
+        flash[:notice] = 'User was successfully created. Thanks for signing up!'
+        format.html { redirect_back_or_default('/') }
         format.xml  { render :xml => @user, :status => :created, :location => @user }
       else
+        flash[:error]  = 'We couldn\'t set up that account, sorry. Please try again, or contact an admin.'
         format.html { render :action => "new" }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end

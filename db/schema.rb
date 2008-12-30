@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081227111643) do
+ActiveRecord::Schema.define(:version => 20081230052010) do
 
   create_table "contexts", :force => true do |t|
     t.string   "name"
@@ -33,7 +33,11 @@ ActiveRecord::Schema.define(:version => 20081227111643) do
     t.string   "openid"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "remember_token",            :limit => 40
+    t.datetime "remember_token_expires_at"
   end
+
+  add_index "users", ["username"], :name => "index_users_on_username", :unique => true
 
   add_foreign_key "quotes", ["context_id"], "contexts", ["id"], :name => "quotes_context_id_fkey"
   add_foreign_key "quotes", ["quoter_id"], "users", ["id"], :name => "quotes_quoter_id_fkey"
