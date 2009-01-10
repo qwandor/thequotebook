@@ -1,4 +1,8 @@
 class QuotesController < ApplicationController
+  before_filter :find_quote, :only => [:show, :edit, :update, :destroy]
+  before_filter :login_required, :only => [:new, :create]
+  before_filter :own_quote, :only => [:edit, :update, :destroy]
+
   # GET /quotes
   # GET /quotes.xml
   def index
@@ -13,8 +17,6 @@ class QuotesController < ApplicationController
   # GET /quotes/1
   # GET /quotes/1.xml
   def show
-    @quote = Quote.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @quote }
@@ -34,14 +36,13 @@ class QuotesController < ApplicationController
 
   # GET /quotes/1/edit
   def edit
-    @quote = Quote.find(params[:id])
   end
 
   # POST /quotes
   # POST /quotes.xml
   def create
     properties = params[:quote]
-    properties[:quoter] = User.first(:conditions => ['username = ?', properties[:quoter]])
+    properties[:quoter] = current_user
 
     # TODO: Move this to a method on User
     quotee_string = properties[:quotee]
@@ -67,10 +68,18 @@ class QuotesController < ApplicationController
   # PUT /quotes/1
   # PUT /quotes/1.xml
   def update
-    @quote = Quote.find(params[:id])
+    properties = params[:quote]
+    properties.delete(:quoter)
+
+    # TODO: Move this to a method on User
+    quotee_string = properties[:quotee]
+    properties[:quotee] = User.first(:conditions => ['username = ?', quotee_string])
+    properties[:quotee] = User.first(:conditions => ['fullname = ?', quotee_string]) if properties[:quotee].nil?
+
+    properties[:context] = Context.first(:conditions => ['name = ?', properties[:context]])
 
     respond_to do |format|
-      if @quote.update_attributes(params[:quote])
+      if @quote.update_attributes(properties)
         flash[:notice] = 'Quote was successfully updated.'
         format.html { redirect_to(@quote) }
         format.xml  { head :ok }
@@ -84,12 +93,20 @@ class QuotesController < ApplicationController
   # DELETE /quotes/1
   # DELETE /quotes/1.xml
   def destroy
-    @quote = Quote.find(params[:id])
     @quote.destroy
 
     respond_to do |format|
       format.html { redirect_to(quotes_url) }
       format.xml  { head :ok }
     end
+  end
+
+protected
+  def find_quote
+    @quote ||= Quote.find(params[:id])
+  end
+
+  def own_quote
+    find_quote && ((logged_in? && @quote.quoter == current_user) || access_denied)
   end
 end

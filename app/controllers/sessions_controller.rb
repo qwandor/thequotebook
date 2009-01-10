@@ -1,8 +1,5 @@
 # This controller handles the login/logout function of the site.
 class SessionsController < ApplicationController
-  # Be sure to include AuthenticationSystem in Application Controller instead
-  include AuthenticatedSystem
-
   protect_from_forgery :except => [:create] #Seems to be necessary, as OpenID provider does not pass authenticity_token back
   # TODO: Would it be better to modify the client library to pass this on in the openid.return_to url sent to the provider?
 
