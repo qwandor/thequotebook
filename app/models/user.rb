@@ -20,4 +20,8 @@ class User < ActiveRecord::Base
   def openid=(value)
     write_attribute :openid, (value ? OpenIdAuthentication.normalize_identifier(value) : nil)
   end
+
+  def email #Used by Gravatar plugin
+    email_address || ''
+  end
 end
