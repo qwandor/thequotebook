@@ -1,5 +1,7 @@
 <h1><%=h @user.fullname %></h1>
 
+<%= gravatar_for @user, :size => 60 %>
+
 <p>
   <b>Username:</b>
   <%=h @user.username %>
