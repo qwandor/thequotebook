@@ -1,5 +1,5 @@
 <p>
-  On <%=h @quote.created_at %>, <%= link_to_user @quote.quoter %> quoted <%= link_to_user @quote.quotee, :content_method => :fullname %> as saying "<%=h @quote.quote_text %>" in <%= link_to h(@quote.context.name), @quote.context %>.
+  <%= formatted_quote(@quote, :quote_link => false) %>
 </p>
 
 <% if @quote.quoter == current_user %>
