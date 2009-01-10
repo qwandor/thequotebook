@@ -49,7 +49,7 @@ module UsersHelper
     content_text    ||= user.send(options.delete(:content_method))
     options[:title] ||= user.send(options.delete(:title_method))
     avatar            = options.delete(:avatar)
-    (avatar ? gravatar_for(user, :size => 16) + ' ' : '') + link_to(h(content_text), user_path(user), options)
+    link_to((avatar ? gravatar_for(user, :size => 16) + ' ' : '') + h(content_text), user_path(user), options)
   end
 
   #
