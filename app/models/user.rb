@@ -16,15 +16,7 @@ class User < ActiveRecord::Base
   # anything else you want your user to change should be added here.
   attr_accessible :username, :fullname
 
-  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
-  #
-  # uff.  this is really an authorization, not authentication routine.
-  # We really need a Dispatch Chain here or something.
-  # This will also let us return a human error message.
-  #
-  def self.authenticate(username, password)
-    return nil if username.blank? || password.blank?
-    u = find_by_username(username) # need to get the salt
-    u && password == 'password' ? u : nil
+  def openid=(value)
+    write_attribute :openid, (value ? OpenIdAuthentication.normalize_identifier(value) : nil)
   end
 end
