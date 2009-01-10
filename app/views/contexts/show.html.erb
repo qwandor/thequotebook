@@ -5,7 +5,7 @@
 <h2>Quotes</h2>
 <% for quote in @context.quotes %>
   <p>
-    On <%=h quote.created_at %>, <%= link_to h(quote.quoter.username), quote.quoter %> quoted <%= link_to h(quote.quotee.fullname), quote.quotee %> as saying "<%=h quote.quote_text %>".
+    On <%=h quote.created_at %>, <%= link_to h(quote.quoter.username), quote.quoter %> quoted <%= link_to h(quote.quotee.fullname), quote.quotee %> as saying "<%= link_to h(quote.quote_text), quote %>".
   </p>
 <% end %>
 
