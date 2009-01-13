@@ -41,6 +41,7 @@ class UsersController < ApplicationController
   # POST /users.xml
   def create
     #params[:user][:username] = nil if params[:user][:username].empty? # TODO: This does not seem to work. How to allow null usernames?
+    params[:user][:email_address] = nil if params[:user][:email_address].empty?
 
     logout_keeping_session!
     @user = User.new(params[:user])

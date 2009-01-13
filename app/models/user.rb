@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   validates_length_of :username, :minimum => 3
   validates_uniqueness_of :username, :case_sensitive => false
-  validates_uniqueness_of :email_address, :case_sensitive => false
+  validates_uniqueness_of :email_address, :case_sensitive => false, :allow_nil => true
   has_many :said_quotes, :class_name => "Quote", :foreign_key => "quotee_id"
 
   include Authentication
