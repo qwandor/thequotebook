@@ -46,6 +46,11 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.xml
   def create
+    if session[:new_user_openid].nil?
+      flash[:notice] = 'To register a new account, please login with your OpenID.'
+      redirect_to new_session_path and return
+    end
+
     #params[:user][:username] = nil if params[:user][:username].empty? # TODO: This does not seem to work. How to allow null usernames?
     params[:user][:email_address] = nil if params[:user][:email_address].empty?
 
