@@ -1,4 +1,8 @@
 class UsersController < ApplicationController
+  before_filter :find_user, :only => [:show, :edit, :update, :destroy]
+  before_filter :login_required, :only => [:edit, :update]
+  before_filter :own_account, :only => [:edit, :update]
+
   # GET /users
   # GET /users.xml
   def index
@@ -13,8 +17,6 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.xml
   def show
-    @user = User.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @user }
@@ -40,7 +42,6 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
-    @user = User.find(params[:id])
   end
 
   # POST /users
@@ -78,8 +79,6 @@ class UsersController < ApplicationController
   # PUT /users/1
   # PUT /users/1.xml
   def update
-    @user = User.find(params[:id])
-
     respond_to do |format|
       if @user.update_attributes(params[:user])
         flash[:notice] = 'User was successfully updated.'
@@ -95,12 +94,35 @@ class UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.xml
   def destroy
-    @user = User.find(params[:id])
+    # TODO: Allow admins to use this, perhaps (disabled completely for now)
+    return
+
     @user.destroy
 
     respond_to do |format|
       format.html { redirect_to(users_url) }
       format.xml  { head :ok }
     end
+  end
+
+protected
+  def permission_denied(reason = 'Permission denied')
+    respond_to do |format|
+      format.html do
+        flash[:error] = reason
+        redirect_to(users_url)
+      end
+      format.xml do
+        render :xml => reason, :status => :forbidden
+      end
+    end
+  end
+
+  def find_user
+    @user ||= User.find(params[:id])
+  end
+
+  def own_account
+    find_user && ((logged_in? && @user == current_user) || permission_denied('You may only edit your own user account'))
   end
 end
