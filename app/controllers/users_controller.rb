@@ -25,6 +25,7 @@ class UsersController < ApplicationController
   # GET /users/new.xml
   def new
     @user = User.new
+    @user.openid = session[:new_user_openid]
 
     respond_to do |format|
       format.html # new.html.erb
@@ -45,6 +46,7 @@ class UsersController < ApplicationController
 
     logout_keeping_session!
     @user = User.new(params[:user])
+    @user.openid = session[:new_user_openid]
     respond_to do |format|
       if @user && @user.save && @user.errors.empty?
         # Protects against session fixation attacks, causes request forgery

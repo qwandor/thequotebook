@@ -16,7 +16,9 @@ class SessionsController < ApplicationController
         if user = User.find_by_openid(openid)
           successful_login(user)
         else
-          failed_login "Sorry, no user by that OpenID exists (#{openid})"
+          #No such user yet, let them create an account
+          session[:new_user_openid] = openid
+          redirect_to new_user_path
         end
       else
         failed_login result.message
