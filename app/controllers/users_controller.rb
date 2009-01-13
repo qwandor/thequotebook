@@ -24,6 +24,11 @@ class UsersController < ApplicationController
   # GET /users/new
   # GET /users/new.xml
   def new
+    if session[:new_user_openid].nil?
+      flash[:notice] = 'To register a new account, please login with your OpenID.'
+      redirect_to new_session_path and return
+    end
+
     @user = User.new
     @user.openid = session[:new_user_openid]
 
