@@ -1,4 +1,7 @@
 class ContextsController < ApplicationController
+  before_filter :find_context, :only => [:show, :edit, :update, :destroy]
+  before_filter :login_required, :only => [:new, :create, :edit, :update, :destroy]
+
   # GET /contexts
   # GET /contexts.xml
   def index
@@ -13,8 +16,6 @@ class ContextsController < ApplicationController
   # GET /contexts/1
   # GET /contexts/1.xml
   def show
-    @context = Context.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @context }
@@ -34,7 +35,6 @@ class ContextsController < ApplicationController
 
   # GET /contexts/1/edit
   def edit
-    @context = Context.find(params[:id])
   end
 
   # POST /contexts
@@ -57,8 +57,6 @@ class ContextsController < ApplicationController
   # PUT /contexts/1
   # PUT /contexts/1.xml
   def update
-    @context = Context.find(params[:id])
-
     respond_to do |format|
       if @context.update_attributes(params[:context])
         flash[:notice] = 'Context was successfully updated.'
@@ -74,12 +72,16 @@ class ContextsController < ApplicationController
   # DELETE /contexts/1
   # DELETE /contexts/1.xml
   def destroy
-    @context = Context.find(params[:id])
     @context.destroy
 
     respond_to do |format|
       format.html { redirect_to(contexts_url) }
       format.xml  { head :ok }
     end
+  end
+
+protected
+  def find_context
+    @context ||= Context.find(params[:id])
   end
 end
