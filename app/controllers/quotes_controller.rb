@@ -27,6 +27,7 @@ class QuotesController < ApplicationController
   # GET /quotes/new.xml
   def new
     @quote = Quote.new
+    @quote.context = Context.find(params[:context]) if params[:context]
 
     respond_to do |format|
       format.html # new.html.erb

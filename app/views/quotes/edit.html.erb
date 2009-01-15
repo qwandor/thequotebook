@@ -1,24 +1,6 @@
 <h1>Editing quote</h1>
 
-<% form_for(@quote) do |f| %>
-  <%= f.error_messages %>
-
-  <p>
-    <%= f.label :quote_text %><br />
-    <%= f.text_area :quote_text %>
-  </p>
-  <p>
-    <%= f.label :context %><br />
-    <%= f.text_field :context %>
-  </p>
-  <p>
-    <%= f.label :quotee %><br />
-    <%= f.text_field :quotee %>
-  </p>
-  <p>
-    <%= f.submit "Update" %>
-  </p>
-<% end %>
+<%= render :partial => 'form', :locals => {:button_label => "Save quote"} %>
 
 <%= link_to 'Show', @quote %> |
 <%= link_to 'Back', quotes_path %>

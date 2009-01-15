@@ -1,0 +1,19 @@
+<% form_for(@quote) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :quotee %><br />
+    <%= f.text_field :quotee %>
+  </p>
+  <p>
+    <%= f.label :quote_text %><br />
+    <%= f.text_area :quote_text %>
+  </p>
+  <p>
+    <%= f.label :context %><br />
+    <%= text_field_tag :context, @quote.context.name %><!-- TODO: use find-as-you-type, or at least combo box for contexts of which the user is a part -->
+  </p>
+  <p>
+    <%= f.submit button_label %>
+  </p>
+<% end %>
