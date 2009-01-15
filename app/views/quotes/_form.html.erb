@@ -11,7 +11,7 @@
   </p>
   <p>
     <%= f.label :context %><br />
-    <%= text_field_tag :context, @quote.context.name %><!-- TODO: use find-as-you-type, or at least combo box for contexts of which the user is a part -->
+    <%= text_field_tag :context, @quote.context ? @quote.context.name : '' %><!-- TODO: use find-as-you-type, or at least combo box for contexts of which the user is a part -->
   </p>
   <p>
     <%= f.submit button_label %>
