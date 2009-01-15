@@ -46,11 +46,11 @@ class QuotesController < ApplicationController
     properties[:quoter] = current_user
 
     # TODO: Move this to a method on User
-    quotee_string = properties[:quotee]
+    quotee_string = params[:quotee]
     properties[:quotee] = User.first(:conditions => ['username = ?', quotee_string])
     properties[:quotee] = User.first(:conditions => ['fullname = ?', quotee_string]) if properties[:quotee].nil?
 
-    properties[:context] = Context.first(:conditions => ['name = ?', properties[:context]])
+    properties[:context] = Context.first(:conditions => ['name = ?', params[:context]])
 
     @quote = Quote.new(properties)
 
