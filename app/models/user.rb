@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email_address, :case_sensitive => false, :allow_nil => true
   validates_length_of :openid, :minimum => 7
   validates_uniqueness_of :openid, :case_sensitive => false
+  validates_length_of :fullname, :minimum => 5
+
   has_many :said_quotes, :class_name => "Quote", :foreign_key => "quotee_id"
 
   include Authentication
