@@ -73,11 +73,11 @@ class QuotesController < ApplicationController
     properties.delete(:quoter)
 
     # TODO: Move this to a method on User
-    quotee_string = properties[:quotee]
+    quotee_string = params[:quotee]
     properties[:quotee] = User.first(:conditions => ['username = ?', quotee_string])
     properties[:quotee] = User.first(:conditions => ['fullname = ?', quotee_string]) if properties[:quotee].nil?
 
-    properties[:context] = Context.first(:conditions => ['name = ?', properties[:context]])
+    properties[:context] = Context.first(:conditions => ['name = ?', params[:context]])
 
     respond_to do |format|
       if @quote.update_attributes(properties)
