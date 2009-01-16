@@ -53,7 +53,7 @@ class QuotesController < ApplicationController
     @quote = Quote.new(properties)
 
     respond_to do |format|
-      if @possible_quotee_matches && @quote.save
+      if !@possible_quotee_matches && @quote.save
         flash[:notice] = 'Quote was successfully created.'
         format.html { redirect_to(@quote) }
         format.xml  { render :xml => @quote, :status => :created, :location => @quote }
