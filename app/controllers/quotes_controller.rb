@@ -50,8 +50,8 @@ class QuotesController < ApplicationController
     properties[:quotee] = User.first(:conditions => ['username = ?', quotee_string])
     properties[:quotee] = User.first(:conditions => ['fullname = ?', quotee_string]) if properties[:quotee].nil?
 
-    if properties[:quotee].nil?
-      @quotee_unmatched = true
+    @quotee_unmatched = properties[:quotee].nil? && !params[:quotee].nil? && !params[:quotee].empty?
+    if @quotee_unmatched
       #Find possible matches
       @possible_quotee_matches = User.all(:conditions => ["username ILIKE '%' || ? || '%' OR fullname ILIKE '%' || ? || '%'", quotee_string, quotee_string])
     end
@@ -62,7 +62,7 @@ class QuotesController < ApplicationController
     @quote = Quote.new(properties)
 
     respond_to do |format|
-      if @quote.save
+      if !@quotee_unmatched && @quote.save
         flash[:notice] = 'Quote was successfully created.'
         format.html { redirect_to(@quote) }
         format.xml  { render :xml => @quote, :status => :created, :location => @quote }
