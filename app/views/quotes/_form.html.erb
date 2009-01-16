@@ -1,5 +1,5 @@
   <% form_for(@quote) do |f| %>
-  <% if @quotee_unmatched %>
+  <% if @possible_quotee_matches %>
     <p>
       Sorry, we cannot find anyone called '<%=h params[:quotee] %>'.
     </p>
