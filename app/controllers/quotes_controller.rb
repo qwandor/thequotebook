@@ -50,7 +50,14 @@ class QuotesController < ApplicationController
     properties[:quotee] = User.first(:conditions => ['username = ?', quotee_string])
     properties[:quotee] = User.first(:conditions => ['fullname = ?', quotee_string]) if properties[:quotee].nil?
 
+    if properties[:quotee].nil?
+      @quotee_unmatched = true
+      #Find possible matches
+      @possible_quotee_matches = User.all(:conditions => ["username ILIKE '%' || ? || '%' OR fullname ILIKE '%' || ? || '%'", quotee_string, quotee_string])
+    end
+
     properties[:context] = Context.first(:conditions => ['name = ?', params[:context]])
+    # TODO: give helpful error if quotee or context is nil (i.e. could not match name), rather than just error about it being blank
 
     @quote = Quote.new(properties)
 

@@ -1,9 +1,25 @@
-<% form_for(@quote) do |f| %>
+  <% form_for(@quote) do |f| %>
+  <% if @quotee_unmatched %>
+    <p>
+      Sorry, we cannot find anyone called '<%=h params[:quotee] %>'.
+    </p>
+    <% unless @possible_quotee_matches.empty? %>
+      <p>
+        Did you mean one of these people:
+      </p>
+      <ul>
+      <% @possible_quotee_matches.each do |possible_quotee_match| %>
+        <li><%= link_to_function "#{h(possible_quotee_match.fullname)} (#{h(possible_quotee_match.username)})", "javascript:document.getElementById('quotee').value='#{ escape_javascript(possible_quotee_match.username || possible_quotee_match.fullname) }'" %></li>
+      <% end %>
+      </ul>
+    <% end %>
+  <% end %>
+
   <%= f.error_messages %>
 
   <p>
     <%= f.label :quotee %><br />
-    <%= text_field_tag :quotee, @quote.quotee && (@quote.quotee.username || @quote.quotee.fullname) %>
+    <%= text_field_tag :quotee, @quote.quotee && (@quote.quotee.username || @quote.quotee.fullname) || params[:quotee] %>
   </p>
   <p>
     <%= f.label :quote_text %><br />
@@ -11,7 +27,7 @@
   </p>
   <p>
     <%= f.label :context %><br />
-    <%= text_field_tag :context, @quote.context && @quote.context.name %><!-- TODO: use find-as-you-type, or at least combo box for contexts of which the user is a part -->
+    <%= text_field_tag :context, @quote.context && @quote.context.name || params[:context] %><!-- TODO: use find-as-you-type, or at least combo box for contexts of which the user is a part -->
   </p>
   <p>
     <%= f.submit button_label %>
