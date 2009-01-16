@@ -88,6 +88,9 @@ class UsersController < ApplicationController
         redirect_to new_session_path and return
       end
 
+      #Ensure that username is set, in case someone tries to send their own post request without them whereby to create a user without a username (nil usernames are allow by model so that they can be used for partial users, but we do not want to allow them for real users)
+      params[:user][:username] ||= ''
+
       logout_keeping_session!
       @user = User.new(params[:user])
       @user.openid = session[:new_user_openid]
