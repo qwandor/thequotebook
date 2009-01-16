@@ -45,16 +45,8 @@ class QuotesController < ApplicationController
     properties = params[:quote]
     properties[:quoter] = current_user
 
-    # TODO: Move this to a method on User
-    quotee_string = params[:quotee]
-    properties[:quotee] = User.first(:conditions => ['username = ?', quotee_string])
-    properties[:quotee] = User.first(:conditions => ['fullname = ?', quotee_string]) if properties[:quotee].nil?
-
-    @quotee_unmatched = properties[:quotee].nil? && !params[:quotee].nil? && !params[:quotee].empty?
-    if @quotee_unmatched
-      #Find possible matches
-      @possible_quotee_matches = User.all(:conditions => ["username ILIKE '%' || ? || '%' OR fullname ILIKE '%' || ? || '%'", quotee_string, quotee_string])
-    end
+    properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee])
+    @quotee_unmatched = @possible_quotee_matches != nil
 
     properties[:context] = Context.first(:conditions => ['name = ?', params[:context]])
     # TODO: give helpful error if quotee or context is nil (i.e. could not match name), rather than just error about it being blank
@@ -79,15 +71,13 @@ class QuotesController < ApplicationController
     properties = params[:quote]
     properties.delete(:quoter)
 
-    # TODO: Move this to a method on User
-    quotee_string = params[:quotee]
-    properties[:quotee] = User.first(:conditions => ['username = ?', quotee_string])
-    properties[:quotee] = User.first(:conditions => ['fullname = ?', quotee_string]) if properties[:quotee].nil?
+    properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee])
+    @quotee_unmatched = @possible_quotee_matches != nil
 
     properties[:context] = Context.first(:conditions => ['name = ?', params[:context]])
 
     respond_to do |format|
-      if @quote.update_attributes(properties)
+      if !@quotee_unmatched && @quote.update_attributes(properties)
         flash[:notice] = 'Quote was successfully updated.'
         format.html { redirect_to(@quote) }
         format.xml  { head :ok }

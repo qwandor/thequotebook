@@ -28,4 +28,20 @@ class User < ActiveRecord::Base
   def email #Used by Gravatar plugin
     email_address || ''
   end
+
+  #Find user with username or fullname matching the given string, or if none then find a list of possible matches
+  #returns user (nil if no exact match), and possible matches (nil if user matched or string was nil or empty)
+  def self.find_from_string(name_string)
+    return [nil, nil] if name_string.nil? || name_string.empty?
+
+    user = User.first(:conditions => ['username = ?', name_string])
+    user = User.first(:conditions => ['fullname = ?', name_string]) if user.nil?
+
+    if user.nil?
+      #Find possible matches
+      [nil, User.all(:conditions => ["username ILIKE '%' || ? || '%' OR fullname ILIKE '%' || ? || '%'", name_string, name_string])]
+    else
+      [user, nil]
+    end
+  end
 end
