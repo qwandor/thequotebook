@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
 
   #Find user with username or fullname matching the given string, or if none then find a list of possible matches
   #returns user (nil if no exact match), and possible matches (nil if user matched or string was nil or empty)
-  def self.find_from_string(name_string)
+  def self.find_from_string(name_string, current_user)
     return [nil, nil] if name_string.nil? || name_string.empty?
 
     user = User.first(:conditions => ['username = ?', name_string])
@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
 
     if user.nil?
       #Find possible matches
-      [nil, User.all(:conditions => ["username ILIKE '%' || ? || '%' OR fullname ILIKE '%' || ? || '%'", name_string, name_string])]
+      [nil, User.all(:conditions => ["username ILIKE '%' || ? || '%' OR fullname ILIKE '%' || ? || '%'", name_string, name_string], :order => "(SELECT COUNT(*) FROM quotes WHERE quotee_id = users.id AND quoter_id = #{current_user.id}) DESC", :limit => 10)]
     else
       [user, nil]
     end

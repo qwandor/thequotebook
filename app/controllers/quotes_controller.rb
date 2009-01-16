@@ -47,7 +47,7 @@ class QuotesController < ApplicationController
     properties = params[:quote]
     properties[:quoter] = current_user
 
-    properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee])
+    properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee], current_user)
 
     properties[:context] = Context.first(:conditions => ['name = ?', params[:context]])
     # TODO: give helpful error if quotee or context is nil (i.e. could not match name), rather than just error about it being blank
@@ -75,7 +75,7 @@ class QuotesController < ApplicationController
     properties = params[:quote]
     properties.delete(:quoter) #Cannot change quoter
 
-    properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee])
+    properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee], current_user)
 
     properties[:context] = Context.first(:conditions => ['name = ?', params[:context]])
 
