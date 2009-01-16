@@ -13,6 +13,9 @@
       <% end %>
       </ul>
     <% end %>
+    <p>
+      Would you like to <%= link_to "create a new person called '#{h(params[:quotee])}'", new_user_path(:mode => 'partial', :fullname => params[:quotee]) %>?
+    </p>
   <% end %>
 
   <%= f.error_messages %>

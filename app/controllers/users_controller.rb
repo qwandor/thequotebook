@@ -26,17 +26,31 @@ class UsersController < ApplicationController
   # GET /users/new
   # GET /users/new.xml
   def new
-    if session[:new_user_openid].nil?
-      flash[:notice] = 'To register a new account, please login with your OpenID.'
-      redirect_to new_session_path and return
-    end
+    if params[:mode] == 'partial'
+      #User is being created by an existing user, so that they can be quoted
+      login_required || return
 
-    @user = User.new
-    @user.openid = session[:new_user_openid]
+      @user = User.new
+      @user.fullname = params[:fullname]
 
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @user }
+      respond_to do |format|
+        format.html { render :action => 'new_partial' } # new.html.erb
+        format.xml  { render :xml => @user }
+      end
+    else
+      #A new user is creating an account for themselves normally
+      if session[:new_user_openid].nil?
+        flash[:notice] = 'To register a new account, please login with your OpenID.'
+        redirect_to new_session_path and return
+      end
+
+      @user = User.new
+      @user.openid = session[:new_user_openid]
+
+      respond_to do |format|
+        format.html # new.html.erb
+        format.xml  { render :xml => @user }
+      end
     end
   end
 
@@ -47,31 +61,51 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.xml
   def create
-    if session[:new_user_openid].nil?
-      flash[:notice] = 'To register a new account, please login with your OpenID.'
-      redirect_to new_session_path and return
-    end
-
-    #params[:user][:username] = nil if params[:user][:username].empty? # TODO: This does not seem to work. How to allow null usernames?
     params[:user][:email_address] = nil if params[:user][:email_address].empty?
 
-    logout_keeping_session!
-    @user = User.new(params[:user])
-    @user.openid = session[:new_user_openid]
-    respond_to do |format|
-      if @user && @user.save && @user.errors.empty?
-        # Protects against session fixation attacks, causes request forgery
-        # protection if visitor resubmits an earlier form using back
-        # button. Uncomment if you understand the tradeoffs.
-        # reset session
-        self.current_user = @user # !! now logged in
-        flash[:notice] = 'User was successfully created. Thanks for signing up!'
-        format.html { redirect_back_or_default('/') }
-        format.xml  { render :xml => @user, :status => :created, :location => @user }
-      else
-        flash[:error]  = 'We couldn\'t set up that account, sorry. Please try again, or contact an admin.'
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+    if params[:mode] == 'partial'
+      #User is being created by an existing user, so that they can be quoted
+      login_required || return
+
+      @user = User.new(params[:user])
+      @user.openid = nil
+      @user.username = nil
+      respond_to do |format|
+        if @user.save
+          #Return to add quote page, or whereever we were
+          flash[:notice] = 'User added.'
+          format.html { redirect_back_or_default(users_path) }
+          format.xml  { render :xml => @user, :status => :created, :location => @user }
+        else
+          format.html { render :action => 'new_partial' }
+          format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+        end
+      end
+    else
+      #A new user is creating an account for themselves normally
+      if session[:new_user_openid].nil?
+        flash[:notice] = 'To register a new account, please login with your OpenID.'
+        redirect_to new_session_path and return
+      end
+
+      logout_keeping_session!
+      @user = User.new(params[:user])
+      @user.openid = session[:new_user_openid]
+      respond_to do |format|
+        if @user && @user.save && @user.errors.empty?
+          # Protects against session fixation attacks, causes request forgery
+          # protection if visitor resubmits an earlier form using back
+          # button. Uncomment if you understand the tradeoffs.
+          # reset session
+          self.current_user = @user # !! now logged in
+          flash[:notice] = 'User was successfully created. Thanks for signing up!'
+          format.html { redirect_back_or_default('/') }
+          format.xml  { render :xml => @user, :status => :created, :location => @user }
+        else
+          flash[:error]  = 'We couldn\'t set up that account, sorry. Please try again, or contact an admin.'
+          format.html { render :action => "new" }
+          format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end

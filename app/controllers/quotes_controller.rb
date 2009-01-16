@@ -2,6 +2,7 @@ class QuotesController < ApplicationController
   before_filter :find_quote, :only => [:show, :edit, :update, :destroy]
   before_filter :login_required, :only => [:new, :create]
   before_filter :own_quote, :only => [:edit, :update, :destroy]
+  after_filter :store_location, :only => [:new, :update]
 
   # GET /quotes
   # GET /quotes.xml
@@ -26,7 +27,8 @@ class QuotesController < ApplicationController
   # GET /quotes/new
   # GET /quotes/new.xml
   def new
-    @quote = Quote.new
+    @quote = session[:quote_in_progress] || Quote.new
+    session[:quote_in_progress] = nil
     @quote.context = Context.find(params[:context]) if params[:context]
 
     respond_to do |format|
@@ -51,6 +53,9 @@ class QuotesController < ApplicationController
     # TODO: give helpful error if quotee or context is nil (i.e. could not match name), rather than just error about it being blank
 
     @quote = Quote.new(properties)
+
+    #Store the quote as it is being edited, so that we can return to editing it if we have to stop to add a new user in the middle
+    session[:quote_in_progress] = @quote if @possible_quotee_matches
 
     respond_to do |format|
       if !@possible_quotee_matches && @quote.save
