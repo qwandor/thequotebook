@@ -73,7 +73,7 @@ class QuotesController < ApplicationController
   # PUT /quotes/1.xml
   def update
     properties = params[:quote]
-    properties.delete(:quoter)
+    properties.delete(:quoter) #Cannot change quoter
 
     properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee])
 
