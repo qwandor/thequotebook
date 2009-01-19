@@ -5,14 +5,14 @@ class SessionsController < ApplicationController
 
   # render new.rhtml
   def new
+    @remember_me = true
   end
 
   def create
     logout_keeping_session!
 
-    authenticate_with_open_id(params[:openid]) do |result, openid|
+    authenticate_with_open_id(params[:openid], :return_to => url_for(:only_path => false, :remember_me => params[:remember_me])) do |result, openid|
       if result.successful?
-        logger.warn "***Successful login as #{openid}***: #{result}"
         if user = User.find_by_openid(openid)
           successful_login(user)
         else
