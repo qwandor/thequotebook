@@ -92,8 +92,25 @@ class UsersController < ApplicationController
       params[:user][:username] ||= ''
 
       logout_keeping_session!
-      @user = User.new(params[:user])
-      @user.openid = session[:new_user_openid]
+
+      if params[:mode] == 'claimpartial'
+        #The account already exists as a partial user, so they are claiming it
+        @user = User.find(params[:id])
+        @user.attributes = params[:user]
+        @user.openid = session[:new_user_openid]
+      else
+        #Check for similar existing users, which might have been created by another user quoting them
+        @possible_matches = User.all(:conditions => ['openid IS NULL AND (LOWER(email_address) = LOWER(?) OR LOWER(fullname) = LOWER(?))', params[:user][:email_address], params[:user][:fullname]])
+
+        @user = User.new(params[:user])
+        @user.openid = session[:new_user_openid]
+
+        if !@possible_matches.empty?
+          render :action => 'create_matches'
+          return
+        end
+      end
+
       respond_to do |format|
         if @user && @user.save && @user.errors.empty?
           # Protects against session fixation attacks, causes request forgery
@@ -101,7 +118,7 @@ class UsersController < ApplicationController
           # button. Uncomment if you understand the tradeoffs.
           # reset session
           self.current_user = @user # !! now logged in
-          flash[:notice] = 'User was successfully created. Thanks for signing up!'
+          flash[:notice] = "User was successfully #{params[:mode] == 'claimpartial' ? 'claimed' : 'created'}. Thanks for signing up!"
           format.html { redirect_back_or_default('/') }
           format.xml  { render :xml => @user, :status => :created, :location => @user }
         else

@@ -1,0 +1,27 @@
+<h1>Sign up as a new user — but do we already know you?</h1>
+
+<p>
+  Are you one of these people, perchance?
+</p>
+
+<ul>
+<% @possible_matches.each do |possible_match| %>
+  <li>
+    <%= link_to_user(possible_match, :content_method => :fullname) %>
+    <% form_for(@user) do |f| %>
+      <div>
+        <%= hidden_field_tag :mode, 'claimpartial' %>
+        <%= hidden_field_tag :id, possible_match.id %>
+        <%= f.hidden_field :username %>
+        <%= f.hidden_field :fullname %>
+        <%= f.hidden_field :email_address %>
+        <%= f.submit 'Yep, that is me.' %>
+      </div>
+    <% end %>
+    <form>
+    </form>
+  </li>
+<% end %>
+</ul>
+
+<%= link_to 'Back', new_user_path %>
