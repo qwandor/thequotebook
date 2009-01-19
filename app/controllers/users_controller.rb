@@ -34,7 +34,7 @@ class UsersController < ApplicationController
       @user.fullname = params[:fullname]
 
       respond_to do |format|
-        format.html { render :action => 'new_partial' } # new.html.erb
+        format.html { render :action => 'new_partial' }
         format.xml  { render :xml => @user }
       end
     else
