@@ -1,7 +1,7 @@
 <h1>Quoteyou</h1>
 
 <h2>Latest quotes</h2>
-<% for quote in Quote.all(:order => 'created_at desc', :limit => 5) %>
+<% for quote in @latest_quotes %>
 <p>
   <%= formatted_quote quote %>
 </p>
@@ -9,26 +9,27 @@
 <p><%= link_to 'All quotes', quotes_path %></p>
 
 <h2>Top contexts</h2>
-<% for context in Context.all(:select => 'id, name, description, (select count(*) from quotes where context_id = contexts.id) as quote_count', :order => 'quote_count desc', :limit => 3) %>
+<% for context in @top_contexts %>
 <p>
   <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
 </p>
 <% end %>
 <p><%= link_to 'All contexts', contexts_path %></p>
 
-<% if logged_in? %>
+<% if @current_user_contexts %>
 <h2>Your contexts</h2>
 <%
-current_user_contexts = Context.all(:select => 'id, name, description, (select count(*) from quotes where context_id = contexts.id) as quote_count', :conditions => ['(select count(*) from quotes where contexts.id = context_id and ? in (quotee_id, quoter_id)) > 0', current_user.id], :order => 'quote_count desc')
-for context in current_user_contexts
+for context in @current_user_contexts
 %>
 <p>
   <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
 </p>
 <% end %>
+<% end %>
 
+<% if @current_user_quotes %>
 <h2>Latest quotes in your contexts</h2>
-<% for quote in Quote.all(:conditions => ['context_id in (?)', current_user_contexts.map{|context| context.id}], :order => 'created_at desc', :limit => 5) %>
+<% for quote in @current_user_quotes %>
 <p>
   <%= formatted_quote quote %>
 </p>
