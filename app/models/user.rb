@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :fullname, :case_sensitive => false
   validates_format_of :fullname, :with => Authentication.name_regex, :message => Authentication.bad_name_message
 
-  has_many :said_quotes, :class_name => "Quote", :foreign_key => "quotee_id"
+  has_many :said_quotes, :class_name => "Quote", :foreign_key => "quotee_id", :order => 'created_at DESC'
 
   include Authentication
   include Authentication::ByCookieToken
