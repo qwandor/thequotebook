@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   validates_format_of :fullname, :with => Authentication.name_regex, :message => Authentication.bad_name_message
 
   has_many :said_quotes, :class_name => "Quote", :foreign_key => "quotee_id", :order => 'created_at DESC'
+  has_and_belongs_to_many :contexts
 
   include Authentication
   include Authentication::ByCookieToken

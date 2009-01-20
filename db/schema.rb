@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090110024256) do
+ActiveRecord::Schema.define(:version => 20090120054754) do
 
   create_table "contexts", :force => true do |t|
     t.string   "name"
@@ -17,6 +17,14 @@ ActiveRecord::Schema.define(:version => 20090110024256) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "contexts_users", :id => false, :force => true do |t|
+    t.integer "context_id", :null => false
+    t.integer "user_id",    :null => false
+  end
+
+  add_index "contexts_users", ["context_id"], :name => "index_contexts_users_on_context_id"
+  add_index "contexts_users", ["user_id"], :name => "index_contexts_users_on_user_id"
 
   create_table "open_id_authentication_associations", :force => true do |t|
     t.integer "issued"
@@ -54,6 +62,9 @@ ActiveRecord::Schema.define(:version => 20090110024256) do
   end
 
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
+
+  add_foreign_key "contexts_users", ["context_id"], "contexts", ["id"], :name => "contexts_users_context_id_fkey"
+  add_foreign_key "contexts_users", ["user_id"], "users", ["id"], :name => "contexts_users_user_id_fkey"
 
   add_foreign_key "quotes", ["context_id"], "contexts", ["id"], :name => "quotes_context_id_fkey"
   add_foreign_key "quotes", ["quoter_id"], "users", ["id"], :name => "quotes_quoter_id_fkey"
