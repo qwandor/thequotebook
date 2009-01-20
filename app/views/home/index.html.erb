@@ -1,5 +1,25 @@
 <h1>Quoteyou</h1>
 
+<% if @current_user_quotes %>
+<h2>Latest quotes in your contexts</h2>
+<% for quote in @current_user_quotes %>
+<p>
+  <%= formatted_quote quote %>
+</p>
+<% end %>
+<% end %>
+
+<% if @current_user_contexts %>
+<h2>Your contexts</h2>
+<%
+for context in @current_user_contexts
+%>
+<p>
+  <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
+</p>
+<% end %>
+<% end %>
+
 <h2>Latest quotes</h2>
 <% for quote in @latest_quotes %>
 <p>
@@ -15,23 +35,3 @@
 </p>
 <% end %>
 <p><%= link_to 'All contexts', contexts_path %></p>
-
-<% if @current_user_contexts %>
-<h2>Your contexts</h2>
-<%
-for context in @current_user_contexts
-%>
-<p>
-  <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
-</p>
-<% end %>
-<% end %>
-
-<% if @current_user_quotes %>
-<h2>Latest quotes in your contexts</h2>
-<% for quote in @current_user_quotes %>
-<p>
-  <%= formatted_quote quote %>
-</p>
-<% end %>
-<% end %>
