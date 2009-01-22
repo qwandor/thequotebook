@@ -85,7 +85,7 @@ class ContextsController < ApplicationController
     @quote = Quote.first(:conditions => ['context_id = ?', params[:id]], :order => 'created_at DESC')
     respond_to do |format|
       format.html { render :template => 'quotes/show' }
-      format.xml  { render :xml => @quote }
+      format.xml  { render :xml => @quote.to_xml(:include => [:context, :quotee, :quoter]) }
     end
   end
 

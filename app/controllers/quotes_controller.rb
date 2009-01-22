@@ -20,7 +20,7 @@ class QuotesController < ApplicationController
   def show
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @quote }
+      format.xml  { render :xml => @quote.to_xml(:include => [:context, :quotee, :quoter]) }
     end
   end
 
