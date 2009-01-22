@@ -80,6 +80,15 @@ class ContextsController < ApplicationController
     end
   end
 
+  # GET /contexts/1/latest
+  def latest #Show latest quote in this context
+    @quote = Quote.first(:conditions => ['context_id = ?', params[:id]], :order => 'created_at DESC')
+    respond_to do |format|
+      format.html { render :template => 'quotes/show' }
+      format.xml  { render :xml => @quote }
+    end
+  end
+
 protected
   def find_context
     @context ||= Context.find(params[:id])
