@@ -48,4 +48,11 @@ class User < ActiveRecord::Base
       [user, nil]
     end
   end
+
+  alias_method :ar_to_xml, :to_xml
+
+  def to_xml(options = {}, &block)
+    default_options = { :except => [ :remember_token, :remember_token_expires_at, :email_address ]}
+    self.ar_to_xml(options.merge(default_options), &block)
+  end
 end
