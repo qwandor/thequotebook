@@ -15,7 +15,7 @@
 for context in @current_user_contexts
 %>
 <p>
-  <%= link_to h(context.name), context %> &mdash; <%=h context.description %>
+  <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quotes.size %> quotes)
 </p>
 <% end %>
 <% end %>
