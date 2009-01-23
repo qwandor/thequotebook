@@ -41,6 +41,7 @@ class ContextsController < ApplicationController
   # POST /contexts.xml
   def create
     @context = Context.new(params[:context])
+    @context.add_user(current_user) #Join it while we are at it
 
     respond_to do |format|
       if @context.save
