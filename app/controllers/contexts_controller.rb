@@ -94,7 +94,7 @@ class ContextsController < ApplicationController
   def join #Add the current user to the context
     respond_to do |format|
       if @context.add_user(current_user)
-        flash[:notice] = 'You are now a member of the context'
+        flash[:notice] = "You are now a member of #{@context.name}."
         format.html { redirect_to(@context) }
         format.xml  { head :ok }
       else
@@ -109,7 +109,7 @@ class ContextsController < ApplicationController
   def leave #Remove the current user from the context
     respond_to do |format|
       if @context.users.delete(current_user)
-        flash[:notice] = 'You are no longer a member of the context'
+        flash[:notice] = "You are no longer a member of #{@context.name}."
         format.html { redirect_to(@context) }
         format.xml  { head :ok }
       else
