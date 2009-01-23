@@ -10,9 +10,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :users
 
-  map.resources :contexts
-  map.connect 'contexts/:id/latest', :controller => 'contexts', :action => 'latest'
-  map.connect 'contexts/:id/latest.:format', :controller => 'contexts', :action => 'latest'
+  map.resources :contexts, :member => {:latest => :get}
 
   map.root :controller => "home"
 
