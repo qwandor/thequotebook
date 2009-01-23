@@ -57,6 +57,12 @@ class QuotesController < ApplicationController
     #Store the quote as it is being edited, so that we can return to editing it if we have to stop to add a new user in the middle
     session[:quote_in_progress] = @quote if @possible_quotee_matches
 
+    #While we are at it, add quoter and quotee to context
+    if !@possible_quotee_matches
+      properties[:context].users << current_user unless properties[:context].users.exists?(:id => current_user.id)
+      properties[:context].users << properties[:quotee] unless properties[:context].users.exists?(:id => properties[:quotee].id)
+    end
+
     respond_to do |format|
       if !@possible_quotee_matches && @quote.save
         flash[:notice] = 'Quote was successfully created.'

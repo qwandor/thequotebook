@@ -6,6 +6,7 @@ class CreateContextsUsers < ActiveRecord::Migration
     end
     add_index :contexts_users, [:context_id]
     add_index :contexts_users, [:user_id]
+    add_index :contexts_users, [:context_id, :user_id], :unique => true
   end
 
   def self.down
