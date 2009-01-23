@@ -46,6 +46,14 @@ class UsersController < ApplicationController
 
       @user = User.new
       @user.openid = session[:new_user_openid]
+      regdata = session[:new_user_registration]
+      @user.username = regdata['nickname'] || regdata['http://axschema.org/namePerson/friendly']
+      @user.fullname = regdata['fullname'] || regdata['http://axschema.org/namePerson']
+      @user.email_address = regdata['email'] || regdata['http://axschema.org/contact/email']
+
+      #Clear session out now that we are done with it
+      session[:new_user_openid] = nil
+      session[:new_user_registration] = nil
 
       respond_to do |format|
         format.html # new.html.erb
