@@ -110,7 +110,7 @@ var providers = {
         info: 'You know what OpenID is.',
         ask_username: true,
         icon: 'http://openid.net/favicon.ico',
-        url: 'http://{username}/'
+        url: '{username}'
     }
 };
 
@@ -220,6 +220,13 @@ var open_selector = {
                             } else {
                                 open_user_block.hide();
                             }
+                        }
+
+                        if (this.id == 'openid') {
+                            open_user.attr('name', 'openid');
+                        }
+                        else {
+                            open_user.removeAttr('name');
                         }
                     } else {
                         // Not a provider selection
