@@ -1,17 +1,7 @@
 <h1>Listing users</h1>
 
-<table>
-  <tr>
-    <th>Username</th>
-    <th>Fullname</th>
-    <th>OpenID</th>
-  </tr>
-
+<ul>
 <% for user in @users %>
-  <tr>
-    <td><%= link_to h(user.username), user %></td>
-    <td><%=h user.fullname %></td>
-    <td><%= link_to (h user.openid), (h user.openid) %></td>
-  </tr>
+  <li><%= link_to_user(user, :content_method => :fullname, :title_method => :username) %></li>
 <% end %>
-</table>
+</ul>
