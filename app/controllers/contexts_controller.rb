@@ -1,6 +1,6 @@
 class ContextsController < ApplicationController
-  before_filter :find_context, :only => [:show, :edit, :update, :destroy]
-  before_filter :login_required, :only => [:new, :create, :edit, :update, :destroy]
+  before_filter :find_context, :only => [:show, :edit, :update, :destroy, :join, :leave]
+  before_filter :login_required, :only => [:new, :create, :edit, :update, :destroy, :join, :leave]
 
   # GET /contexts
   # GET /contexts.xml
@@ -81,11 +81,42 @@ class ContextsController < ApplicationController
   end
 
   # GET /contexts/1/latest
+  # GET /contexts/1/latest.xml
   def latest #Show latest quote in this context
     @quote = Quote.first(:conditions => ['context_id = ?', params[:id]], :order => 'created_at DESC')
     respond_to do |format|
       format.html { render :template => 'quotes/show' }
       format.xml  { render :xml => @quote.to_xml(:include => [:context, :quotee, :quoter]) }
+    end
+  end
+
+  # POST /contexts/1/join
+  def join #Add the current user to the context
+    respond_to do |format|
+      if @context.add_user(current_user)
+        flash[:notice] = 'You are now a member of the context'
+        format.html { redirect_to(@context) }
+        format.xml  { head :ok }
+      else
+        flash[:error] = 'Error joining context'
+        format.html { redirect_to(@context) }
+        format.xml  { render :xml => @context.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  # POST /contexts/1/leave
+  def leave #Remove the current user from the context
+    respond_to do |format|
+      if @context.users.delete(current_user)
+        flash[:notice] = 'You are no longer a member of the context'
+        format.html { redirect_to(@context) }
+        format.xml  { head :ok }
+      else
+        flash[:error] = 'Error leaving context'
+        format.html { redirect_to(@context) }
+        format.xml  { render :xml => @context.errors, :status => :unprocessable_entity }
+      end
     end
   end
 

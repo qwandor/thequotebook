@@ -13,5 +13,15 @@
   <%= link_to 'New quote', new_quote_path(:context => @context) %>
 </p>
 
+<% if logged_in? %>
+<p>
+<% if @context.users.exists?(current_user) %>
+  <%= button_to 'Leave this context', leave_context_path(@context) %>
+<% else %>
+  <%= button_to 'Join this context', join_context_path(@context) %>
+<% end %>
+</p>
+<% end %>
+
 <%= link_to 'Edit', edit_context_path(@context) %> |
 <%= link_to 'Back', contexts_path %>
