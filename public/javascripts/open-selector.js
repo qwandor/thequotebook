@@ -149,7 +149,7 @@ var open_selector = {
         var open_user_html = '<input type="text" style="padding-left: 22px;" id="open-selector-username" disabled="disabled" size="' + this.textbox_size + '"/>';
         var select_html = '<select id="open-selector"><option value="0">Select provider</option></select> ';
         var html_credits = this.show_credits?'<p style="color:#DDD;font-size:80%;font-style:italic;">Powered by <a href="http://open-selector.com" title="Open-selector">Open-selector</a>.</p>':'';
-        var html_label = this.show_label?'<label for="open-selector">Select your provider</label>:<br/> ':'';
+        var html_label = this.show_label?'<label for="open-selector">Choose an account to login with</label>:<br/> ':'';
 
         openid_box.hide();
         openid_box_label.hide();
