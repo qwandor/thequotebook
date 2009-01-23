@@ -59,8 +59,8 @@ class QuotesController < ApplicationController
 
     #While we are at it, add quoter and quotee to context
     if !@possible_quotee_matches
-      properties[:context].users << current_user unless properties[:context].users.exists?(:id => current_user.id)
-      properties[:context].users << properties[:quotee] unless properties[:context].users.exists?(:id => properties[:quotee].id)
+      properties[:context].add_user(current_user)
+      properties[:context].add_user(properties[:quotee])
     end
 
     respond_to do |format|
