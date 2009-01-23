@@ -1,6 +1,6 @@
 <h1>Log In</h1>
 
-<% form_tag session_path do -%>
+<% form_tag session_path, :id => 'openid_form' do -%>
 <p><%= label_tag 'openid' %><br/>
 <%= text_field_tag 'openid', @openid %></p>
 
