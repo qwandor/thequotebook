@@ -12,6 +12,7 @@ class QuotesController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @quotes }
+      format.atom # index.atom.builder
     end
   end
 
