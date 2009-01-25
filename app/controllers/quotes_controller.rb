@@ -7,7 +7,8 @@ class QuotesController < ApplicationController
   # GET /quotes
   # GET /quotes.xml
   def index
-    @quotes = Quote.find(:all)
+    order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
+    @quotes = Quote.find(:all, :order => order)
 
     respond_to do |format|
       format.html # index.html.erb
