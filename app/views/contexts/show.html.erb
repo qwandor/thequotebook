@@ -9,10 +9,6 @@
   </p>
 <% end %>
 
-<p>
-  <%= link_to 'New quote', new_quote_path(:context => @context) %>
-</p>
-
 <% if logged_in? %>
 <p>
 <% if @context.users.exists?(current_user) %>
@@ -23,5 +19,7 @@
 </p>
 <% end %>
 
-<%= link_to 'Edit', edit_context_path(@context) %> |
-<%= link_to 'Back', contexts_path %>
+<%= link_to h("Edit #{@context.name}"), edit_context_path(@context) %> |
+<%= link_to 'New quote', new_quote_path(:context => @context) %> |
+<%= link_to h("All #{@context.name} quotes"), quotes_context_path(@context) %> |
+<%= link_to 'List of contexts', contexts_path %>

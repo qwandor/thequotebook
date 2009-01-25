@@ -2,7 +2,7 @@
 <%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => "#{h(@context.name)} quotes"} %>
 <% end %>
 
-<h1><%=h @context.name %> quotes</h1>
+<h1>All <%=h @context.name %> quotes</h1>
 
 <% for quote in @quotes %>
   <p>
