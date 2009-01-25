@@ -1,24 +1,9 @@
 <h1>Listing quotes</h1>
 
-<table>
-  <tr>
-    <th>Quote text</th>
-    <th>Context</th>
-    <th>Quoter</th>
-    <th>Quotee</th>
-  </tr>
-
 <% for quote in @quotes %>
-  <tr>
-    <td><%=h quote.quote_text %></td>
-    <td><%=h quote.context.name %></td>
-    <td><%=h quote.quoter.username %></td>
-    <td><%=h quote.quotee.username %></td>
-    <td><%= link_to 'Show', quote %></td>
-  </tr>
+  <p>
+    <%= formatted_quote quote, :show_context => false %>
+  </p>
 <% end %>
-</table>
-
-<br />
 
 <%= link_to 'New quote', new_quote_path %>
