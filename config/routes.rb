@@ -8,7 +8,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :quotes
 
-  map.resources :users
+  map.resources :users, :member => {:quotes => :get}
 
   map.resources :contexts, :member => {:latest => :get, :join => :post, :leave => :post}
 

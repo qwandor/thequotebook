@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :find_user, :only => [:show, :edit, :update, :destroy]
+  before_filter :find_user, :only => [:show, :edit, :update, :destroy, :quotes]
   before_filter :login_required, :only => [:edit, :update]
   before_filter :own_account, :only => [:edit, :update]
 
@@ -20,6 +20,22 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @user }
+    end
+  end
+
+  # GET /users/1/quotes
+  # GET /users/1/quotes.xml
+  # GET /users/1/quotes.atom
+  def quotes
+    order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
+    @quotes = Quote.find(:all, :conditions => ['quotee_id = ?', @user.id], :order => order)
+
+    @feed_title = "Quoteyou: Quotes by #{@user.fullname}"
+
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => @user }
+      format.atom { render :template => 'quotes/index' }
     end
   end
 

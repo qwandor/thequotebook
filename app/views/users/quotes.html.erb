@@ -1,0 +1,15 @@
+<% content_for :head do %>
+<%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => "Quotes by #{h(@user.fullname)}"} %>
+<% end %>
+
+<h1>Quotes by <%=h @user.fullname %></h1>
+
+<% for quote in @quotes %>
+  <p>
+    <%= formatted_quote quote, :quotee_link => false %>
+  </p>
+<% end %>
+
+<p>
+  Back to <%= link_to_user @user %>
+</p>

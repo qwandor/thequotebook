@@ -1,11 +1,11 @@
 xml.instruct!
 
 xml.feed 'xmlns' => 'http://www.w3.org/2005/Atom' do
-  xml.title   'Quoteyou: All quotes'
+  xml.title   @feed_title
   xml.link    'rel' => 'self', 'type' => 'application/atom+xml', "href" => url_for(:only_path => false, :controller => 'quotes', :action => 'index', :format => 'atom')
   xml.link    'rel' => 'alternate', 'type' => 'text/html', 'href' => url_for(:only_path => false, :controller => 'quotes')
   xml.id      url_for(:only_path => false, :controller => 'quotes', :action => 'index', :format => 'atom')
-  xml.updated @quotes.first.updated_at.strftime '%Y-%m-%dT%H:%M:%SZ' if @quotes.any? # TODO: should this be last rather than first?
+  xml.updated @quotes.first.updated_at.strftime '%Y-%m-%dT%H:%M:%SZ' if @quotes.any?
   xml.generator 'Quoteyou', :uri => url_for(:only_path => false, :controller => 'home')
 
   @quotes.each do |quote|
