@@ -6,10 +6,6 @@
 
 <% for quote in @quotes %>
   <p>
-    <%= formatted_quote quote, :quotee_link => false %>
+    <%= formatted_quote quote %>
   </p>
 <% end %>
-
-<p>
-  Back to <%= link_to_user @user %>
-</p>
