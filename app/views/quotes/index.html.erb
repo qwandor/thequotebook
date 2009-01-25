@@ -1,3 +1,7 @@
+<% content_for :head do %>
+<%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => 'All quotes'} %>
+<% end %>
+
 <h1>Listing quotes</h1>
 
 <% for quote in @quotes %>
