@@ -1,3 +1,7 @@
+<% content_for :head do %>
+<%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => "Quotes by #{h(@user.fullname)}"} %>
+<% end %>
+
 <h1><%=h @user.fullname %></h1>
 
 <%= gravatar_for @user, :size => 60 %>
