@@ -1,5 +1,5 @@
 <% content_for :head do %>
-<%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => "#{h(@context.name)} quotes"} %>
+<%= auto_discovery_link_tag :atom, {:action => :quotes, :format => :atom}, {:title => "#{h(@context.name)} quotes"} %>
 <% end %>
 
 <h1><%=h @context.name %></h1>
