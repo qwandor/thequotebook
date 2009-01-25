@@ -1,5 +1,5 @@
 class ContextsController < ApplicationController
-  before_filter :find_context, :only => [:show, :edit, :update, :destroy, :join, :leave]
+  before_filter :find_context, :only => [:show, :edit, :update, :destroy, :join, :leave, :quotes]
   before_filter :login_required, :only => [:new, :create, :edit, :update, :destroy, :join, :leave]
 
   # GET /contexts
@@ -118,6 +118,22 @@ class ContextsController < ApplicationController
         format.html { redirect_to(@context) }
         format.xml  { render :xml => @context.errors, :status => :unprocessable_entity }
       end
+    end
+  end
+
+  # GET /contexts/1/quotes
+  # GET /contexts/1/quotes.xml
+  # GET /contexts/1/quotes.atom
+  def quotes
+    order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
+    @quotes = Quote.find(:all, :conditions => ['context_id = ?', @context.id], :order => order)
+
+    @feed_title = "Quoteyou: #{@context.name} quotes"
+
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => @quotes }
+      format.atom { render :template => 'quotes/index' }
     end
   end
 

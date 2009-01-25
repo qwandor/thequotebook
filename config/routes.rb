@@ -10,7 +10,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :users, :member => {:quotes => :get}
 
-  map.resources :contexts, :member => {:latest => :get, :join => :post, :leave => :post}
+  map.resources :contexts, :member => {:latest => :get, :join => :post, :leave => :post, :quotes => :get}
 
   map.root :controller => "home"
 

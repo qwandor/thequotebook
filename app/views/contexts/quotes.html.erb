@@ -1,0 +1,15 @@
+<% content_for :head do %>
+<%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => "#{h(@context.name)} quotes"} %>
+<% end %>
+
+<h1><%=h @context.name %> quotes</h1>
+
+<% for quote in @quotes %>
+  <p>
+    <%= formatted_quote quote, :show_context => false %>
+  </p>
+<% end %>
+
+<p>
+  <%= link_to h("Back to #{@context.name}"), @context %>
+</p>
