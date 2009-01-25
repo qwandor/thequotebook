@@ -34,7 +34,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.xml  { render :xml => @user }
+      format.xml  { render :xml => @quotes }
       format.atom { render :template => 'quotes/index' }
     end
   end
