@@ -132,7 +132,7 @@ class ContextsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.xml  { render :xml => @quotes }
+      format.xml  { render :xml => @quotes.to_xml(:include => [:quotee, :quoter]) }
       format.atom { render :template => 'quotes/index' }
     end
   end
