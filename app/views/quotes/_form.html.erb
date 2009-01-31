@@ -21,15 +21,15 @@
   <%= f.error_messages %>
 
   <p>
-    <%= label_tag 'quotee' %><br />
+    <%= label_tag 'quotee' %> &mdash; Who said it?<br />
     <%= text_field_tag :quotee, @quote.quotee && (@quote.quotee.username || @quote.quotee.fullname) || params[:quotee] %>
   </p>
   <p>
-    <%= f.label :quote_text %><br />
+    <%= f.label :quote_text %> &mdash; What did they say?<br />
     <%= f.text_area :quote_text %>
   </p>
   <p>
-    <%= label_tag 'context_name' %><br />
+    <%= label_tag 'context_name', 'Context' %> &mdash; Where did they say it?<br />
     <%= text_field_with_auto_complete(:context, :name, {:value => @quote.context && @quote.context.name}, {:skip_style => true}) %>
   </p>
   <p>
