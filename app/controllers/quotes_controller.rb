@@ -4,6 +4,9 @@ class QuotesController < ApplicationController
   before_filter :own_quote, :only => [:edit, :update, :destroy]
   after_filter :store_location, :only => [:new, :update]
 
+  auto_complete_for :context, :name
+  protect_from_forgery :except => [:auto_complete_for_context_name]
+
   # GET /quotes
   # GET /quotes.xml
   def index
@@ -53,7 +56,7 @@ class QuotesController < ApplicationController
 
     properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee], current_user)
 
-    properties[:context] = Context.first(:conditions => ['name = ?', params[:context]])
+    properties[:context] = Context.first(:conditions => ['name = ?', params[:context][:name]])
     # TODO: give helpful error if quotee or context is nil (i.e. could not match name), rather than just error about it being blank
 
     @quote = Quote.new(properties)
@@ -61,15 +64,14 @@ class QuotesController < ApplicationController
     #Store the quote as it is being edited, so that we can return to editing it if we have to stop to add a new user in the middle
     session[:quote_in_progress] = @quote if @possible_quotee_matches
 
-    #While we are at it, add quoter and quotee to context
-    if !@possible_quotee_matches
-      properties[:context].add_user(current_user)
-      properties[:context].add_user(properties[:quotee])
-    end
-
     respond_to do |format|
       if !@possible_quotee_matches && @quote.save
         flash[:notice] = 'Quote was successfully created.'
+
+        #While we are at it, add quoter and quotee to context
+        properties[:context].add_user(current_user)
+        properties[:context].add_user(properties[:quotee])
+
         format.html { redirect_to(@quote) }
         format.xml  { render :xml => @quote, :status => :created, :location => @quote }
       else

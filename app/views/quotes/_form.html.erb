@@ -1,4 +1,4 @@
-  <% form_for(@quote) do |f| %>
+<% form_for(@quote) do |f| %>
   <% if @possible_quotee_matches %>
     <p>
       Sorry, we cannot find anyone called '<%=h params[:quotee] %>'.
@@ -21,7 +21,7 @@
   <%= f.error_messages %>
 
   <p>
-    <%= f.label :quotee %><br />
+    <%= label_tag 'quotee' %><br />
     <%= text_field_tag :quotee, @quote.quotee && (@quote.quotee.username || @quote.quotee.fullname) || params[:quotee] %>
   </p>
   <p>
@@ -29,8 +29,8 @@
     <%= f.text_area :quote_text %>
   </p>
   <p>
-    <%= f.label :context %><br />
-    <%= text_field_tag :context, @quote.context && @quote.context.name || params[:context] %><!-- TODO: use find-as-you-type, or at least combo box for contexts of which the user is a part -->
+    <%= label_tag 'context_name' %><br />
+    <%= text_field_with_auto_complete(:context, :name, {:value => @quote.context.name}, {:skip_style => true}) %>
   </p>
   <p>
     <%= f.submit button_label %>
