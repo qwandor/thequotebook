@@ -89,7 +89,7 @@ class QuotesController < ApplicationController
 
     properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee], current_user)
 
-    properties[:context] = Context.first(:conditions => ['name = ?', params[:context]])
+    properties[:context] = Context.first(:conditions => ['name = ?', params[:context][:name]])
 
     respond_to do |format|
       if !@possible_quotee_matches && @quote.update_attributes(properties)
