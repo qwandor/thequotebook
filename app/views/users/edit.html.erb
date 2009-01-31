@@ -1,28 +1,6 @@
-<h1>Editing user</h1>
+<h1>Editing user profile</h1>
 
-<% form_for(@user) do |f| %>
-  <%= f.error_messages %>
-
-  <p>
-    OpenID<br />
-    <%= link_to h(@user.openid), h(@user.openid) %>
-  </p>
-  <p>
-    <%= f.label :username %><br />
-    <%= f.text_field :username %>
-  </p>
-  <p>
-    <%= f.label :fullname, 'Full name' %><br />
-    <%= f.text_field :fullname %>
-  </p>
-  <p>
-    <%= f.label :email_address %><br />
-    <%= f.text_field :email_address %>
-  </p>
-  <p>
-    <%= f.submit "Update" %>
-  </p>
-<% end %>
+<%= render :partial => 'form', :locals => {:button_label => 'Update'} %>
 
 <%= link_to 'Show', @user %> |
 <%= link_to 'Back', users_path %>
