@@ -4,16 +4,16 @@
   <%= f.error_messages %>
 
   <p>
+    OpenID<br />
+    <%= link_to h(@user.openid), h(@user.openid) %>
+  </p>
+  <p>
     <%= f.label :username %><br />
     <%= f.text_field :username %>
   </p>
   <p>
     <%= f.label :fullname %><br />
     <%= f.text_field :fullname %>
-  </p>
-  <p>
-    <%= f.label :openid %><br />
-    <%= f.text_field :openid %>
   </p>
   <p>
     <%= f.label :email_address %><br />

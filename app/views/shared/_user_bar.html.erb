@@ -1,7 +1,10 @@
+<div id="user-bar">
 <% if logged_in? -%>
-  <div id="user-bar-greeting">Logged in as <%= link_to_current_user :content_method => :username %></div>
-  <div id="user-bar-action"  >(<%= link_to "Log out", logout_path, { :title => "Log out" }    %>)</div>
+  <span id="user-bar-greeting">Logged in as <%= link_to_current_user :content_method => :username %></span>
+  <span id="user-bar-action">(<%= link_to 'Edit profile', edit_user_path(current_user) %> | <%= link_to 'Log out', logout_path, { :title => "Log out" } %>)</span>
 <% else -%>
-  <div id="user-bar-greeting"><%= link_to_login_with_IP 'Not logged in', :style => 'border: none;' %></div>
-  <div id="user-bar-action"  ><%= link_to "Log in",  login_path,  { :title => "Log in" } %></div>
+  <span id="user-bar-greeting"><%= link_to_login_with_IP 'Not logged in', :style => 'border: none;' %></span>
+  <span id="user-bar-action"><%= link_to 'Log in', login_path,  { :title => "Log in" } %></span>
 <% end -%>
+  <span id="user-bar-newquote"><%= link_to 'Add quote', new_quote_path %></span>
+</div>
