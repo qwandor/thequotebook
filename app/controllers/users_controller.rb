@@ -68,7 +68,6 @@ class UsersController < ApplicationController
       @user.email_address = regdata['email'] || regdata['http://axschema.org/contact/email']
 
       #Clear session out now that we are done with it
-      session[:new_user_openid] = nil
       session[:new_user_registration] = nil
 
       respond_to do |format|
@@ -142,6 +141,7 @@ class UsersController < ApplicationController
           # button. Uncomment if you understand the tradeoffs.
           # reset session
           self.current_user = @user # !! now logged in
+          session[:new_user_openid] = nil #Clear OpenID from session now that it is no longer needed
           flash[:notice] = "User was successfully #{params[:mode] == 'claimpartial' ? 'claimed' : 'created'}. Thanks for signing up!"
           format.html { redirect_back_or_default('/') }
           format.xml  { render :xml => @user, :status => :created, :location => @user }
