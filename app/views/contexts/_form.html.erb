@@ -2,12 +2,12 @@
   <%= f.error_messages %>
 
   <p>
-    <%= f.label :name %><br />
+    <%= f.label :name %> &mdash; Just something short and sweet, but it should be a unique name (not just 'my flat' or 'friends').<br />
     <%= f.text_field :name %>
   </p>
   <p>
-    <%= f.label :description %><br />
-    <%= f.text_field :description %>
+    <%= f.label :description %> &mdash; Give everyone a bit more information about what this context is.<br />
+    <%= f.text_area :description %>
   </p>
   <p>
     <%= f.submit "Save" %>

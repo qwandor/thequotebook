@@ -6,12 +6,12 @@
     <%= link_to h(@user.openid), h(@user.openid) %>
   </p>
   <p>
-    <%= f.label :username %><br />
-    <%= f.text_field :username %>
+    <%= f.label :fullname, 'Full name' %> &mdash; Put your real name, so people can find you.<br />
+    <%= f.text_field :fullname %>
   </p>
   <p>
-    <%= f.label :fullname, 'Full name' %><br />
-    <%= f.text_field :fullname %>
+    <%= f.label :username %> &mdash; You can call yourself whatever you like here. Keep it fairly short though.<br />
+    <%= f.text_field :username %>
   </p>
   <p>
     <%= f.label :email_address %><br />
