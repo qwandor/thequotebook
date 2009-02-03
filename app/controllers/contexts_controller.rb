@@ -5,7 +5,7 @@ class ContextsController < ApplicationController
   # GET /contexts
   # GET /contexts.xml
   def index
-    @contexts = Context.find(:all)
+    @contexts = Context.all(:select => 'id, name, description, (select count(*) from quotes where context_id = contexts.id) as quote_count', :order => 'created_at desc')
 
     respond_to do |format|
       format.html # index.html.erb

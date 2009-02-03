@@ -1,21 +1,11 @@
 <h1>Listing contexts</h1>
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Description</th>
-  </tr>
-
+<ul>
 <% for context in @contexts %>
-  <tr>
-    <td><%= link_to h(context.name), context %></td>
-    <td><%=h context.description %></td>
-    <td><%= link_to 'Edit', edit_context_path(context) %></td>
-    <td><%= link_to 'Destroy', context, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
+  <li>
+    <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
+  </li>
 <% end %>
-</table>
-
-<br />
+</ul>
 
 <%= link_to 'New context', new_context_path %>

@@ -11,13 +11,15 @@
 
 <% if @current_user_contexts %>
 <h2>Your contexts</h2>
+<ul>
 <%
 for context in @current_user_contexts
 %>
-<p>
+<li>
   <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quotes.size %> quotes)
-</p>
+</li>
 <% end %>
+</ul>
 <% end %>
 
 <h2>Latest quotes</h2>
@@ -29,9 +31,11 @@ for context in @current_user_contexts
 <p><%= link_to 'All quotes', quotes_path %></p>
 
 <h2>Top contexts</h2>
+<ul>
 <% for context in @top_contexts %>
-<p>
+<li>
   <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
-</p>
+</li>
 <% end %>
+</ul>
 <p><%= link_to 'All contexts', contexts_path %></p>
