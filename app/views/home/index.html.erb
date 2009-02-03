@@ -11,15 +11,24 @@
 
 <% if @current_user_contexts %>
 <h2>Your contexts</h2>
+<% if @current_user_contexts.empty? %>
+<p>
+  You are not part of any contexts yet. Perhaps you would like to look through the <%= link_to 'list of contexts', contexts_path %> to find some to join, or <%= link_to 'create a new context', new_context_path %> for quotes from your group of friends?
+</p>
+<% else %>
 <ul>
 <%
 for context in @current_user_contexts
 %>
-<li>
-  <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quotes.size %> quotes)
-</li>
+  <li>
+    <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quotes.size %> quotes)
+  </li>
 <% end %>
 </ul>
+<p>
+  <%= link_to 'Create a new context', new_context_path %>
+</p>
+<% end %>
 <% end %>
 
 <h2>Latest quotes</h2>
@@ -33,9 +42,9 @@ for context in @current_user_contexts
 <h2>Top contexts</h2>
 <ul>
 <% for context in @top_contexts %>
-<li>
-  <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
-</li>
+  <li>
+    <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
+  </li>
 <% end %>
 </ul>
 <p><%= link_to 'All contexts', contexts_path %></p>
