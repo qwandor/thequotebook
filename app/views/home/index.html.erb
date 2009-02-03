@@ -1,6 +1,6 @@
 <h1>Quoteyou</h1>
 
-<% if @current_user_quotes %>
+<% if @current_user_quotes && !@current_user_quotes.empty? %>
 <h2>Latest quotes in your contexts</h2>
 <% for quote in @current_user_quotes %>
 <p>
