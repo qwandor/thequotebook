@@ -9,7 +9,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090120054754) do
+ActiveRecord::Schema.define(:version => 20090207004827) do
+
+  create_table "comments", :force => true do |t|
+    t.integer  "quote_id",   :null => false
+    t.integer  "user_id",    :null => false
+    t.text     "body",       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "comments", ["quote_id"], :name => "index_comments_on_quote_id"
 
   create_table "contexts", :force => true do |t|
     t.string   "name"
@@ -63,6 +73,9 @@ ActiveRecord::Schema.define(:version => 20090120054754) do
   end
 
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
+
+  add_foreign_key "comments", ["quote_id"], "quotes", ["id"], :name => "comments_quote_id_fkey"
+  add_foreign_key "comments", ["user_id"], "users", ["id"], :name => "comments_user_id_fkey"
 
   add_foreign_key "contexts_users", ["context_id"], "contexts", ["id"], :name => "contexts_users_context_id_fkey"
   add_foreign_key "contexts_users", ["user_id"], "users", ["id"], :name => "contexts_users_user_id_fkey"
