@@ -1,2 +1,16 @@
-<h1>Comments#edit</h1>
-<p>Find me in app/views/comments/edit.html.erb</p>
+<h1>Editing comment</h1>
+
+<% form_for([@quote, @comment]) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :body %><br />
+    <%= f.text_area :body %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', quote_comment_path(@quote, @comment) %> |
+<%= link_to 'Back', quote_comments_path(@quote) %>

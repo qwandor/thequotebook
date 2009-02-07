@@ -1,2 +1,14 @@
-<h1>Comments#show</h1>
-<p>Find me in app/views/comments/show.html.erb</p>
+<h1>Comment on <%= @quote.quote_text %></h1>
+
+<p>
+  <b>Commenter:</b>
+  <%=h @comment.user %>
+</p>
+
+<p>
+  <b>Comment:</b>
+  <%=h @comment.body %>
+</p>
+
+<%= link_to 'Edit', edit_quote_comment_path(@quote, @comment) %> |
+<%= link_to 'Back', quote_comments_path(@quote) %>
