@@ -7,11 +7,9 @@ class CommentsController < ApplicationController
   # GET /quotes/1/comments
   # GET /quotes/1/comments.xml
   def index
-    @comments = @quote.comments
-
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @comments }
+      format.xml  { render :xml => @quote.comments.to_xml(:include => [:user]) }
     end
   end
 
@@ -48,7 +46,7 @@ class CommentsController < ApplicationController
     respond_to do |format|
       if @comment.save
         flash[:notice] = 'Comment posted.'
-        format.html { redirect_to quote_comment_url(@quote, @comment) }
+        format.html { redirect_to @quote }
         format.xml  { render :xml => @comment, :status => :created, :location => @comment }
       else
         format.html { render :action => 'new' }

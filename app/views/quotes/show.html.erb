@@ -2,9 +2,18 @@
   <%= formatted_quote(@quote, :quote_link => false) %>
 </p>
 
-<% if @quote.quoter == current_user %>
-<%= link_to 'Edit', edit_quote_path(@quote) %> |
-<%= link_to 'Destroy', @quote, :confirm => 'Are you sure?', :method => :delete %> |
-<% end %>
+<p>
+  <% if @quote.quoter == current_user %>
+  <%= link_to 'Edit', edit_quote_path(@quote) %> |
+  <%= link_to 'Destroy', @quote, :confirm => 'Are you sure?', :method => :delete %> |
+  <% end %>
+  <%= link_to 'Back', quotes_path %>
+</p>
 
-<%= link_to 'Back', quotes_path %>
+<h2>Comments</h2>
+
+<%= render :partial => 'comments/list' %>
+
+<p>
+  <%= link_to 'New comment', new_quote_comment_path(@quote) %>
+</p>

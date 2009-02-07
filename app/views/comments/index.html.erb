@@ -1,22 +1,6 @@
 <h1>Comments for <%=h @quote.quote_text %></h1>
 
-<table>
-<% for comment in @comments %>
-  <tr>
-    <td>
-      At <%= link_to comment.created_at, quote_comment_path(@quote, comment) %>,<br />
-      <%=link_to_user comment.user %> said:<br />
-      <% if comment.user == current_user %>
-        (<%= link_to 'Edit', edit_quote_comment_path(@quote, comment) %> |
-        <%= link_to 'Destroy', quote_comment_path(@quote, comment), :confirm => 'Are you sure?', :method => :delete %>)
-      <% end %>
-    </td>
-    <td>
-      <%=h comment.body %>
-    </td>
-  </tr>
-<% end %>
-</table>
+<%= render :partial => 'list' %>
 
 <br />
 
