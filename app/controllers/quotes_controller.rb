@@ -52,7 +52,6 @@ class QuotesController < ApplicationController
   # POST /quotes.xml
   def create
     properties = params[:quote]
-    properties[:quoter] = current_user
 
     properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee], current_user)
 
@@ -60,6 +59,7 @@ class QuotesController < ApplicationController
     # TODO: give helpful error if quotee or context is nil (i.e. could not match name), rather than just error about it being blank
 
     @quote = Quote.new(properties)
+    @quote.quoter = current_user
 
     #Store the quote as it is being edited, so that we can return to editing it if we have to stop to add a new user in the middle
     session[:quote_in_progress] = @quote if @possible_quotee_matches
