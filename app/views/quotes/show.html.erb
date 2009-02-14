@@ -14,6 +14,15 @@
 
 <%= render :partial => 'comments/list' %>
 
+<h3>New comment</h3>
+
+<% if logged_in? %>
+<%
+@comment = @quote.comments.build #For new comment form; must be after above list of comments or it will show up there
+%>
+<%= render :partial => 'comments/form', :locals => {:button_label => 'Post comment'} %>
+<% else %>
 <p>
-  <%= link_to 'New comment', new_quote_comment_path(@quote) %>
+  <%= link_to 'Login to post a comment', new_quote_comment_path(@quote) %>
 </p>
+<% end %>
