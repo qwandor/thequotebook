@@ -51,7 +51,7 @@ module UsersHelper
     avatar            = options.delete(:avatar)
     actually_link     = options.delete(:actually_link)
 
-    link_text = (avatar ? gravatar_for(user, :size => 16) + ' ' : '') + h(content_text)
+    link_text = (avatar ? gravatar_for(user, :size => 16, :default => 'identicon') + ' ' : '') + h(content_text)
     actually_link ? link_to(link_text, user_path(user), options) : link_text
   end
 
