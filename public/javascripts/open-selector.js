@@ -237,6 +237,7 @@ var open_selector = {
                             open_user_block.hide();
                         }
                     }
+                openid_box.val(endpoint.replace('{username}', open_user.val()));
                 return; // Stop looping here
                 }
             });
@@ -246,6 +247,7 @@ var open_selector = {
             open_user.bind("blur focus keydown keyup click", function(){
                 span.html(open_user.val()?
                     endpoint.replace('{username}', "<strong>" + (open_user.val()) + "</strong>"):endpoint);
+                openid_box.val(endpoint.replace('{username}', open_user.val()));
             });
         }
 
