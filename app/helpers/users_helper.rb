@@ -46,7 +46,7 @@ module UsersHelper
     raise "Invalid user" unless user
     options.reverse_merge! :content_method => :username, :title_method => :fullname, :class => :nickname, :avatar => true, :actually_link => true
     content_text      = options.delete(:content_text)
-    content_text    ||= user.send(options.delete(:content_method))
+    content_text    ||= user.send(options.delete(:content_method)) || user.fullname
     options[:title] ||= user.send(options.delete(:title_method))
     avatar            = options.delete(:avatar)
     actually_link     = options.delete(:actually_link)
