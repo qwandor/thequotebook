@@ -1,7 +1,7 @@
 <h1>Quoteyou</h1>
 
 <% if @current_user_quotes && !@current_user_quotes.empty? %>
-<h2>Latest quotes in your contexts</h2>
+<h2>Latest quotes in your quotebooks</h2>
 <% for quote in @current_user_quotes %>
 <p>
   <%= formatted_quote quote %>
@@ -10,10 +10,10 @@
 <% end %>
 
 <% if @current_user_contexts %>
-<h2>Your contexts</h2>
+<h2>Your quotebook</h2>
 <% if @current_user_contexts.empty? %>
 <p>
-  You are not part of any contexts yet. Perhaps you would like to look through the <%= link_to 'list of contexts', contexts_path %> to find some to join, or <%= link_to 'create a new context', new_context_path %> for quotes from your group of friends?
+  You are not part of any quotebooks yet. Perhaps you would like to look through the <%= link_to 'list of quotebooks', contexts_path %> to find some to join, or <%= link_to 'create a new quotebook', new_context_path %> for quotes from your group of friends?
 </p>
 <% else %>
 <ul>
@@ -26,7 +26,7 @@ for context in @current_user_contexts
 <% end %>
 </ul>
 <p>
-  <%= link_to 'Create a new context', new_context_path %>
+  <%= link_to 'Create a new quotebook', new_context_path %>
 </p>
 <% end %>
 <% end %>
@@ -39,7 +39,7 @@ for context in @current_user_contexts
 <% end %>
 <p><%= link_to 'All quotes', quotes_path %></p>
 
-<h2>Top contexts</h2>
+<h2>Top quotebooks</h2>
 <ul>
 <% for context in @top_contexts %>
   <li>
@@ -47,4 +47,4 @@ for context in @current_user_contexts
   </li>
 <% end %>
 </ul>
-<p><%= link_to 'All contexts', contexts_path %></p>
+<p><%= link_to 'All quotebooks', contexts_path %></p>

@@ -24,9 +24,9 @@
 <% end %>
 
 <% if !@user.contexts.empty? %>
-  <h2>Contexts</h2>
+  <h2>Quotebooks</h2>
   <p>
-    <%=h @user.username || @user.fullname %> is a member of the following contexts:
+    <%=h @user.username || @user.fullname %> is a member of the following quotebooks:
   </p>
   <ul>
   <% for context in @user.contexts %>

@@ -29,7 +29,7 @@
     <%= f.text_area :quote_text %>
   </p>
   <p>
-    <%= label_tag 'context_name', 'Context' %> &mdash; Where did they say it?<br />
+    <%= label_tag 'context_name', 'Quotebook' %> &mdash; Where did they say it?<br />
     <%= text_field_with_auto_complete(:context, :name, {:value => @quote.context && @quote.context.name}, {:skip_style => true}) %>
   </p>
   <p>
