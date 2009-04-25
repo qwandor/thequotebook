@@ -4,17 +4,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title>theQuotebook: <%= controller.action_name %></title>
-  <%= stylesheet_link_tag 'scaffold' %>
+  <title><%= controller.controller_name %>: <%= controller.action_name %></title>
+  <%= stylesheet_link_tag 'scaffold', 'style' %>
+  <%= javascript_include_tag :defaults %>
+  <%= yield :head %>
 </head>
 <body>
 
 <%= render :partial => "shared/user_bar" %>
 
-<p style="color: green"><%=h flash[:notice] %></p>
-<p style="color: red"><%=h flash[:error] %></p>
+<div id="content">
+  <p style="color: green"><%=h flash[:notice] %></p>
+  <p style="color: red"><%=h flash[:error] %></p>
 
-<%= yield  %>
+  <%= yield  %>
+</div>
 
 </body>
 </html>

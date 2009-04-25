@@ -1,0 +1,34 @@
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+#user-bar {
+  background-color: #4C5E97;
+  color: #CCCCCC;
+  padding: 5px;
+  height: 1.5em;
+}
+
+#user-bar a {
+  color: #FFFFFF;
+}
+
+#user-bar-user {
+  position: absolute;
+  left: 5px; /* Konqueror seems to need this, though it should be implied by padding of #user-bar. */
+}
+
+#user-bar-links {
+  position: absolute;
+  right: 5px;
+  top: 6px;
+}
+
+#content {
+  margin: 8px;
+}
+
+a img {
+  border: none;
+}
