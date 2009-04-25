@@ -6,7 +6,7 @@ xml.feed 'xmlns' => 'http://www.w3.org/2005/Atom' do
   xml.link    'rel' => 'alternate', 'type' => 'text/html', 'href' => url_for(:only_path => false)
   xml.id      url_for(:only_path => false, :format => 'atom')
   xml.updated @quotes.first.updated_at.strftime '%Y-%m-%dT%H:%M:%SZ' if @quotes.any?
-  xml.generator 'Quoteyou', :uri => url_for(:only_path => false, :controller => 'home')
+  xml.generator 'theQuotebook', :uri => url_for(:only_path => false, :controller => 'home')
 
   @quotes.each do |quote|
     xml.entry do
