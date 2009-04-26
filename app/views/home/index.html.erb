@@ -10,7 +10,7 @@
 <% end %>
 
 <% if @current_user_contexts %>
-<h2>Your quotebook</h2>
+<h2>Your quotebooks</h2>
 <% if @current_user_contexts.empty? %>
 <p>
   You are not part of any quotebooks yet. Perhaps you would like to look through the <%= link_to 'list of quotebooks', contexts_path %> to find some to join, or <%= link_to 'create a new quotebook', new_context_path %> for quotes from your group of friends?
