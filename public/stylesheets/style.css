@@ -64,6 +64,10 @@ a img {
   color: #444444;
 }
 
+.sidebar-block ul {
+  padding-left: 30px;
+}
+
 h2 {
   color: #993264;
 }
