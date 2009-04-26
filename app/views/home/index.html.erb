@@ -1,34 +1,48 @@
 <h1>theQuotebook</h1>
 
+<div id="sidebar">
+<% if @current_user_contexts %>
+  <div class="sidebar-block">
+    <h2>Your quotebooks</h2>
+<%   if @current_user_contexts.empty? %>
+    <p>
+      You are not part of any quotebooks yet. Perhaps you would like to look through the <%= link_to 'list of quotebooks', contexts_path %> to find some to join, or <%= link_to 'create a new quotebook', new_context_path %> for quotes from your group of friends?
+    </p>
+<%   else %>
+    <ul>
+<%     for context in @current_user_contexts %>
+      <li>
+        <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quotes.size %> quotes)
+      </li>
+<%     end %>
+    </ul>
+    <p>
+      <%= link_to 'Create a new quotebook', new_context_path %>
+    </p>
+<%   end %>
+  </div>
+<% end %>
+
+  <div class="sidebar-block">
+    <h2>Top quotebooks</h2>
+    <ul>
+<% for context in @top_contexts %>
+      <li>
+        <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
+      </li>
+<% end %>
+    </ul>
+    <p><%= link_to 'All quotebooks', contexts_path %></p>
+  </div>
+</div>
+
 <% if @current_user_quotes && !@current_user_quotes.empty? %>
 <h2>Latest quotes in your quotebooks</h2>
-<% for quote in @current_user_quotes %>
+<%   for quote in @current_user_quotes %>
 <p>
   <%= formatted_quote quote %>
 </p>
-<% end %>
-<% end %>
-
-<% if @current_user_contexts %>
-<h2>Your quotebooks</h2>
-<% if @current_user_contexts.empty? %>
-<p>
-  You are not part of any quotebooks yet. Perhaps you would like to look through the <%= link_to 'list of quotebooks', contexts_path %> to find some to join, or <%= link_to 'create a new quotebook', new_context_path %> for quotes from your group of friends?
-</p>
-<% else %>
-<ul>
-<%
-for context in @current_user_contexts
-%>
-  <li>
-    <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quotes.size %> quotes)
-  </li>
-<% end %>
-</ul>
-<p>
-  <%= link_to 'Create a new quotebook', new_context_path %>
-</p>
-<% end %>
+<%   end %>
 <% end %>
 
 <h2>Latest quotes</h2>
@@ -38,13 +52,3 @@ for context in @current_user_contexts
 </p>
 <% end %>
 <p><%= link_to 'All quotes', quotes_path %></p>
-
-<h2>Top quotebooks</h2>
-<ul>
-<% for context in @top_contexts %>
-  <li>
-    <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
-  </li>
-<% end %>
-</ul>
-<p><%= link_to 'All quotebooks', contexts_path %></p>

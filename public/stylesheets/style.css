@@ -27,8 +27,36 @@ body {
 
 #content {
   margin: 8px;
+  margin-right: 355px;
 }
 
 a img {
   border: none;
+}
+
+#sidebar {
+  position: absolute;
+  right: 0px;
+  top: 1.5em;
+  margin-top: 15px;
+  width: 360px;
+}
+
+.sidebar-block {
+  background-color: #6ABC83;
+  margin: 10px;
+  padding: 5px;
+}
+
+.sidebar-block h2 {
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+
+.sidebar-block p {
+  margin-bottom: 5px;
+}
+
+.sidebar-block a:visited {
+  color: #444444;
 }
