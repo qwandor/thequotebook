@@ -13,7 +13,7 @@
 
 <%= render :partial => "shared/user_bar" %>
 
-<div id="content">
+<div id="content"<%= yield :content_element %>>
   <p style="color: green"><%=h flash[:notice] %></p>
   <p style="color: red"><%=h flash[:error] %></p>
 

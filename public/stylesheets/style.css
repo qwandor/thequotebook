@@ -27,6 +27,9 @@ body {
 
 #content {
   margin: 8px;
+}
+
+#content.with-sidebar {
   margin-right: 355px;
 }
 
