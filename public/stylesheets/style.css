@@ -46,7 +46,7 @@ a img {
 }
 
 .sidebar-block {
-  background-color: #6ABC83;
+  background-color: #A2CE5B;
   margin: 10px;
   padding: 5px;
 }
@@ -62,4 +62,8 @@ a img {
 
 .sidebar-block a:visited {
   color: #444444;
+}
+
+h2 {
+  color: #993264;
 }
