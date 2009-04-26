@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :username, :fullname, :email_address
+  attr_accessible :username, :fullname, :email_address, :time_zone
 
   def openid=(value)
     write_attribute :openid, (value ? OpenIdAuthentication.normalize_identifier(value) : nil)
