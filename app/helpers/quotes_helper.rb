@@ -9,7 +9,7 @@ module QuotesHelper
     quotee_link = options.delete(:quotee_link)
     show_context = options.delete(:show_context)
 
-    "<p class=\"quote\">On #{h quote.created_at}, #{link_to_user quote.quoter, :actually_link => quoter_link} quoted #{link_to_user quote.quotee, :actually_link => quotee_link} as saying \"#{quote_link ? link_to(h(quote.quote_text), quote) : h(quote.quote_text)}\"" + (show_context ? " in #{link_to h(quote.context.name), quote.context}." : '') + "<\p>"
+    render :partial => 'shared/quote', :locals => {:quote => quote, :quote_link => quote_link, :quoter_link => quoter_link, :quotee_link => quotee_link, :show_context => show_context}
   end
 
   def chatty_quote(quote, options={})
