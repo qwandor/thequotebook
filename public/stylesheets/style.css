@@ -73,7 +73,11 @@ h2 {
 }
 
 .quote {
-  margin: 15px 0px;
+  margin: 7px;
+  margin-right: 10px;
+  margin-left: 0px;
+  padding-bottom: 7px;
+  border-bottom: 1px dashed #dddddd;
 }
 
 .quote-text {
@@ -84,5 +88,5 @@ h2 {
 .quote-quotee {
   float: right;
   font-size: 18px;
-  margin-right: 20px;
+  margin-right: 10px;
 }
