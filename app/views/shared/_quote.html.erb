@@ -1,3 +1,9 @@
-<p class="quote">
-  On <%=h quote.created_at %>, <%=link_to_user quote.quoter, :actually_link => quoter_link %> quoted <%=link_to_user quote.quotee, :actually_link => quotee_link %> as saying "<%=quote_link ? link_to(h(quote.quote_text), quote) : h(quote.quote_text) %>" <%=(show_context ? " in #{link_to h(quote.context.name), quote.context}." : '')%>
-</p>
+<div class="quote">
+  <div class="quote-text">
+    "<%=quote_link ? link_to(h(quote.quote_text), quote) : h(quote.quote_text) %>"
+  </div>
+  <div class="quote-info">
+    <div class="quote-quotee">&mdash; <%=link_to_user quote.quotee, :actually_link => quotee_link, :avatar_size => 20 %></div>
+    Quoted by <%=link_to_user quote.quoter, :actually_link => quoter_link %> on <%=h quote.created_at %><%=(show_context ? " in #{link_to h(quote.context.name), quote.context}" : '')%>.
+  </div>
+</div>

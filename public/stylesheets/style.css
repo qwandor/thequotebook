@@ -71,3 +71,18 @@ a img {
 h2 {
   color: #993264;
 }
+
+.quote {
+  margin: 15px 0px;
+}
+
+.quote-text {
+  font-size: 18px;
+  padding-bottom: 4px;
+}
+
+.quote-quotee {
+  float: right;
+  font-size: 18px;
+  margin-right: 20px;
+}
