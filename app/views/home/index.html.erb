@@ -41,16 +41,12 @@
 <% if @current_user_quotes && !@current_user_quotes.empty? %>
 <h2>Latest quotes in your quotebooks</h2>
 <%   for quote in @current_user_quotes %>
-<p>
-  <%= formatted_quote quote %>
-</p>
+<%= formatted_quote quote %>
 <%   end %>
 <% end %>
 
 <h2>Latest quotes</h2>
 <% for quote in @latest_quotes %>
-<p>
-  <%= formatted_quote quote %>
-</p>
+<%= formatted_quote quote %>
 <% end %>
 <p><%= link_to 'All quotes', quotes_path %></p>

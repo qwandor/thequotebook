@@ -5,9 +5,7 @@
 <h1>All <%=h @context.name %> quotes</h1>
 
 <% for quote in @quotes %>
-  <p>
-    <%= formatted_quote quote, :show_context => false %>
-  </p>
+<%= formatted_quote quote, :show_context => false %>
 <% end %>
 
 <p>

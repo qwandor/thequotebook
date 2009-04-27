@@ -20,7 +20,7 @@ xml.feed 'xmlns' => 'http://www.w3.org/2005/Atom' do
          xml.uri url_for(:only_path => false, :controller => 'users', :action => 'show', :id => quote.quoter.id)
       end
       xml.content 'type' => 'html' do
-        xml.text! formatted_quote(quote) + "\n"
+        xml.text! chatty_quote(quote) + "\n"
       end
     end
   end

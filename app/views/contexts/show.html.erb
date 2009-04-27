@@ -8,9 +8,7 @@
 
 <h2>Quotes</h2>
 <% for quote in @context.quotes %>
-  <p>
-    <%= formatted_quote quote, :show_context => false %>
-  </p>
+<%= formatted_quote quote, :show_context => false %>
 <% end %>
 
 <% if logged_in? %>

@@ -5,9 +5,7 @@
 <h1>Listing quotes</h1>
 
 <% for quote in @quotes %>
-  <p>
-    <%= formatted_quote quote %>
-  </p>
+<%= formatted_quote quote %>
 <% end %>
 
 <%= link_to 'New quote', new_quote_path %>

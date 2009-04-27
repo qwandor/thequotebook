@@ -5,7 +5,5 @@
 <h1>All quotes by <%=h @user.fullname %></h1>
 
 <% for quote in @quotes %>
-  <p>
-    <%= formatted_quote quote %>
-  </p>
+<%= formatted_quote quote %>
 <% end %>

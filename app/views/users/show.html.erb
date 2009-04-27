@@ -19,9 +19,7 @@
 
 <h2>Quotes</h2>
 <% for quote in @user.said_quotes %>
-  <p>
-    <%= formatted_quote quote, :quotee_link => false %>
-  </p>
+<%= formatted_quote quote, :quotee_link => false %>
 <% end %>
 
 <div id="sidebar">
