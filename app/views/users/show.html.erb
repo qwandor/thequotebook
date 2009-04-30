@@ -23,8 +23,8 @@
 <% end %>
 
 <div id="sidebar">
-  <div class="sidebar-block">
 <% if !@user.contexts.empty? %>
+  <div class="sidebar-block">
     <h2>Quotebooks</h2>
     <p>
       <%=h @user.username || @user.fullname %> is a member of the following quotebooks:
@@ -36,8 +36,8 @@
       </li>
 <%   end %>
     </ul>
-<% end %>
   </div>
+<% end %>
 </div>
 
 <% if @user == current_user %>
