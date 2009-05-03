@@ -1,6 +1,10 @@
 <div class="quote">
   <div class="quote-text">
+<% if quote.quote_text.include?('"') %>
+    <%=quote_link ? link_to(h(quote.quote_text), quote) : h(quote.quote_text) %>
+<% else %>
     "<%=quote_link ? link_to(h(quote.quote_text), quote) : h(quote.quote_text) %>"
+<% end %>
   </div>
   <div class="quote-info">
     <div class="quote-quotee">&mdash; <%=link_to_user quote.quotee, :actually_link => quotee_link, :avatar_size => 20 %></div>
