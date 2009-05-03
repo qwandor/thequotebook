@@ -16,6 +16,7 @@ class ContextsController < ApplicationController
   # GET /contexts/1
   # GET /contexts/1.xml
   def show
+    @quotes = Quote.all(:conditions => ['context_id = ?', @context.id], :order => 'created_at DESC', :limit => 10)
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @context }
@@ -126,7 +127,7 @@ class ContextsController < ApplicationController
   # GET /contexts/1/quotes.atom
   def quotes
     order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
-    @quotes = Quote.find(:all, :conditions => ['context_id = ?', @context.id], :order => order)
+    @quotes = Quote.all(:conditions => ['context_id = ?', @context.id], :order => order)
 
     @feed_title = "Quoteyou: #{@context.name} quotes"
 

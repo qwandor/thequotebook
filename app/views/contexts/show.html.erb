@@ -6,8 +6,8 @@
 
 <p><%=h @context.description %></p>
 
-<h2>Quotes</h2>
-<% for quote in @context.quotes %>
+<h2>Latest quotes</h2>
+<% for quote in @quotes %>
 <%= formatted_quote quote, :show_context => false %>
 <% end %>
 
@@ -21,7 +21,13 @@
 </p>
 <% end %>
 
+<p>
+<% if @context.quotes.size > @quotes.size %>
+  There are <strong><%= @context.quotes.size - @quotes.size %> more quotes</strong> from <%=h @context.name %>, before these most recent <%= @quotes.size %>.
+<% end %>
+  <%= link_to h("Show all #{@context.quotes.size} #{@context.name} quotes"), quotes_context_path(@context) %>
+</p>
+
 <%= link_to h("Edit #{@context.name}"), edit_context_path(@context) %> |
 <%= link_to 'New quote', new_quote_path(:context => @context) %> |
-<%= link_to h("All #{@context.name} quotes"), quotes_context_path(@context) %> |
 <%= link_to 'List of quotebooks', contexts_path %>
