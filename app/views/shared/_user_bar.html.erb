@@ -9,7 +9,7 @@
 <% end -%>
   </span>
   <span id="user-bar-quote">
-    <span class="quote-text"><%= h(trim_if_needed(quote_marks_if_needed(@random_quote.quote_text), 70)) %></span>
+    <span class="quote-text"><%= link_to h(trim_if_needed(quote_marks_if_needed(@random_quote.quote_text), 70)), @random_quote %></span>
     <span class="quote-quotee">&mdash; <%=link_to_user @random_quote.quotee, :actually_link => true %></span>
   </span>
   <span id="user-bar-links">
