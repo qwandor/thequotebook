@@ -3,6 +3,14 @@ body {
   padding: 0px;
 }
 
+.notice {
+  color: green;
+}
+
+.error {
+  color: red;
+}
+
 #user-bar {
   background-color: #4C5E97;
   color: #CCCCCC;
