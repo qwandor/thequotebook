@@ -1,13 +1,9 @@
 <div class="quote">
   <div class="quote-text">
 <%
-text = h(quote.quote_text).gsub("\n", "<br\>")
+text = h(quote_marks_if_needed(quote.quote_text)).gsub("\n", "<br\>")
 %>
-<% if quote.quote_text.include?('"') %>
     <%= quote_link ? link_to(text, quote) : text %>
-<% else %>
-    "<%= quote_link ? link_to(text, quote) : text %>"
-<% end %>
   </div>
   <div class="quote-info">
     <div class="quote-quotee">&mdash; <%=link_to_user quote.quotee, :actually_link => quotee_link, :avatar_size => 20 %></div>

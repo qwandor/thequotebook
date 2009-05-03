@@ -22,4 +22,12 @@ module QuotesHelper
 
     "On #{h quote.created_at}, #{link_to_user quote.quoter, :actually_link => quoter_link} quoted #{link_to_user quote.quotee, :actually_link => quotee_link} as saying \"#{quote_link ? link_to(h(quote.quote_text), quote) : h(quote.quote_text)}\"" + (show_context ? " in #{link_to h(quote.context.name), quote.context}." : '')
   end
+
+  def quote_marks_if_needed(text)
+    if text.include?('"')
+      text
+    else
+      '"' + text + '"'
+    end
+  end
 end

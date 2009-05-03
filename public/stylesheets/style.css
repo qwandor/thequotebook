@@ -15,7 +15,6 @@ body {
 }
 
 #user-bar-user {
-  position: absolute;
   left: 5px; /* Konqueror seems to need this, though it should be implied by padding of #user-bar. */
 }
 
@@ -23,6 +22,16 @@ body {
   position: absolute;
   right: 5px;
   top: 6px;
+  background-color: #4C5E97;
+  padding-left: 5px;
+  padding-top: 2px; /* The extra padding / negative margin is to make the background extend over the avator image, if this happens to overlap the quote. */
+  margin-top: -2px;
+}
+
+#user-bar-quote {
+  margin-left: 20px;
+  /*white-space: nowrap;*/
+  overflow: hidden;
 }
 
 #content {
@@ -80,12 +89,12 @@ h2 {
   border-bottom: 1px dashed #dddddd;
 }
 
-.quote-text {
+.quote .quote-text { /* Match only full quotes, not the ones in the user bar. */
   font-size: 18px;
   padding-bottom: 4px;
 }
 
-.quote-quotee {
+.quote .quote-quotee {
   float: right;
   font-size: 18px;
   margin-right: 10px;

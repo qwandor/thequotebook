@@ -15,10 +15,18 @@ class ApplicationController < ActionController::Base
   # from your application log (in this case, all fields with names like "password"). 
   # filter_parameter_logging :password
 
-  before_filter :set_time_zone
+  before_filter :set_time_zone, :get_random_quote
 
 protected
   def set_time_zone
     Time.zone = current_user ? current_user.time_zone : 'Wellington'
+  end
+
+  def get_random_quote
+    if logged_in?
+      @random_quote = Quote.first(:conditions => ['context_id in (?)', current_user.context_ids], :order => 'random()')
+    else
+      @random_quote = Quote.first(:order => 'random()')
+    end
   end
 end
