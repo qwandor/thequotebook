@@ -1,0 +1,9 @@
+<% content_for :head do %>
+<%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => "Quotes of interest to #{h(@user.fullname)}"} %>
+<% end %>
+
+<h1>All quotes of interest to <%=h @user.fullname %></h1>
+
+<% for quote in @quotes %>
+<%= formatted_quote quote %>
+<% end %>

@@ -1,3 +1,9 @@
+<% if logged_in? %>
+<%   content_for :head do %>
+<%= auto_discovery_link_tag :atom, {:controller => 'users', :id => current_user.id, :action => 'relevant_quotes', :format => :atom}, {:title => "Quotes of interest to #{h(current_user.fullname)}"} %>
+<%   end %>
+<% end %>
+
 <% content_for :content_element do %> class="with-sidebar"<% end %>
 
 <h1>theQuotebook</h1>

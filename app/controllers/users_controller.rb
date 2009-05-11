@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :find_user, :only => [:show, :edit, :update, :destroy, :quotes]
+  before_filter :find_user, :only => [:show, :edit, :update, :destroy, :quotes, :relevant_quotes]
   before_filter :login_required, :only => [:edit, :update]
   before_filter :own_account, :only => [:edit, :update]
 
@@ -31,6 +31,22 @@ class UsersController < ApplicationController
     @quotes = Quote.find(:all, :conditions => ['quotee_id = ?', @user.id], :order => order)
 
     @feed_title = "Quoteyou: Quotes by #{@user.fullname}"
+
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => @quotes }
+      format.atom { render :template => 'quotes/index' }
+    end
+  end
+
+  # GET /users/1/relevant_quotes
+  # GET /users/1/relevant_quotes.xml
+  # GET /users/1/relevant_quotes.atom
+  def relevant_quotes #Quotes from quotebooks of which the person is a member
+    order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
+    @quotes = Quote.find(:all, :joins => 'INNER JOIN contexts_users ON quotes.context_id=contexts_users.context_id', :conditions => ['contexts_users.user_id = ?', @user.id], :order => order)
+
+    @feed_title = "Quoteyou: Quotes of interest to #{@user.fullname}"
 
     respond_to do |format|
       format.html
