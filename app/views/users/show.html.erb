@@ -15,7 +15,7 @@
 <% if !@user.openid.nil? %>
   <p>
     <b>OpenID:</b>
-    <%= link_to h(@user.openid), h(@user.openid), :class => 'url' %>
+    <%= link_to h(@user.openid), h(@user.openid), :class => 'url', :rel => 'me' %>
   </p>
 <% end %>
 </div>
