@@ -3,19 +3,20 @@
 <% end %>
 <% content_for :content_element do %> class="with-sidebar"<% end %>
 
-<h1><%=h @user.fullname %></h1>
+<div class="vcard">
+  <h1 class="fn"><%=h @user.fullname %></h1>
 
-<%= gravatar_for @user, :size => 60, :default => 'identicon' %>
+  <%= gravatar_for @user, :size => 60, :default => 'identicon', :class => 'photo' %>
 
-<p>
-  <b>Username:</b>
-  <%=h @user.username %>
-</p>
-
-<p>
-  <b>OpenID:</b>
-  <%= link_to h(@user.openid), h(@user.openid) %>
-</p>
+  <p>
+    <b>Username:</b>
+    <span class="nickname"><%=h @user.username %></span>
+  </p>
+  <p>
+    <b>OpenID:</b>
+    <%= link_to h(@user.openid), h(@user.openid), :class => 'url' %>
+  </p>
+</div>
 
 <h2>Quotes</h2>
 <% for quote in @user.said_quotes %>
