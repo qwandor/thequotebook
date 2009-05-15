@@ -12,10 +12,12 @@
     <b>Username:</b>
     <span class="nickname"><%=h @user.username %></span>
   </p>
+<% if !@user.openid.nil? %>
   <p>
     <b>OpenID:</b>
     <%= link_to h(@user.openid), h(@user.openid), :class => 'url' %>
   </p>
+<% end %>
 </div>
 
 <h2>Quotes</h2>
