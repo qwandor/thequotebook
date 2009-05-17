@@ -3,7 +3,7 @@
 <ul>
 <% for context in @contexts %>
   <li>
-    <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
+    <% if current_user && current_user.contexts.include?(context) %><strong><%= link_to h(context.name), context %></strong><% else %><%= link_to h(context.name), context %><% end %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
   </li>
 <% end %>
 </ul>
