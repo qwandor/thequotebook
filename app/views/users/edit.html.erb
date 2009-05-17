@@ -1,3 +1,5 @@
+<% content_for :title do %>: Editing profile for <%=h @user.fullname %><% end %>
+
 <h1>Editing user profile</h1>
 
 <%= render :partial => 'form', :locals => {:button_label => 'Update'} %>

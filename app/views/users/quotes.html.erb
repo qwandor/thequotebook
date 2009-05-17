@@ -1,3 +1,5 @@
+<% content_for :title do %>: <%=h @user.fullname %>'s quotes<% end %>
+
 <% content_for :head do %>
 <%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => "Quotes by #{h(@user.fullname)}"} %>
 <% end %>
