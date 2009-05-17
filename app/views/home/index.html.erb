@@ -51,6 +51,16 @@
 <%   end %>
 <% end %>
 
+<% if @current_user_comments && !@current_user_comments.empty? %>
+<h2>Latest comments on your quotebooks</h2>
+<%   for comment in @current_user_comments %>
+<p>
+  <%=link_to_user comment.user %> commented on <%=link_to_user comment.quote.quotee %>'s quote <%=link_to h(trim_if_needed(quote_marks_if_needed(comment.quote.quote_text), 40)), comment.quote %>:
+  <%=h comment.body %>
+</p>
+<%   end %>
+<% end %>
+
 <h2>Latest quotes from everywhere</h2>
 <% for quote in @latest_quotes %>
 <%= formatted_quote quote %>
