@@ -22,6 +22,10 @@
     <%= f.time_zone_select :time_zone %>
   </p>
   <p>
+    <%= f.label :email_notification %> &mdash; Should we send you an email when someone quotes you, or comments on one of your quotes?<br />
+    <%= f.check_box :email_notification %>
+  </p>
+  <p>
     <%= f.submit button_label %>
   </p>
 <% end %>
