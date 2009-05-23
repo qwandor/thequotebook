@@ -1,5 +1,8 @@
+<% if @quote.comments.empty? %>
+<p>(No comments yet.)</p>
+<% else %>
 <table>
-<% for comment in @quote.comments %>
+<%   for comment in @quote.comments %>
   <tr>
     <td>
       At <%= link_to comment.created_at, quote_comment_path(@quote, comment) %>,<br />
@@ -13,5 +16,6 @@
       <%=h comment.body %>
     </td>
   </tr>
-<% end %>
+<%   end %>
 </table>
+<% end %>

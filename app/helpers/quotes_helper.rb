@@ -3,13 +3,14 @@ module QuotesHelper
   #May include various links
   def formatted_quote(quote, options={})
     raise "Invalid quote" unless quote
-    options.reverse_merge! :quote_link => true, :quoter_link => true, :quotee_link => true, :show_context => true
+    options.reverse_merge! :quote_link => true, :quoter_link => true, :quotee_link => true, :show_context => true, :show_comments => true
     quote_link = options.delete(:quote_link)
     quoter_link = options.delete(:quoter_link)
     quotee_link = options.delete(:quotee_link)
     show_context = options.delete(:show_context)
+    show_comments = options.delete(:show_comments)
 
-    render :partial => 'shared/quote', :locals => {:quote => quote, :quote_link => quote_link, :quoter_link => quoter_link, :quotee_link => quotee_link, :show_context => show_context}
+    render :partial => 'shared/quote', :locals => {:quote => quote, :quote_link => quote_link, :quoter_link => quoter_link, :quotee_link => quotee_link, :show_context => show_context, :show_comments => show_comments}
   end
 
   def chatty_quote(quote, options={})
