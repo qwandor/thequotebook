@@ -30,7 +30,7 @@ class UsersController < ApplicationController
     order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
     @quotes = Quote.find(:all, :conditions => ['quotee_id = ?', @user.id], :order => order)
 
-    @feed_title = "Quoteyou: Quotes by #{@user.fullname}"
+    @feed_title = "theQuotebook: Quotes by #{@user.fullname}"
 
     respond_to do |format|
       format.html
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
     order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
     @quotes = Quote.all(:joins => 'INNER JOIN contexts_users ON quotes.context_id=contexts_users.context_id', :conditions => ['contexts_users.user_id = ?', @user.id], :order => order)
 
-    @feed_title = "Quoteyou: Quotes of interest to #{@user.fullname}"
+    @feed_title = "theQuotebook: Quotes of interest to #{@user.fullname}"
 
     respond_to do |format|
       format.html

@@ -13,7 +13,7 @@ class QuotesController < ApplicationController
     order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
     @quotes = Quote.find(:all, :order => order)
 
-    @feed_title = 'Quoteyou: All quotes'
+    @feed_title = 'theQuotebook: All quotes'
 
     respond_to do |format|
       format.html # index.html.erb

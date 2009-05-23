@@ -129,7 +129,7 @@ class ContextsController < ApplicationController
     order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
     @quotes = Quote.all(:conditions => ['context_id = ?', @context.id], :order => order)
 
-    @feed_title = "Quoteyou: #{@context.name} quotes"
+    @feed_title = "theQuotebook: #{@context.name} quotes"
 
     respond_to do |format|
       format.html
