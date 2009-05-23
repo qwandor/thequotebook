@@ -64,6 +64,7 @@ class UsersController < ApplicationController
 
       @user = User.new
       @user.fullname = params[:fullname]
+      @user.email_notification = false
 
       respond_to do |format|
         format.html { render :action => 'new_partial' }
@@ -109,6 +110,7 @@ class UsersController < ApplicationController
       @user = User.new(params[:user])
       @user.openid = nil
       @user.username = nil
+      @user.email_notification = false
       respond_to do |format|
         if @user.save
           #Return to add quote page, or whereever we were
@@ -137,6 +139,7 @@ class UsersController < ApplicationController
         @user = User.find(params[:id])
         @user.attributes = params[:user]
         @user.openid = session[:new_user_openid]
+        @user.email_notification = true # TODO: this (and other attributes) should come from what was originally entered in the form, rather than from the user being claimed
       else
         #Check for similar existing users, which might have been created by another user quoting them
         @possible_matches = User.all(:conditions => ['openid IS NULL AND (LOWER(email_address) = LOWER(?) OR LOWER(fullname) = LOWER(?))', params[:user][:email_address], params[:user][:fullname]])
