@@ -1,0 +1,5 @@
+<%= link_to_user @quote.quoter, :actually_link => false, :avatar => false %> just quoted you as saying <%= quote_marks_if_needed(@quote.quote_text) %> in <%= @quote.context.name %>.
+
+You can see and comment on this quote at <%= quote_url(@quote) %>, or see all quotes from <%= @quote.context.name %> at <%= context_url(@quote.context) %>. You can also see all your quotes at <%= user_url(@quote.quotee) %>.
+
+If you wish to stop receiving these notifications, you can edit your profile to disable email notification by going to <%= edit_user_url(@quote.quotee) %>.
