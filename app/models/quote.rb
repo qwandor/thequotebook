@@ -5,7 +5,10 @@ class Quote < ActiveRecord::Base
   after_create :send_notification
 
 protected
+  #If quotee has email notification enabled, then send them an email telling them that they have been quoted
   def send_notification()
-    UserMailer.deliver_quote_email(self)
+    if quotee.email_address && quotee.email_notification
+      UserMailer.deliver_quote_email(self)
+    end
   end
 end
