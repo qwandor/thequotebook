@@ -107,3 +107,11 @@ h2 {
   font-size: 18px;
   margin-right: 10px;
 }
+
+td {
+  vertical-align: top;
+}
+
+.comment-date {
+  min-width: 20em;
+}
