@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <p>
+<% if @recipient == @quote.quoter %>
+      <%= link_to_user @comment.user, :full_url => true %> just commented on the quote <%= link_to(h(quote_marks_if_needed(@quote.quote_text)), quote_url(@quote)) %> by <%= link_to_user @quote.quotee, :full_url => true %> which you added to <%= link_to h(@quote.context.name), context_url(@quote.context) %>:
+<% else %>
+      <%= link_to_user @comment.user, :full_url => true %> just commented on your quote <%= link_to(h(quote_marks_if_needed(@quote.quote_text)), quote_url(@quote)) %> in <%= link_to h(@quote.context.name), context_url(@quote.context) %>:
+<% end %>
+    </p>
+    <p>
+      <%= @comment.body %>
+    </p>
+    <p>
+      You can <%= link_to 'comment on this', quote_url(@quote) %> as well if you want to.
+    </p>
+    <p>
+      If you wish to stop receiving these notifications, you can <%= link_to 'edit your profile', edit_user_url(@quote.quotee) %> to disable email notification.
+    </p>
+  </body>
+</html>
