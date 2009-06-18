@@ -5,6 +5,7 @@ ActionController::Routing::Routes.draw do |map|
   map.signup '/signup', :controller => 'users', :action => 'new'
 
   map.resource :session
+  map.login_external '/login_external', :controller => 'sessions', :action => 'create'
 
   map.resources :quotes, :has_many => :comments
   map.resources :quotes, :collection => { :auto_complete_for_context_name => :post }

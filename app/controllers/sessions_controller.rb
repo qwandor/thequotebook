@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
   def create
     logout_keeping_session!
 
-    authenticate_with_open_id(params[:openid], :required => [:nickname, :fullname, 'http://axschema.org/namePerson/friendly', 'http://axschema.org/namePerson', 'http://axschema.org/contact/email'], :optional => [:email], :return_to => url_for(:only_path => false, :remember_me => params[:remember_me])) do |result, openid, registration|
+    authenticate_with_open_id(params[:openid] || params[:openid_identifier], :required => [:nickname, :fullname, 'http://axschema.org/namePerson/friendly', 'http://axschema.org/namePerson', 'http://axschema.org/contact/email'], :optional => [:email], :return_to => url_for(:controller => 'sessions', :action => 'create', :_method => 'post', :only_path => false, :remember_me => params[:remember_me])) do |result, openid, registration|
       if result.successful?
         if user = User.find_by_openid(openid)
           successful_login(user)
