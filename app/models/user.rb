@@ -39,8 +39,8 @@ class User < ActiveRecord::Base
   def self.find_from_string(name_string, current_user)
     return [nil, nil] if name_string.nil? || name_string.empty?
 
-    user = User.first(:conditions => ['username = ?', name_string])
-    user = User.first(:conditions => ['fullname = ?', name_string]) if user.nil?
+    user = User.first(:conditions => ['username ILIKE ?', name_string])
+    user = User.first(:conditions => ['fullname ILIKE ?', name_string]) if user.nil?
 
     if user.nil?
       #Find possible matches
