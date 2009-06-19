@@ -145,50 +145,49 @@ module BBRuby
       /\[dt\](.*?)\[\/dt\]/mi,
       '<dt>\1</dt>',
       'List of definition terms',
-      nil, nil,
+      nil,
       :defineterm],
     'Definition Definition' => [
       /\[dd\](.*?)\[\/dd\]/mi,
       '<dd>\1</dd>',
       'Definition definitions',
-      nil, nil,
+      nil,
       :definition],
     'Quote' => [
       /\[quote(:.*)?="?(.*?)"?\](.*?)\[\/quote\1?\]/mi,
       '<fieldset><legend>\2</legend><blockquote>\3</blockquote></fieldset>',
       'Quote with citation',
-      nil, nil,
+      nil,
       :quote],
     'Quote (Sourceless)' => [
       /\[quote(:.*)?\](.*?)\[\/quote\1?\]/mi,
       '<fieldset><blockquote>\2</blockquote></fieldset>',
       'Quote (sourceclass)',
-      nil, nil,
+      nil,
       :quote],
     'Link' => [
       /\[url=(.*?)\](.*?)\[\/url\]/mi,
       '<a href="\1">\2</a>',
       'Hyperlink to somewhere else',
       'Maybe try looking on [url=http://google.com]Google[/url]?',
-      nil, nil,
       :link],
     'Link (Implied)' => [
       /\[url\](.*?)\[\/url\]/mi,
       '<a href="\1">\1</a>',
       'Hyperlink (implied)',
-      nil, nil,
+      nil,
       :link],
     'Link (Automatic)' => [
-        /\s(https?:\/\/.*?(?=(\s|$)))/,
-        ' <a href="\1">\1</a>',
-     nil, nil,
-     :link],
+      /\s(https?:\/\/.*?(?=(\s|$)))/,
+      ' <a href="\1">\1</a>',
+      nil, nil,
+      :link],
     'Email' => [
       /\[email(:.+)?\](.+)\[\/email\1?\]/i,
       '<a href="mailto:\2">\2</a>',
       'Link to email address',
-      '[email]wadus@wadus.com[/email]'
-    ]
+      '[email]wadus@wadus.com[/email]',
+      :email]
   }
 
   def self.to_html(text, tags_alternative_definition = {}, method = :disable, escape_html = true, paragraphs = true, tags = [])
