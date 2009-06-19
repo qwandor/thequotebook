@@ -45,6 +45,18 @@ module BBRuby
       'Underline',
       'Use it for [u]important[/u] things or something',
       :underline],
+    'Bold (easy)' => [
+      /\*(.+)\*/mi,
+      '<strong>\1</strong>',
+      'Embolden text',
+      'Look *here*',
+      :bold],
+    'Italics (easy)' => [
+      /_(.+)_/mi,
+      '<em>\1</em>',
+      'Italicize or emphasize text',
+      'Even my _cat_ was chasing the mailman!',
+      :italics],
     'Strikeout' => [
       /\[s(:.+)?\](.*?)\[\/s\1?\]/mi,
       '<del>\2</del>',
