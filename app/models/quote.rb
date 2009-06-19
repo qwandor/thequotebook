@@ -1,6 +1,7 @@
 class Quote < ActiveRecord::Base
   validates_presence_of :quoter, :quotee, :context
   validates_length_of :quote_text, :minimum => 3
+  has_many :comments, :order => 'created_at ASC'
 
   after_create :send_notification
 
