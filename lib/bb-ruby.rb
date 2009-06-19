@@ -167,7 +167,7 @@ module BBRuby
     ]
   }
 
-  def self.to_html(text, tags_alternative_definition = {}, method = :disable, escape_html = true, *tags)
+  def self.to_html(text, tags_alternative_definition = {}, method = :disable, escape_html = true, paragraphs = true, *tags)
     text = text.clone
     # escape < and > to remove any html
     if escape_html
@@ -194,10 +194,16 @@ module BBRuby
 
     # parse spacing
     text.gsub!( /\r\n?/, "\n" )
+    text.strip!
+    text.gsub!(/\n\n/, "</p><p>") if paragraphs
     text.gsub!( /\n/, "<br />" )
 
     # return markup
-    text
+    if paragraphs
+      '<p>' + text + '</p>'
+    else
+      text
+    end
   end
 
   def self.tags
@@ -213,10 +219,10 @@ module BBRuby
 end
 
 class String
-  def bbcode_to_html(tags_alternative_definition = {}, method = :disable, escape_html = true, *tags)
-    BBRuby.to_html(self, tags_alternative_definition, method, escape_html, tags)
+  def bbcode_to_html(tags_alternative_definition = {}, method = :disable, escape_html = true, paragraphs = true, *tags)
+    BBRuby.to_html(self, tags_alternative_definition, method, escape_html, paragraphs, tags)
   end
-  def bbcode_to_html!(tags_alternative_definition = {}, method = :disable, *tags)
-    self.replace(BBRuby.to_html(self, tags_alternative_definition, method, tags))
+  def bbcode_to_html!(tags_alternative_definition = {}, method = :disable, escape_html = true, paragraphs = true, *tags)
+    self.replace(BBRuby.to_html(self, tags_alternative_definition, method, escape_html, paragraphs, tags))
   end
 end
