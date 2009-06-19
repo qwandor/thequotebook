@@ -62,7 +62,7 @@ module BBRuby
       '<del>\2</del>',
       'Strikeout',
       '[s]nevermind[/s]',
-      :strikeout],
+      :delete],
     'Delete' => [
       /\[del(:.+)?\](.*?)\[\/del\1?\]/mi,
       '<del>\2</del>',
