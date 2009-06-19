@@ -11,7 +11,6 @@
 #This modified file is licensed under same license as the rest of quoteyou, namely the GPL
 
 module BBRuby
-
   @@imageformats = 'png|bmp|jpg|gif|jpeg'
 
   @@tags = {
@@ -156,63 +155,26 @@ module BBRuby
       nil, nil,
       :link],
     'Link (Automatic)' => [
-        /\s(https?:\/\/.*?(?=\s))/,
+        /\s(https?:\/\/.*?(?=(\s|$)))/,
         ' <a href="\1">\1</a>',
      nil, nil,
      :link],
-    'Image (Resized)' => [
-      /\[img(:.+)? size=(['"]?)(\d+)x(\d+)\2\](.*?)\[\/img\1?\]/im,
-      '<img src="\5" style="width: \3px; height: \4px;" />',
-      'Display an image with a set width and height', 
-      '[img size=96x96]http://www.google.com/intl/en_ALL/images/logo.gif[/img]',
-      :image],
-    'Image (Alternative)' => [
-      /\[img=([^\[\]].*?)\.(#{@@imageformats})\]/im,
-      '<img src="\1.\2" alt="" />',
-      'Display an image (alternative format)', 
-      '[img=http://myimage.com/logo.gif]',
-      :image],
-    'Image' => [
-      /\[img(:.+)?\]([^\[\]].*?)\.(#{@@imageformats})\[\/img\1?\]/im,
-      '<img src="\2.\3" alt="" />',
-      'Display an image',
-      'Check out this crazy cat: [img]http://catsweekly.com/crazycat.jpg[/img]',
-      :image],   
-       
-    'YouTube' => [
-      /\[youtube\](.*?)\?v=([\w\d\-]+).*\[\/youtube\]/im,
-      '<object width="400" height="330"><param name="movie" value="http://www.youtube.com/v/\2"></param><param name="wmode" value="transparent"></param><embed src="http://www.youtube.com/v/\2" type="application/x-shockwave-flash" wmode="transparent" width="400" height="330"></embed></object>',
-      'Display a video from YouTube.com', 
-      '[youtube]http://youtube.com/watch?v=E4Fbk52Mk1w[/youtube]',
-      :video],
-    'YouTube (Alternative)' => [
-      /\[youtube\](.*?)\/v\/([\w\d\-]+)\[\/youtube\]/im,
-      '<object width="400" height="330"><param name="movie" value="http://www.youtube.com/v/\2"></param><param name="wmode" value="transparent"></param><embed src="http://www.youtube.com/v/\2" type="application/x-shockwave-flash" wmode="transparent" width="400" height="330"></embed></object>',
-      'Display a video from YouTube.com (alternative format)', 
-      '[youtube]http://youtube.com/watch/v/E4Fbk52Mk1w[/youtube]',
-      :video],
-    'Google Video' => [
-      /\[gvideo\](.*?)\?docid=([-]{0,1}\d+).*\[\/gvideo\]/mi,
-      '<embed style="width:400px; height:326px;" id="VideoPlayback" type="application/x-shockwave-flash" src="http://video.google.com/googleplayer.swf?docId=\2" flashvars=""> </embed>',
-      'Display a video from Google Video', 
-      '[gvideo]http://video.google.com/videoplay?docid=-2200109535941088987[/gvideo]',
-      :video],
     'Email' => [
       /\[email(:.+)?\](.+)\[\/email\1?\]/i,
       '<a href="mailto:\2">\2</a>',
       'Link to email address',
-      '[email]wadus@wadus.com[/email]'      
+      '[email]wadus@wadus.com[/email]'
     ]
   }
 
   def self.to_html(text, tags_alternative_definition = {}, method = :disable, escape_html = true, *tags)
     text = text.clone
     # escape < and > to remove any html
-    if escape_html 
+    if escape_html
       text.gsub!( '<', '&lt;' )
       text.gsub!( '>', '&gt;' )
     end
-    
+
     tags_definition = @@tags.merge(tags_alternative_definition)
 
     # parse bbcode tags
@@ -244,11 +206,10 @@ module BBRuby
       yield tn, ti[2], ti[3] if ti[2]
     }
   end
-  
+
   def self.tag_list
     @@tags
   end
-
 end
 
 class String
