@@ -1,3 +1,5 @@
+require 'bb-ruby'
+
 module QuotesHelper
   #Nicely formatted version of the quote ready to display
   #May include various links

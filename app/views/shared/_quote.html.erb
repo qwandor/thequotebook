@@ -1,7 +1,7 @@
 <div class="quote">
   <div class="quote-text">
 <%
-text = h(quote_marks_if_needed(quote.quote_text)).gsub("\n", "<br\>")
+text = quote_marks_if_needed(quote.quote_text).bbcode_to_html({}, :enable, true, false, [:bold, :italics])
 %>
     <%= quote_link ? link_to(text, quote) : text %>
   </div>
