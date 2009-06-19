@@ -13,7 +13,7 @@
       <% end %>
     </td>
     <td>
-      <%=h comment.body %>
+      <%= comment.body.bbcode_to_html %>
     </td>
   </tr>
 <%   end %>
