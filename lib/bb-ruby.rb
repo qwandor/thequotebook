@@ -178,8 +178,8 @@ module BBRuby
       nil,
       :link],
     'Link (Automatic)' => [
-      /\s(https?:\/\/.*?(?=(\s|$)))/,
-      ' <a href="\1">\1</a>',
+      /(\s|^)(https?:\/\/.*?(?=(\s|$)))/,
+      '\1<a href="\2">\2</a>',
       nil, nil,
       :link],
     'Email' => [
