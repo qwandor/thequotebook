@@ -16,12 +16,24 @@ module BBRuby
   @@tags = {
     # tag name => [regex, replace, description, example, enable/disable symbol]
     'Bold' => [
+      /\[strong(:.*)?\](.*?)\[\/strong\1?\]/mi,
+      '<strong>\2</strong>',
+      'Embolden text',
+      'Look [strong]here[/strong]',
+      :bold],
+    'Italics' => [
+      /\[em(:.+)?\](.*?)\[\/em\1?\]/mi,
+      '<em>\2</em>',
+      'Italicize or emphasize text',
+      'Even my [em]cat[/em] was chasing the mailman!',
+      :italics],
+    'Bold (alternative)' => [
       /\[b(:.*)?\](.*?)\[\/b\1?\]/mi,
       '<strong>\2</strong>',
       'Embolden text',
       'Look [b]here[/b]',
       :bold],
-    'Italics' => [
+    'Italics (alternative)' => [
       /\[i(:.+)?\](.*?)\[\/i\1?\]/mi,
       '<em>\2</em>',
       'Italicize or emphasize text',
