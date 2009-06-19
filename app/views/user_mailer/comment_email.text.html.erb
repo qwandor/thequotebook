@@ -6,14 +6,12 @@
   <body>
     <p>
 <% if @recipient == @quote.quoter %>
-      <%= link_to_user @comment.user, :full_url => true %> just commented on the quote <%= link_to(h(quote_marks_if_needed(@quote.quote_text)), quote_url(@quote)) %> by <%= link_to_user @quote.quotee, :full_url => true %> which you added to <%= link_to h(@quote.context.name), context_url(@quote.context) %>:
+      <%= link_to_user @comment.user, :full_url => true %> just commented on the quote <%= link_to(quote_marks_if_needed(@quote.quote_text).bbcode_to_html({}, :enable, true, false, [:bold, :italics]), quote_url(@quote)) %> by <%= link_to_user @quote.quotee, :full_url => true %> which you added to <%= link_to h(@quote.context.name), context_url(@quote.context) %>:
 <% else %>
-      <%= link_to_user @comment.user, :full_url => true %> just commented on your quote <%= link_to(h(quote_marks_if_needed(@quote.quote_text)), quote_url(@quote)) %> in <%= link_to h(@quote.context.name), context_url(@quote.context) %>:
+      <%= link_to_user @comment.user, :full_url => true %> just commented on your quote <%= link_to(quote_marks_if_needed(@quote.quote_text).bbcode_to_html({}, :enable, true, false, [:bold, :italics]), quote_url(@quote)) %> in <%= link_to h(@quote.context.name), context_url(@quote.context) %>:
 <% end %>
     </p>
-    <p>
-      <%= @comment.body %>
-    </p>
+    <%= @comment.body.bbcode_to_html %>
     <p>
       You can <%= link_to 'comment on this', quote_url(@quote) %> as well if you want to.
     </p>

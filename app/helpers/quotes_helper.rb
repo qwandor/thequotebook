@@ -23,7 +23,9 @@ module QuotesHelper
     quotee_link = options.delete(:quotee_link)
     show_context = options.delete(:show_context)
 
-    "On #{h quote.created_at}, #{link_to_user quote.quoter, :actually_link => quoter_link} quoted #{link_to_user quote.quotee, :actually_link => quotee_link} as saying #{quote_link ? link_to(h(quote_marks_if_needed(quote.quote_text)), quote) : h(quote_marks_if_needed(quote.quote_text))}" + (show_context ? " in #{link_to h(quote.context.name), quote.context}." : '')
+    quote_text = quote_marks_if_needed(quote.quote_text).bbcode_to_html({}, :enable, true, false, [:bold, :italics])
+
+    "On #{h quote.created_at}, #{link_to_user quote.quoter, :actually_link => quoter_link} quoted #{link_to_user quote.quotee, :actually_link => quotee_link} as saying #{quote_link ? link_to(quote_text, quote) : quote_text}" + (show_context ? " in #{link_to h(quote.context.name), quote.context}." : '')
   end
 
   def quote_marks_if_needed(text)
