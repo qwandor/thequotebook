@@ -30,7 +30,12 @@
   </p>
   <p>
     <%= label_tag 'context_name', 'Quotebook' %> &mdash; Where did they say it?<br />
+<% if @context %>
+    <%= text_field_tag :context_dummy, @context.name, {:disabled => 'disabled'} %>
+    <%= hidden_field_tag 'context[name]', @context.name %>
+<% else %>
     <%= text_field_with_auto_complete(:context, :name, {:value => @quote.context && @quote.context.name}, {:skip_style => true}) %>
+<% end %>
   </p>
   <p>
     <%= f.submit button_label %>

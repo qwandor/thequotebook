@@ -6,6 +6,9 @@
 
 <p><%=h @context.description %></p>
 
+<h2>New quote</h2>
+<%= render :partial => "quotes/form", :locals => {:button_label => "Add quote"} %>
+
 <h2>Latest quotes</h2>
 <% for quote in @quotes %>
 <%= formatted_quote quote, :show_context => false %>
@@ -29,5 +32,4 @@
 </p>
 
 <%= link_to h("Edit #{@context.name}"), edit_context_path(@context) %> |
-<%= link_to 'New quote', new_quote_path(:context => @context) %> |
 <%= link_to 'List of quotebooks', contexts_path %>

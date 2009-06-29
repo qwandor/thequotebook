@@ -17,6 +17,12 @@ class ContextsController < ApplicationController
   # GET /contexts/1.xml
   def show
     @quotes = Quote.all(:conditions => ['context_id = ?', @context.id], :order => 'created_at DESC', :limit => 10)
+
+    #For new quote form
+    @quote = Quote.new
+    session[:quote_in_progress] = nil
+    @quote.context = @context
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @context }
