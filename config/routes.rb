@@ -3,6 +3,8 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
+  map.comments '/comments', :controller => 'home', :action => 'comments'
+  map.comments '/comments.:format', :controller => 'home', :action => 'comments'
 
   map.resource :session
   map.login_external '/login_external', :controller => 'sessions', :action => 'create'

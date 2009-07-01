@@ -8,4 +8,20 @@ class HomeController < ApplicationController
       @current_user_comments = Comment.all(:joins => 'INNER JOIN quotes ON quotes.id=comments.quote_id', :conditions => ['context_id in (?)', current_user.context_ids], :order => 'created_at desc', :limit => 5)
     end
   end
+
+  # GET /comments
+  # GET /comments.xml
+  # GET /comments.atom
+  def comments #All comments
+    order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
+    @comments = Comment.all(:order => 'created_at desc')
+
+    @feed_title = "theQuotebook: All comments"
+
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => @comments }
+      format.atom { render :template => 'comments/index' }
+    end
+  end
 end
