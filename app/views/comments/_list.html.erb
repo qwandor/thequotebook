@@ -5,7 +5,7 @@
 <%   @quote.comments.each do |comment| %>
   <tr>
     <td class="comment-date">
-      At <%= link_to comment.created_at, quote_comment_path(@quote, comment) %>,<br />
+      On <%= link_to comment.created_at, quote_comment_path(@quote, comment) %>,<br />
       <%= link_to_user comment.user %> said:<br />
       <% if comment.user == current_user %>
         (<%= link_to 'Edit', edit_quote_comment_path(@quote, comment) %> |
