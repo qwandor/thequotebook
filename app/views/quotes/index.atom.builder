@@ -10,9 +10,10 @@ xml.feed 'xmlns' => 'http://www.w3.org/2005/Atom' do
 
   @quotes.each do |quote|
     xml.entry do
+      url = url_for(:only_path => false, :controller => 'quotes', :action => 'show', :id => quote.id)
       xml.title   "#{quote.quotee.fullname}: #{quote.quote_text}"
-      xml.link    'rel' => 'alternate', 'type' => 'text/html', 'href' => url_for(:only_path => false, :controller => 'quotes', :action => 'show', :id => quote.id)
-      xml.id      url_for(:only_path => false, :controller => 'quotes', :action => 'show', :id => quote.id) # TODO: better ids (maybe tag URLs)
+      xml.link    'rel' => 'alternate', 'type' => 'text/html', 'href' => url
+      xml.id      url # TODO: better ids (maybe tag URLs)
       xml.updated quote.updated_at.strftime '%Y-%m-%dT%H:%M:%SZ'
       xml.published quote.created_at.strftime '%Y-%m-%dT%H:%M:%SZ'
       xml.author do
