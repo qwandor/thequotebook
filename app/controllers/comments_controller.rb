@@ -6,7 +6,10 @@ class CommentsController < ApplicationController
 
   # GET /quotes/1/comments
   # GET /quotes/1/comments.xml
+  # GET /quotes/1/comments.atom
   def index
+    @feed_title = "theQuotebook: Comments on #{@quote.quote_text}"
+
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @quote.comments.to_xml(:include => [:user]) }
