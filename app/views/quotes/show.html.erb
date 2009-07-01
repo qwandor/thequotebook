@@ -1,5 +1,9 @@
 <% content_for :title do %>: Quote by <%=h @quote.quotee.fullname %><% end %>
 
+<% content_for :head do %>
+<%= auto_discovery_link_tag :atom, {:controller => 'comments', :quote_id => @quote.id, :action => 'index', :format => :atom}, {:title => 'Comments for this quote'} %>
+<% end %>
+
 <%= formatted_quote(@quote, :quote_link => false, :show_comments => false) %>
 
 <p>

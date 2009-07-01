@@ -1,5 +1,9 @@
 <% content_for :title do %>: Comments for quote<% end %>
 
+<% content_for :head do %>
+<%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => 'Comments'} %>
+<% end %>
+
 <h1>Comments for <%=h @quote.quote_text %></h1>
 
 <%= render :partial => 'list' %>
