@@ -10,6 +10,7 @@ class CommentsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @quote.comments.to_xml(:include => [:user]) }
+      format.atom { @comments = @quote.comments } # index.atom.builder
     end
   end
 
