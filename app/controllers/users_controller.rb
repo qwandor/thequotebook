@@ -66,7 +66,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.xml  { render :xml => @quotes }
+      format.xml  { render :xml => @comments }
       format.atom { render :template => 'comments/index' }
     end
   end
