@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :find_user, :only => [:show, :edit, :update, :destroy, :quotes, :relevant_quotes]
+  before_filter :find_user, :only => [:show, :edit, :update, :destroy, :quotes, :relevant_quotes, :relevant_comments]
   before_filter :login_required, :only => [:edit, :update]
   before_filter :own_account, :only => [:edit, :update]
 
@@ -52,6 +52,22 @@ class UsersController < ApplicationController
       format.html
       format.xml  { render :xml => @quotes }
       format.atom { render :template => 'quotes/index' }
+    end
+  end
+
+  # GET /users/1/relevant_comments
+  # GET /users/1/relevant_comments.xml
+  # GET /users/1/relevant_comments.atom
+  def relevant_comments #Comments on quotes from quotebooks of which the person is a member
+    order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
+    @comments = Comment.all(:joins => 'INNER JOIN quotes ON quotes.id=comments.quote_id', :conditions => ['context_id in (?)', @user.context_ids], :order => 'created_at desc')
+
+    @feed_title = "theQuotebook: Comments of interest to #{@user.fullname}"
+
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => @quotes }
+      format.atom { render :template => 'comments/index' }
     end
   end
 

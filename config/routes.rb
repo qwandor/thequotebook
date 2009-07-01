@@ -10,7 +10,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :quotes, :has_many => :comments
   map.resources :quotes, :collection => { :auto_complete_for_context_name => :post }
 
-  map.resources :users, :member => {:quotes => :get, :relevant_quotes => :get}
+  map.resources :users, :member => {:quotes => :get, :relevant_quotes => :get, :relevant_comments => :get}
 
   map.resources :contexts, :member => {:latest => :get, :join => :post, :leave => :post, :quotes => :get}
 

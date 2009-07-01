@@ -1,0 +1,17 @@
+<% content_for :title do %>: Comments of interest to <%=h @user.fullname %><% end %>
+
+<% content_for :head do %>
+<%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => "Comments of interest to #{h(@user.fullname)}"} %>
+<% end %>
+
+<h1>All comments of interest to <%=h @user.fullname %></h1>
+<p>
+  These are all the comments on quotes in your quotebooks.
+</p>
+
+<% for comment in @comments %>
+<p>
+  <%=link_to_user comment.user %> commented on <%=link_to_user comment.quote.quotee %>'s quote <%=link_to trim_if_needed(quote_marks_if_needed(comment.quote.quote_text), 40).gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics]), comment.quote %>:
+  <%= comment.body.gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics, :underline, :insert, :delete, :link, :email]) %>
+</p>
+<% end %>

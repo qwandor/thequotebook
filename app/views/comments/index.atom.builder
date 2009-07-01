@@ -10,7 +10,7 @@ xml.feed 'xmlns' => 'http://www.w3.org/2005/Atom' do
 
   @comments.each do |comment|
     xml.entry do
-      url = url_for(:only_path => false, :controller => 'comments', :action => 'show', :id => comment.id)
+      url = url_for(:only_path => false, :controller => 'comments', :action => 'show', :quote_id => comment.quote.id, :id => comment.id)
       xml.title   "#{comment.user.username} on #{comment.quote.quote_text} (#{comment.quote.quotee.fullname})"
       xml.link    'rel' => 'alternate', 'type' => 'text/html', 'href' => url
       xml.id      url # TODO: better ids (maybe tag URLs)
@@ -22,7 +22,7 @@ xml.feed 'xmlns' => 'http://www.w3.org/2005/Atom' do
       end
       xml.content 'type' => 'html' do
         xml.text! "<p>
-  On #{link_to comment.created_at, quote_comment_path(@quote, comment)},
+  On #{link_to comment.created_at, url},
   #{link_to_user comment.user} commented on #{link_to_user comment.quote.quotee}'s quote #{link_to trim_if_needed(quote_marks_if_needed(comment.quote.quote_text), 40).gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics]), comment.quote}:
 </p>
 #{comment.body.bbcode_to_html}
