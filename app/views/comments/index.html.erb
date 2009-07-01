@@ -4,7 +4,7 @@
 <%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => 'Comments'} %>
 <% end %>
 
-<h1>Comments for <%=h @quote.quote_text %></h1>
+<h1>Comments for <%= quote_marks_if_needed(@quote.quote_text).gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics]) %></h1>
 
 <%= render :partial => 'list' %>
 
