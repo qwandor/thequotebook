@@ -1,6 +1,7 @@
 <% if logged_in? %>
 <%   content_for :head do %>
 <%= auto_discovery_link_tag :atom, {:controller => 'users', :id => current_user.id, :action => 'relevant_quotes', :format => :atom}, {:title => "Quotes of interest to #{h(current_user.fullname)}"} %>
+<%= auto_discovery_link_tag :atom, {:controller => 'users', :id => current_user.id, :action => 'relevant_comments', :format => :atom}, {:title => "Comments of interest to #{h(current_user.fullname)}"} %>
 <%   end %>
 <% end %>
 
@@ -49,6 +50,7 @@
 <%   for quote in @current_user_quotes %>
 <%= formatted_quote quote %>
 <%   end %>
+<p><%= link_to 'All quotes in your quotebooks', {:controller => 'users', :id => current_user.id, :action => 'relevant_quotes'} %></p>
 <% end %>
 
 <% if @current_user_comments && !@current_user_comments.empty? %>
@@ -59,6 +61,7 @@
   <%= comment.body.gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics, :underline, :insert, :delete, :link, :email]) %>
 </p>
 <%   end %>
+<p><%= link_to 'All comments on your quotebooks', {:controller => 'users', :id => current_user.id, :action => 'relevant_comments'} %></p>
 <% end %>
 
 <h2>Latest quotes from everywhere</h2>
