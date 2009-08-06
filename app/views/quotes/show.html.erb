@@ -11,7 +11,10 @@
   <%= link_to 'Edit', edit_quote_path(@quote) %> |
   <%= link_to 'Destroy', @quote, :confirm => 'Are you sure?', :method => :delete %> |
   <% end %>
-  <%= link_to 'Back', quotes_path %>
+<%
+tweet_quote_text = trim_if_needed(quote_marks_if_needed(@quote.quote_text), 80)
+%>
+  <%= link_to 'Back', quotes_path %> | <%= link_to 'Tweet this', "http://twitter.com?status=" + URI.escape("#{@quote.quotee.fullname} said #{tweet_quote_text} #{quote_url(@quote)}") %>
 </p>
 
 <h2>Comments</h2>
