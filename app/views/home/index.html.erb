@@ -5,67 +5,88 @@
 <%   end %>
 <% end %>
 
-<% content_for :content_element do %> class="with-sidebar"<% end %>
+<% content_for :header do %>
+  <h1 id="logo"><img src="/images/logo-large.png" alt="theQuotebook.net"></h1>
+<% end %>
 
-<h1>theQuotebook</h1>
+<% content_for :body_element do %> class="home"<% end %>
 
-<div id="sidebar">
-<% if @current_user_contexts %>
-  <div class="sidebar-block">
-    <h2>Your quotebooks</h2>
-<%   if @current_user_contexts.empty? %>
-    <p>
-      You are not part of any quotebooks yet. Perhaps you would like to look through the <%= link_to 'list of quotebooks', contexts_path %> to find some to join, or <%= link_to 'create a new quotebook', new_context_path %> for quotes from your group of friends?
-    </p>
+<% if @current_user_quotes %>
+<%   if @current_user_quotes.empty? %>
+<p>Once you join some quotebooks or add quotes to your quotebooks, they will show up here.</p>
 <%   else %>
-    <ul>
-<%     for context in @current_user_contexts %>
-      <li>
-        <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quotes.size %> quotes)
-      </li>
+<%     for quote in @current_user_quotes %>
+<%= formatted_quote quote %>
 <%     end %>
-    </ul>
-    <p>
-      <%= link_to 'Create a new quotebook', new_context_path %>
-    </p>
+  <ul class="pagination">
+    <li><span class="button">1</span></li>
+    <li><%= link_to 'All', {:controller => 'users', :id => current_user.id, :action => 'relevant_quotes'}, {:class => 'button'} %></li>
+  </ul>
 <%   end %>
-  </div>
+<% else %>
+<%   for quote in @latest_quotes %>
+<%= formatted_quote quote %>
+<%   end %>
+  <ul class="pagination">
+    <li><span class="button">1</span></li>
+    <li><%= link_to 'All', quotes_path, {:class => 'button'} %></li>
+  </ul>
 <% end %>
 
-  <div class="sidebar-block">
-    <h2>Top quotebooks</h2>
-    <ul>
-<% for context in @top_contexts %>
-      <li>
-        <%= link_to h(context.name), context %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
-      </li>
+<% content_for :sidebars do %>
+<div class="sidebar left">
+<% if @current_user_contexts %>
+  <h2>Your quotebooks</h2>
+<%   if @current_user_contexts.empty? %>
+  <p>
+    You are not part of any quotebooks yet. Perhaps you would like to look through the <%= link_to 'list of quotebooks', contexts_path %> to find some to join, or <%= link_to 'create a new quotebook', new_context_path %> for quotes from your group of friends?
+  </p>
+<%   else %>
+  <ul>
+<%     for context in @current_user_contexts %>
+    <li>
+      <%= link_to h(context.name), context, {:title => h(context.description)} %> (<%= context.quotes.size %>)
+    </li>
+<%     end %>
+  </ul>
+<%   end %>
 <% end %>
-    </ul>
-    <p><%= link_to 'All quotebooks', contexts_path %></p>
-  </div>
+
+  <h2>Top quotebooks</h2>
+  <ul>
+<% for context in @top_contexts %>
+    <li>
+      <%= link_to h(context.name), context, {:title => h(context.description)} %> (<%= context.quote_count %>)
+    </li>
+<% end %>
+  </ul>
+
+  <ul>
+    <li><%= link_to 'Create a new quotebook', new_context_path %></li>
+    <li><%= link_to 'All quotebooks', contexts_path %></li>
+  </ul>
 </div>
 
-<% if @current_user_quotes && !@current_user_quotes.empty? %>
-<h2>Latest quotes in your quotebooks</h2>
-<%   for quote in @current_user_quotes %>
-<%= formatted_quote quote %>
-<%   end %>
-<p><%= link_to 'All quotes in your quotebooks', {:controller => 'users', :id => current_user.id, :action => 'relevant_quotes'} %></p>
-<% end %>
-
+<div class="sidebar right" id="comments">
 <% if @current_user_comments && !@current_user_comments.empty? %>
-<h2>Latest comments on your quotebooks</h2>
+  <h2>Latest comments</h2>
 <%   for comment in @current_user_comments %>
-<p>
-  <%=link_to_user comment.user %> commented on <%=link_to_user comment.quote.quotee %>'s quote <%=link_to trim_if_needed(quote_marks_if_needed(comment.quote.quote_text), 40).gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics]), comment.quote %>:
-  <%= comment.body.gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics, :underline, :insert, :delete, :link, :email]) %>
-</p>
+  <blockquote class="comment">
+    <p>
+      <a href="/quotes/552#quote_id" class="body"><%= comment.body.gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics, :underline, :insert, :delete, :link, :email]) %></a>
+      <span class="author">&mdash; <%=link_to_user comment.user %></span>
+    </p>
+    <div class="meta">
+      <span>
+        On
+        <%=link_to trim_if_needed(quote_marks_if_needed(comment.quote.quote_text), 40).gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics]), comment.quote, :title => h(quote_marks_if_needed(comment.quote.quote_text)) %>
+        in
+        <%=link_to h(comment.quote.context.name), comment.quote.context %>
+      </span>
+    </div>
+  </blockquote>
 <%   end %>
-<p><%= link_to 'All comments on your quotebooks', {:controller => 'users', :id => current_user.id, :action => 'relevant_comments'} %></p>
+  <p><%= link_to 'All comments on your quotebooks', {:controller => 'users', :id => current_user.id, :action => 'relevant_comments'} %></p>
 <% end %>
-
-<h2>Latest quotes from everywhere</h2>
-<% for quote in @latest_quotes %>
-<%= formatted_quote quote %>
+</div>
 <% end %>
-<p><%= link_to 'All quotes', quotes_path %></p>

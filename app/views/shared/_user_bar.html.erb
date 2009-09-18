@@ -1,19 +1,9 @@
-<div id="user-bar">
-  <span id="user-bar-user">
-<% if logged_in? -%>
-    <span id="user-bar-greeting">Logged in as <%= link_to_current_user :content_method => :username %></span>
-    <span id="user-bar-action">(<%= link_to 'Edit profile', edit_user_path(current_user) %> | <%= link_to 'Log out', logout_path, { :title => "Log out" } %>)</span>
-<% else -%>
-    <span id="user-bar-greeting"><%= link_to_login_with_IP 'Not logged in', :style => 'border: none;' %></span>
-    <span id="user-bar-action">(<%= link_to 'Log in', login_path,  { :title => "Log in" } %>)</span>
-<% end -%>
-  </span>
-  <span id="user-bar-quote">
-    <span class="quote-text"><%= link_to h(trim_if_needed(quote_marks_if_needed(@random_quote.quote_text), 70)), @random_quote %></span>
-    <span class="quote-quotee">&mdash; <%=link_to_user @random_quote.quotee %></span>
-  </span>
-  <span id="user-bar-links">
-    <span id="user-bar-newquote"><%= link_to 'Add quote', new_quote_path %></span>
-    <span id="user-bar-home"><%= link_to 'Home', '/' %></span>
-  </span>
+<div id="nav">
+<% if logged_in? %>
+  <%= link_to "Logged in as <strong>#{current_user.username}</strong>", current_user %>
+  <%= link_to 'Edit profile', edit_user_path(current_user), {:class => 'button'} %>
+  <%= link_to 'Log out', logout_path, {:title => 'Log out', :class => 'button'} %>
+<% else %>
+  <%= link_to 'Log in', login_path,  {:title => 'Log in', :class => 'button'} %>
+<% end %>
 </div>

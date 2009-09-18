@@ -19,8 +19,8 @@ a:active {color:black !important;}
 .button:focus {background:#14181A;/*rgba(0,0,0,0.9)*/ color:white !important;}
 .button:active {background:black; color:white !important;}
 
-.sidebar .hr {height:1em; border:0; width:100%; margin:0; padding:0; background:url('../images/rule-sidebar.png') no-repeat center transparent; border:0; color:transparent; margin:0 0 2em; border-width:0;} /*hr elements were causing me trouble. this doesn't bother me much. */
-.sidebar ul {list-style-type:none; margin:0 0 2em; padding:0 0 2em; text-indent:0; background:url('../images/rule-sidebar.png') no-repeat bottom center;}
+.sidebar .hr {height:1em; border:0; width:100%; margin:0; padding:0; background:url('/images/rule-sidebar.png') no-repeat center transparent; border:0; color:transparent; margin:0 0 2em; border-width:0;} /*hr elements were causing me trouble. this doesn't bother me much. */
+.sidebar ul {list-style-type:none; margin:0 0 2em; padding:0 0 2em; text-indent:0; background:url('/images/rule-sidebar.png') no-repeat bottom center;}
 .sidebar li {margin:0; font-size:1.6em;}
 .sidebar li a {text-decoration:none;}
 
@@ -42,7 +42,7 @@ td .button {font-size:1em;float:right;margin-right:0;}
           border-radius: 0.4em; 
      -moz-border-radius: 0.4em; 
   -webkit-border-radius: 0.4em; }
-.holygrail {padding:0 31.5em 1px 23.5em; background:url('../images/rule-main.png') no-repeat center bottom; margin:0 0 4em;}
+.holygrail {padding:0 31.5em 1px 23.5em; background:url('/images/rule-main.png') no-repeat center bottom; margin:0 0 4em;}
 #content,
 .sidebar {position:relative; float:left;}
 #content {width:100%;  padding: 0 4em;}
@@ -66,7 +66,7 @@ body.no-sidebars {padding:0 4em;width:auto;}
 body.no-sidebars #content {width:100%;padding:0 0 75px;}
 
 /**= Logos */
-h1#logo {font-size:1em; height:25px; width:187px; background:url('../images/logo-small.png') no-repeat center; position:absolute; top:0;left:0;padding:1em; margin:0;}
+h1#logo {font-size:1em; height:25px; width:187px; background:url('/images/logo-small.png') no-repeat center; position:absolute; top:0;left:0;padding:1em; margin:0;}
 h1#logo a {text-indent:-9999px; display:block; height:100%;}
 .home h1#logo {padding:7em 2em;width:auto; position:static; font-size:1em;line-height:1em; text-indent:0;text-align:center;background:none;height:auto;}
 .home h1#logo img {width:100%;max-width:694px;display:inline; vertical-align:middle;}
@@ -87,9 +87,9 @@ blockquote:hover .meta {color:rgba(0,0,0,0.5);}
 .sidebar .meta{line-height:1.4em; color:#6e8d99;}
 blockquote.comment p {text-indent:0;}
 
-blockquote.single {font-size:4em;max-width:13.5em;background:url('../images/rule-main-top.png') no-repeat center top; padding-top:65px; margin:3em auto;}
+blockquote.single {font-size:4em;max-width:13.5em;background:url('/images/rule-main-top.png') no-repeat center top; padding-top:65px; margin:3em auto;}
 blockquote.single .author {padding-right:56px;}
-blockquote.single .meta{font-size:0.4em;background:url('../images/rule-main.png') no-repeat center bottom; padding-bottom:75px;}
+blockquote.single .meta{font-size:0.4em;background:url('/images/rule-main.png') no-repeat center bottom; padding-bottom:75px;}
 
 /** New Quote Form */
 form {max-width:75%; margin:0 auto; padding:0;}
@@ -124,7 +124,7 @@ form .note {font-style:italic;position:static;top:auto;width:auto;text-align:lef
 
 
 .border, 
-.fleuron{background:url('../images/corners-fleurons.png') no-repeat;}
+.fleuron{background:url('/images/corners-fleurons.png') no-repeat;}
 .border {background-position:-73px -73px; min-height:146px; padding:0 4em 4em; margin-bottom:4em; position:relative;}
 div.fleuron {width:73px; height:73px; position:absolute; z-index:1;}
 .tr {top:0; right:0; background-position:bottom left;}
