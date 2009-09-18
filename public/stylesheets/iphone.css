@@ -1,0 +1,21 @@
+h1{font-size:4em;}
+h1#logo {background-image:url('../images/logo-tiny.png');height:21px;width:100px;top:2em;}
+	blockquote.single {font-size:3em;margin:1em auto;}
+blockquote.single .meta {font-size:0.5em;}
+.border div.input,
+.border .button {width:100%;float:none;}
+.border .input div {position:relative;padding-right:0;padding-bottom:1em}
+.sidebar {float:none;width:auto;}
+#nav {font-size:0.7em;margin-right:1.4em;}
+#header {padding-top:3em;}
+#notices {margin-bottom:3px;}
+body.no-sidebars {padding:0;}
+label, 
+.label,
+.item{padding-left:0.5em;display:block;padding-right:0.5em;}
+.border label {padding-left:0;}
+.checkbox label {text-indent:1.7em;}
+.checkbox input {left:0.5em;}
+.checkbox .note {text-indent:0;}
+form .button {margin:1em;}
+table td {white-space:normal;}

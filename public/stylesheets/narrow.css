@@ -1,0 +1,17 @@
+body {min-width:0;margin-top:0;padding:0;}
+.sidebar {
+	      border-radius: 0.4em; 
+     -moz-border-radius: 0.4em; 
+  -webkit-border-radius: 0.4em; }
+.holygrail, 
+#content {padding:0;}
+.sidebar, 
+#content, 
+.holygrail{float:none; position:static; width:auto; right:auto; left:auto; margin:0 auto;}
+.holygrail{padding:1em;margin:0 auto 4em;}
+#content {padding:0 1em 1em 2em;} 
+.sidebar {padding-bottom:1em;margin-bottom:8em;width:35%;}
+
+label, .label {position:static;text-align:left;}
+.left {float:left;}
+.right {float:right;}
