@@ -96,8 +96,8 @@ form {max-width:75%; margin:0 auto; padding:0;}
 form h2 {margin:0; position:relative; top:-0.5em;}
 select {display:block;}
 textarea {display:block; width:100%; position:relative; z-index:2; font-size:1.5em; height:5em; border:0; margin:0 0 1em;
-		  border-radius: 0.2em; 
-     -moz-border-radius: 0.2em; 
+		  border-radius: 0.2em;
+     -moz-border-radius: 0.2em;
   -webkit-border-radius: 0.2em;}
 form div {position:relative;float:left;clear:left;width:100%;margin-bottom:1em;}
 form .button {float:right !important; margin-right:0; width:auto; }
@@ -108,7 +108,7 @@ label,
 .label, 
 .checkbox input{position:absolute; text-align:right; width:20em; left:-21em;top:0.2em;font-size:1.5em;}
 .checkbox input{width:auto;left:-2em;}
-label img, 
+label img,
 .label img {float:left;margin:0 0.5em 0.5em 0;}
 form .note {font-style:italic;position:static;top:auto;width:auto;text-align:left;font-size:1.3em;}
 #content h2 label {float:none; font-size:1em; width:auto;position:static;top:auto;width:auto;text-align:center;}
@@ -123,7 +123,7 @@ form .note {font-style:italic;position:static;top:auto;width:auto;text-align:lef
 .border .button {width:20%;text-align:center;clear:none;}
 
 
-.border, 
+.border,
 .fleuron{background:url('/images/corners-fleurons.png') no-repeat;}
 .border {background-position:-73px -73px; min-height:146px; padding:0 4em 4em; margin-bottom:4em; position:relative;}
 div.fleuron {width:73px; height:73px; position:absolute; z-index:1;}
@@ -131,26 +131,28 @@ div.fleuron {width:73px; height:73px; position:absolute; z-index:1;}
 .br {bottom:0; right:0; background-position:top left;}
 .bl {bottom:0; left:0; background-position:top right;}
 
-/** Pagination */
-.pagination {text-align:center; padding-right:1.5em;}
-.pagination li{display:inline-block;}
-.pagination span, 
-.pagination span:hover, 
-.pagination span:focus, 
+/** Pagination and command buttons */
+.pagination,.commands {text-align:center; padding-right:1.5em;}
+.pagination li, .commands li{display:inline-block;}
+.pagination span,
+.pagination span:hover,
+.pagination span:focus,
 .pagination span:active {background:transparent; border:#667880 0.1em solid; color:#667880 !important;/*rgba(0,0,0,0.5)*/}
-.pagination a {border:1px solid transparent;}
+.pagination a, .commands a, .commands input {border:1px solid transparent;}
 
 /* Alerts */
 #notices {margin-bottom:6em;}
 .notice,
-.alert, 
+.alert,
 .warning {max-width:75%; padding:0.6em; margin:0 auto 1em; display:block; background:#ea6066;/*rgba(255,0,0,0.6)*/ font-size:1.5em;
-          border-radius: 0.4em; 
-     -moz-border-radius: 0.4em; 
+          border-radius: 0.4em;
+     -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em; }
 .notice {background:#51f966;/*rgba(0,255,0,0.6)*/}
 .alert  {background:#eaf966;/*rgba(255,255,0,0.6);*/}
 
 /** Utility */
-
 .clearfix:after {content:"."; display:block; height:0; clear:both; visibility:hidden;}
+
+/** qwandor added some stuff. */
+a img {border-width: 0; }

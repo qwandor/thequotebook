@@ -1,10 +1,10 @@
-<blockquote>
+<blockquote<% if single %> class="single"<% end %>>
   <p>
 <%
 text = quote_marks_if_needed(quote.quote_text).bbcode_to_html({}, :enable, true, false, [:bold, :italics])
 %>
     <%= quote_link ? link_to(text, quote, {:class => 'quote'}) : text %>
-    <div class="author" style="background-image:url(<%=h gravatar_url(quote.quotee.email, :size => 20, :default => 'identicon') %>)">&mdash; <%=link_to_user quote.quotee, :actually_link => quotee_link, :avatar => false %></div>
+    <div class="author" style="background-image:url(<%=h gravatar_url(quote.quotee.email, :size => single ? 48 : 20, :default => 'identicon') %>)">&mdash; <%=link_to_user quote.quotee, :actually_link => quotee_link, :avatar => false %></div>
   </p>
   <div class="meta">
 <%
