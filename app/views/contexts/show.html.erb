@@ -2,34 +2,32 @@
 <%= auto_discovery_link_tag :atom, {:action => :quotes, :format => :atom}, {:title => "#{h(@context.name)} quotes"} %>
 <% end %>
 
-<h1><%=h @context.name %></h1>
+<% content_for :header do %>
+  <h1 id="logo"><%= link_to 'theQuotebook.net', '/' %></h1>
+  <h1 id="title"><%=h @context.name %><span class="tagline"><%=h @context.description %></span></h1>
+<% end %>
 
-<p><%=h @context.description %></p>
+<%= render :partial => "quotes/form", :locals => {:button_label => "Quote"} %>
 
-<h2>New quote</h2>
-<%= render :partial => "quotes/form", :locals => {:button_label => "Add quote"} %>
-
-<h2>Latest quotes</h2>
 <% for quote in @quotes %>
 <%= formatted_quote quote, :show_context => false %>
 <% end %>
 
+<ul class="pagination">
+  <li><span class="button">1</span></li>
+  <li><%= link_to 'All', quotes_context_path(@context), {:class => 'button'} %></li>
+</ul>
+
+<ul class="pagination">
 <% if logged_in? %>
-<p>
+  <li>
 <% if @context.users.exists?(current_user) %>
-  <%= button_to 'Leave this quotebook', leave_context_path(@context) %>
+    <%= button_to 'Leave this quotebook', leave_context_path(@context), :class => 'button' %>
 <% else %>
-  <%= button_to 'Join this quotebook', join_context_path(@context) %>
+    <%= button_to 'Join this quotebook', join_context_path(@context), :class => 'button' %>
 <% end %>
-</p>
+  </li>
 <% end %>
 
-<p>
-<% if @context.quotes.size > @quotes.size %>
-  There are <strong><%= @context.quotes.size - @quotes.size %> more quotes</strong> from <%=h @context.name %>, before these most recent <%= @quotes.size %>.
-<% end %>
-  <%= link_to h("Show all #{@context.quotes.size} #{@context.name} quotes"), quotes_context_path(@context) %>
-</p>
-
-<%= link_to h("Edit #{@context.name}"), edit_context_path(@context) %> |
-<%= link_to 'List of quotebooks', contexts_path %>
+  <li><%= link_to h("Edit #{@context.name}"), edit_context_path(@context), :class => 'button' %></li>
+</ul>

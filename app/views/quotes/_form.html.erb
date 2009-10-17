@@ -1,4 +1,4 @@
-<% form_for(@quote) do |f| %>
+<% form_for(@quote, :html => {:class => 'border clearfix'}) do |f| %>
   <% if @possible_quotee_matches %>
     <p>
       Sorry, we cannot find anyone called '<%=h params[:quotee] %>'.
@@ -20,24 +20,25 @@
 
   <%= f.error_messages %>
 
-  <p>
-    <%= label_tag 'quotee' %> &mdash; Who said it?<br />
+  <h2><%= f.label :quote_text, 'Add Quote' %></h2>
+  <%= f.text_area :quote_text, {:rows => 4, :cols => 80} %>
+  <div class="input"><div>
+    <%= f.label :quotee, 'by' %>
     <%= text_field_tag :quotee, @quote.quotee && (@quote.quotee.username || @quote.quotee.fullname) || params[:quotee] %>
-  </p>
-  <p>
-    <%= f.label :quote_text %> &mdash; What did they say?<br />
-    <%= f.text_area :quote_text, {:rows => 4, :cols => 80} %>
-  </p>
-  <p>
-    <%= label_tag 'context_name', 'Quotebook' %> &mdash; Where did they say it?<br />
+  </div></div>
+  <div class="input"><div>
+    <%= label_tag :context_name, 'in' %>
 <% if @context %>
     <%= text_field_tag :context_dummy, @context.name, {:disabled => 'disabled'} %>
     <%= hidden_field_tag 'context[name]', @context.name %>
 <% else %>
     <%= text_field_with_auto_complete(:context, :name, {:value => @quote.context && @quote.context.name}, {:skip_style => true}) %>
 <% end %>
-  </p>
-  <p>
-    <%= f.submit button_label %>
-  </p>
+  </div></div>
+
+  <%= f.submit button_label, {:class => 'button'} %>
+
+  <div class="fleuron tr"></div>
+  <div class="fleuron bl"></div>
+  <div class="fleuron br"></div>
 <% end %>
