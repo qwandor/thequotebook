@@ -17,6 +17,7 @@ class ContextsController < ApplicationController
   # GET /contexts/1.xml
   def show
     @quotes = Quote.all(:conditions => ['context_id = ?', @context.id], :order => 'created_at DESC', :limit => 10)
+    @context_comments = Comment.all(:joins => 'INNER JOIN quotes ON quotes.id=comments.quote_id', :conditions => ['context_id = ?', @context.id], :order => 'created_at DESC', :limit => 5)
 
     #For new quote form
     @quote = Quote.new

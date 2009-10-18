@@ -1,0 +1,18 @@
+<% for comment in comments %>
+  <blockquote class="comment">
+    <p>
+      <%= link_to comment.body.gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics, :underline, :insert, :delete, :link, :email]), comment.quote %>
+      <span class="author">&mdash; <%=link_to_user comment.user %></span>
+    </p>
+    <div class="meta">
+      <span>
+        On
+        <%=link_to trim_if_needed(quote_marks_if_needed(comment.quote.quote_text), 40).gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics]), comment.quote, :title => h(quote_marks_if_needed(comment.quote.quote_text)) %>
+<% if show_context %>
+        in
+        <%=link_to h(comment.quote.context.name), comment.quote.context %>
+<% end %>
+      </span>
+    </div>
+  </blockquote>
+<% end %>

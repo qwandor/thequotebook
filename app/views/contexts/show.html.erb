@@ -31,3 +31,12 @@
 
   <li><%= link_to h("Edit #{@context.name}"), edit_context_path(@context), :class => 'button' %></li>
 </ul>
+
+<% content_for :sidebars do %>
+<div class="sidebar right" id="comments">
+<% if !@context_comments.empty? %>
+  <h2>Latest comments</h2>
+  <%= render :partial => 'comments/list_sidebar', :locals => {:comments => @context_comments, :show_context => false} %>
+<% end %>
+</div>
+<% end %>

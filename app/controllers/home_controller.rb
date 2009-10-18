@@ -5,7 +5,7 @@ class HomeController < ApplicationController
     if logged_in?
       @current_user_contexts = current_user.contexts
       @current_user_quotes = Quote.all(:conditions => ['context_id in (?)', current_user.context_ids], :order => 'created_at desc', :limit => 5)
-      @current_user_comments = Comment.all(:joins => 'INNER JOIN quotes ON quotes.id=comments.quote_id', :conditions => ['context_id in (?)', current_user.context_ids], :order => 'created_at desc', :limit => 5)
+      @current_user_comments = Comment.all(:joins => 'INNER JOIN quotes ON quotes.id=comments.quote_id', :conditions => ['context_id in (?)', current_user.context_ids], :order => 'created_at DESC', :limit => 5)
     end
   end
 

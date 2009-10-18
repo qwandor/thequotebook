@@ -70,22 +70,8 @@
 <div class="sidebar right" id="comments">
 <% if @current_user_comments && !@current_user_comments.empty? %>
   <h2>Latest comments</h2>
-<%   for comment in @current_user_comments %>
-  <blockquote class="comment">
-    <p>
-      <a href="/quotes/552#quote_id" class="body"><%= comment.body.gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics, :underline, :insert, :delete, :link, :email]) %></a>
-      <span class="author">&mdash; <%=link_to_user comment.user %></span>
-    </p>
-    <div class="meta">
-      <span>
-        On
-        <%=link_to trim_if_needed(quote_marks_if_needed(comment.quote.quote_text), 40).gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics]), comment.quote, :title => h(quote_marks_if_needed(comment.quote.quote_text)) %>
-        in
-        <%=link_to h(comment.quote.context.name), comment.quote.context %>
-      </span>
-    </div>
-  </blockquote>
-<%   end %>
+  <%= render :partial => 'comments/list_sidebar', :locals => {:comments => @current_user_comments, :show_context => true} %>
+
   <p><%= link_to 'All comments on your quotebooks', {:controller => 'users', :id => current_user.id, :action => 'relevant_comments'} %></p>
 <% end %>
 </div>
