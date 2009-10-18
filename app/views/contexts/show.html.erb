@@ -33,6 +33,15 @@
 </ul>
 
 <% content_for :sidebars do %>
+<div class="sidebar left">
+  <h2>In this quotebook</h2>
+  <ul>
+<% for user in @context.users %>
+    <li><%= link_to_user user %></li>
+<% end %>
+  </ul>
+</div>
+
 <div class="sidebar right" id="comments">
 <% if !@context_comments.empty? %>
   <h2>Latest comments</h2>
