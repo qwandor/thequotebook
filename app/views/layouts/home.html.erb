@@ -20,12 +20,11 @@
   <%= javascript_include_tag :defaults %>
   <%= yield :head %>
 </head>
-<body>
+<body class="home">
 
 <div id="header">
   <%= render :partial => "shared/user_bar" %>
-  <h1 id="logo"><%= link_to 'theQuotebook.net', '/' %></h1>
-  <%= yield :header %>
+  <h1 id="logo"><img src="/images/logo-large.png" alt="theQuotebook.net"></h1>
 </div>
 
 <div class="holygrail">

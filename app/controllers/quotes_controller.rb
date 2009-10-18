@@ -7,6 +7,8 @@ class QuotesController < ApplicationController
   auto_complete_for :context, :name
   protect_from_forgery :except => [:auto_complete_for_context_name]
 
+  layout 'no_sidebars'
+
   # GET /quotes
   # GET /quotes.xml
   # GET /quotes.atom

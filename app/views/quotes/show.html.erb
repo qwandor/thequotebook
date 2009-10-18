@@ -4,10 +4,6 @@
 <%= auto_discovery_link_tag :atom, {:controller => 'comments', :quote_id => @quote.id, :action => 'index', :format => :atom}, {:title => 'Comments for this quote'} %>
 <% end %>
 
-<% content_for :header do %>
-  <h1 id="logo"><%= link_to 'theQuotebook.net', '/' %></h1>
-<% end %>
-
 <%= formatted_quote(@quote, :single => true, :show_comments => false) %>
 
 <ul class="commands">

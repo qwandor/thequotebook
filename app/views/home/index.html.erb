@@ -5,12 +5,6 @@
 <%   end %>
 <% end %>
 
-<% content_for :header do %>
-  <h1 id="logo"><img src="/images/logo-large.png" alt="theQuotebook.net"></h1>
-<% end %>
-
-<% content_for :body_element do %> class="home"<% end %>
-
 <% if @current_user_quotes %>
 <%   if @current_user_quotes.empty? %>
 <p>Once you join some quotebooks or add quotes to your quotebooks, they will show up here.</p>

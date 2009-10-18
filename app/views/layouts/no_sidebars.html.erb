@@ -20,33 +20,28 @@
   <%= javascript_include_tag :defaults %>
   <%= yield :head %>
 </head>
-<body>
+<body class="no-sidebars">
 
 <div id="header">
   <%= render :partial => "shared/user_bar" %>
-  <h1 id="logo"><%= link_to 'theQuotebook.net', '/' %></h1>
   <%= yield :header %>
 </div>
 
-<div class="holygrail">
-  <div id="content">
+<div id="content">
 <% if !flash.empty? %>
-    <div id="notices">
+  <div id="notices">
 <%   if flash[:notice] %>
-      <div class="notice"><%=h flash[:notice] %></div><!--TODO: Use p rather than div -->
+    <div class="notice"><%=h flash[:notice] %></div><!--TODO: Use p rather than div -->
 <%   end %>
 <%   if flash[:error] %>
-      <div class="error"><%=h flash[:error] %></div><!--TODO: Change classes. Currently notice, alert and warning are in the stylesheet. -->
+    <div class="error"><%=h flash[:error] %></div><!--TODO: Change classes. Currently notice, alert and warning are in the stylesheet. -->
 <%   end %>
-      <!-- <div class="alert">Logged in successfully</div> -->
-      <!-- <div class="warning">Logged in successfully</div> -->
-    </div>
+    <!-- <div class="alert">Logged in successfully</div> -->
+    <!-- <div class="warning">Logged in successfully</div> -->
+  </div>
 <% end %>
 
-    <%= yield %>
-  </div>
-
-  <%= yield :sidebars %>
+  <%= yield %>
 </div>
 
 </body>
