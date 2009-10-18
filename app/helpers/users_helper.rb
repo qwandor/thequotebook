@@ -44,7 +44,7 @@ module UsersHelper
   #
   def link_to_user(user, options={})
     raise "Invalid user" unless user
-    options.reverse_merge! :content_method => :username, :title_method => :fullname, :class => :nickname, :avatar => true, :actually_link => true, :full_url => false
+    options.reverse_merge! :content_method => :username, :title_method => :fullname, :class => :nickname, :avatar => true, :actually_link => true, :full_url => false, :css_avatar => false
     content_text      = options.delete(:content_text)
     content_text    ||= user.send(options.delete(:content_method)) || user.fullname
     options[:title] ||= user.send(options.delete(:title_method))
@@ -52,8 +52,16 @@ module UsersHelper
     actually_link     = options.delete(:actually_link)
     avatar_size       = options.delete(:avatar_size) || 16
     full_url          = options.delete(:full_url)
+    css_avatar        = options.delete(:css_avatar)
+    prefix            = options.delete(:prefix)
 
-    link_text = (avatar ? gravatar_for(user, :size => avatar_size, :default => 'identicon') + ' ' : '') + h(content_text)
+    if css_avatar
+      avatar = false
+      options[:style] = "background-image:url(#{h gravatar_url(user.email, :size => avatar_size, :default => 'identicon')})"
+      options[:class] = 'author'
+    end
+
+    link_text = (prefix || '') + (avatar ? gravatar_for(user, :size => avatar_size, :default => 'identicon') + ' ' : '') + h(content_text)
     actually_link ? link_to(link_text, full_url ? user_url(user) : user_path(user), options) : link_text
   end
 

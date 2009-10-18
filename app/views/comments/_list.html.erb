@@ -1,21 +1,19 @@
 <% if @quote.comments.empty? %>
 <p>(No comments yet.)</p>
 <% else %>
-<table>
 <%   @quote.comments.each do |comment| %>
-  <tr>
-    <td class="comment-date">
-      On <%= link_to comment.created_at, quote_comment_path(@quote, comment) %>,<br />
-      <%= link_to_user comment.user %> said:<br />
-      <% if comment.user == current_user %>
-        (<%= link_to 'Edit', edit_quote_comment_path(@quote, comment) %> |
-        <%= link_to 'Destroy', quote_comment_path(@quote, comment), :confirm => 'Are you sure?', :method => :delete %>)
-      <% end %>
-    </td>
-    <td>
-      <%= comment.body.bbcode_to_html %>
-    </td>
-  </tr>
+<blockquote class="comment">
+  <div>
+    <%= comment.body.bbcode_to_html %>
+    <%=link_to_user comment.user, :avatar_size => 24, :css_avatar => true, :prefix => '&mdash; ' %>
+  </div>
+  <div class="meta">
+    <%= link_to comment.created_at, quote_comment_path(@quote, comment) %>
+<% if comment.user == current_user %>
+    (<%= link_to 'Edit', edit_quote_comment_path(@quote, comment) %> |
+    <%= link_to 'Destroy', quote_comment_path(@quote, comment), :confirm => 'Are you sure?', :method => :delete %>)
+<% end %>
+  </div>
+</blockquote>
 <%   end %>
-</table>
 <% end %>

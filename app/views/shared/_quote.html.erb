@@ -4,7 +4,7 @@
 text = quote_marks_if_needed(quote.quote_text).bbcode_to_html({}, :enable, true, false, [:bold, :italics])
 %>
     <%= quote_link ? link_to(text, quote, {:class => 'quote'}) : text %>
-    <div class="author" style="background-image:url(<%=h gravatar_url(quote.quotee.email, :size => single ? 48 : 20, :default => 'identicon') %>)">&mdash; <%=link_to_user quote.quotee, :actually_link => quotee_link, :avatar => false %></div>
+    <%=link_to_user quote.quotee, :actually_link => quotee_link, :css_avatar => true, :avatar_size => single ? 48 : 24, :prefix => '&mdash; ' %>
   </p>
   <div class="meta">
 <%
