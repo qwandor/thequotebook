@@ -3,50 +3,53 @@
 <% content_for :head do %>
 <%= auto_discovery_link_tag :atom, {:action => :quotes, :format => :atom}, {:title => "Quotes by #{h(@user.fullname)}"} %>
 <% end %>
-<% content_for :content_element do %> class="with-sidebar"<% end %>
 
-<div class="vcard">
-  <h1 class="fn"><%=h @user.fullname %></h1>
+<% content_for :header do %>
+  <div class="vcard">
+    <h1 class="fn"><%=h @user.fullname %></h1>
 
-  <%= gravatar_for @user, :size => 60, :default => 'identicon', :class => 'photo' %>
+    <%= gravatar_for @user, :size => 60, :default => 'identicon', :class => 'photo' %>
 
-  <p>
-    <b>Username:</b>
-    <span class="nickname"><%=h @user.username %></span>
-  </p>
+    <p>
+      <b>Username:</b>
+      <span class="nickname"><%=h @user.username %></span>
+    </p>
 <% if !@user.openid.nil? %>
-  <p>
-    <b>OpenID:</b>
-    <%= link_to h(@user.openid), h(@user.openid), :class => 'url', :rel => 'me' %>
-  </p>
+    <p>
+      <b>OpenID:</b>
+      <%= link_to h(@user.openid), h(@user.openid), :class => 'url', :rel => 'me' %>
+    </p>
 <% end %>
-</div>
+  </div>
+<% end %>
 
-<h2>Quotes</h2>
 <% for quote in @user.said_quotes %>
 <%= formatted_quote quote, :quotee_link => false %>
 <% end %>
 
-<div id="sidebar">
+<ul class="pagination">
+  <li><span class="button">1</span></li>
+  <li><%= link_to 'All', quotes_user_path(@user), {:class => 'button'} %></li>
+</ul>
+
+<% content_for :sidebars do %>
+<div class="sidebar left">
 <% if !@user.contexts.empty? %>
-  <div class="sidebar-block">
-    <h2>Quotebooks</h2>
-    <p>
-      <%=h @user.username || @user.fullname %> is a member of the following quotebooks:
-    </p>
-    <ul>
+  <h2><%=h @user.username || @user.fullname %>'s quotebooks</h2>
+  <ul>
 <%   for context in @user.contexts %>
-      <li>
-        <%= link_to h(context.name), context %> &mdash; <%=h context.description %>
-      </li>
+    <li>
+      <%= link_to h(context.name), context, {:title => h(context.description)} %> (<%= context.quotes.size %>)
+    </li>
 <%   end %>
-    </ul>
-  </div>
+  </ul>
 <% end %>
 </div>
 
-<% if @user == current_user %>
-<%= link_to 'Edit', edit_user_path(@user) %> |
+<div class="sidebar right" id="comments">
+<% if !@comments.empty? %>
+  <h2><%=h @user.username || @user.fullname %>'s comments</h2>
+  <%= render :partial => 'comments/list_sidebar', :locals => {:comments => @comments, :show_context => false} %>
 <% end %>
-<%= link_to h("All quotes by #{@user.fullname}"), quotes_user_path(@user) %> |
-<%= link_to 'List users', users_path %>
+</div>
+<% end %>

@@ -62,7 +62,13 @@ module UsersHelper
     end
 
     link_text = (prefix || '') + (avatar ? gravatar_for(user, :size => avatar_size, :default => 'identicon') + ' ' : '') + h(content_text)
-    actually_link ? link_to(link_text, full_url ? user_url(user) : user_path(user), options) : link_text
+    if actually_link
+      link_to(link_text, full_url ? user_url(user) : user_path(user), options)
+    elsif css_avatar
+      content_tag :span, link_text, options
+    else
+      link_text
+    end
   end
 
   #

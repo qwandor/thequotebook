@@ -17,6 +17,8 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.xml
   def show
+    @comments = Comment.all(:joins => 'INNER JOIN quotes ON quotes.id=comments.quote_id', :conditions => ['comments.user_id = ?', @user.id], :order => 'created_at DESC', :limit => 5)
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @user }
@@ -33,7 +35,7 @@ class UsersController < ApplicationController
     @feed_title = "theQuotebook: Quotes by #{@user.fullname}"
 
     respond_to do |format|
-      format.html
+      format.html { render :layout => 'no_sidebars' }
       format.xml  { render :xml => @quotes }
       format.atom { render :template => 'quotes/index' }
     end
