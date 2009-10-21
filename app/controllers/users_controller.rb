@@ -85,7 +85,7 @@ class UsersController < ApplicationController
       @user.email_notification = false
 
       respond_to do |format|
-        format.html { render :action => 'new_partial' }
+        format.html { render :action => 'new_partial', :layout => 'no_sidebars' }
         format.xml  { render :xml => @user }
       end
     else
@@ -106,7 +106,7 @@ class UsersController < ApplicationController
       session[:new_user_registration] = nil
 
       respond_to do |format|
-        format.html # new.html.erb
+        format.html { render :layout => 'no_sidebars' } # new.html.erb
         format.xml  { render :xml => @user }
       end
     end
@@ -114,6 +114,9 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
+    respond_to do |format|
+      format.html { render :layout => 'no_sidebars' }
+    end
   end
 
   # POST /users
@@ -184,7 +187,7 @@ class UsersController < ApplicationController
           format.xml  { render :xml => @user, :status => :created, :location => @user }
         else
           flash[:error]  = 'We couldn\'t set up that account, sorry. Please try again, or contact an admin.'
-          format.html { render :action => "new" }
+          format.html { render :action => 'new', :layout => 'no_sidebars' }
           format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
         end
       end
@@ -202,7 +205,7 @@ class UsersController < ApplicationController
         format.html { redirect_to(@user) }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { render :action => 'edit', :layout => 'no_sidebars' }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
     end

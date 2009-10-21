@@ -1,11 +1,9 @@
 <% content_for :title do %>: Editing profile for <%=h @user.fullname %><% end %>
 
-<h1>Editing user profile</h1>
+<% content_for :header do %>
+<h1>Edit Profile</h1>
+<% end %>
 
-<%= render :partial => 'form', :locals => {:button_label => 'Update'} %>
+<%= render :partial => 'form', :locals => {:button_label => 'Save'} %>
 
-<p>
-  Want to change your avatar image? We get them from <a href="http://en.gravatar.com/">Gravatar</a>, so <a href="http://en.gravatar.com/site/signup">sign up with Gravatar</a> to choose an avatar. It will then be used on all sites that support Gravatar. Just make sure to use the same email address here as you set for your Gravatar so that we can find you.
-</p>
-
-<%= link_to 'Show', @user %>
+<%= link_to 'Cancel', @user, :class => 'button' %>

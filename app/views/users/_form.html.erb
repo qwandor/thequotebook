@@ -1,31 +1,43 @@
-<% form_for(@user) do |f| %>
+  <% form_for(@user) do |f| %>
   <%= f.error_messages %>
 
-  <p>
-    OpenID<br />
-    <%= link_to h(@user.openid), h(@user.openid) %>
-  </p>
-  <p>
-    <%= f.label :fullname, 'Full name' %> &mdash; Put your real name, so people can find you.<br />
+  <div>
+    <%= f.label :fullname, 'Full name' %>
     <%= f.text_field :fullname %>
-  </p>
-  <p>
-    <%= f.label :username %> &mdash; You can call yourself whatever you like here. Keep it fairly short though.<br />
+    <%= f.label :fullname, 'Put your real name, so that people can find you.', :class => 'note' %>
+  </div>
+  <div>
+    <%= f.label :username %>
     <%= f.text_field :username %>
-  </p>
-  <p>
-    <%= f.label :email_address %> &mdash; This is used to find your avatar image for your profile.<br />
+    <%= f.label :username, 'You can choose any unique name here. Keep it fairly short though.', :class => 'note' %>
+  </div>
+  <div>
+    <%= f.label :email_address %>
     <%= f.text_field :email_address %>
-  </p>
-  <p>
-    <%= f.label :time_zone %> &mdash; So that we can show when quotes were added in your local time zone.<br />
-    <%= f.time_zone_select :time_zone %>
-  </p>
-  <p>
-    <%= f.label :email_notification %> &mdash; Should we send you an email when someone quotes you, or comments on one of your quotes?<br />
+    <%= f.label :email_address, 'This is used to find your avatar image for your profile.', :class => 'note' %>
+  </div>
+  <div class="checkbox">
+    <%= f.label :email_notification %>
     <%= f.check_box :email_notification %>
-  </p>
-  <p>
-    <%= f.submit button_label %>
-  </p>
+    <%= f.label :email_notification, 'Should we send you an email when someone quotes you, or comments on one of your quotes?', :class => 'note' %>
+  </div>
+  <div>
+    <%= f.label :time_zone %>
+    <%= f.time_zone_select :time_zone %>
+    <%= f.label :time_zone, 'So that we can show times in your local time zone.', :class => 'note' %>
+  </div>
+  <div>
+    <div class="label">Gravatar</div>
+    <div class="label note">
+      <%= gravatar_for(@user, :size => 64, :default => 'identicon') %>
+      To change this image <a href="http://en.gravatar.com/site/signup">sign up with gravatar</a>. <a href="http://www.gravatar.com"/>Gravatar</a> (Globally Recognized Avatar) associates an image to your email address, so make sure when you sign up that you use the same email address as above.
+    </div>
+  </div>
+  <div>
+    <div class="label">OpenID</div>
+    <%= link_to h(@user.openid), h(@user.openid), :class => 'item' %>
+  </div>
+  <div>
+    <%= f.submit button_label, :class => 'button' %>
+  </div>
 <% end %>
