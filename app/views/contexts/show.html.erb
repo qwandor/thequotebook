@@ -6,7 +6,9 @@
   <h1 id="title"><%=h @context.name %><span class="tagline"><%=h @context.description %></span></h1>
 <% end %>
 
+<% if logged_in? %>
 <%= render :partial => "quotes/form", :locals => {:button_label => "Quote"} %>
+<% end %>
 
 <% for quote in @quotes %>
 <%= formatted_quote quote, :show_context => false %>
