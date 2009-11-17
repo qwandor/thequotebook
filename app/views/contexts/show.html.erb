@@ -6,8 +6,10 @@
 
 <p><%=h @context.description %></p>
 
+<% if logged_in? %>
 <h2>New quote</h2>
 <%= render :partial => "quotes/form", :locals => {:button_label => "Add quote"} %>
+<% end %>
 
 <h2>Latest quotes</h2>
 <% for quote in @quotes %>
