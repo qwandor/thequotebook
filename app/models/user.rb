@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   validates_length_of :openid, :minimum => 7, :allow_nil => true
   validates_uniqueness_of :openid, :case_sensitive => false, :allow_nil => true
 
-  validates_length_of :fullname, :minimum => 5
+  validates_length_of :fullname, :minimum => 4
   validates_uniqueness_of :fullname, :case_sensitive => false
   validates_format_of :fullname, :with => Authentication.name_regex, :message => Authentication.bad_name_message
 
