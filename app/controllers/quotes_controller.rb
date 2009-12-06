@@ -12,7 +12,7 @@ class QuotesController < ApplicationController
   # GET /quotes.atom
   def index
     order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
-    @quotes = Quote.find(:all, :order => order)
+    @quotes = Quote.find(:all, :conditions => ['NOT hidden'], :order => order)
 
     @feed_title = 'theQuotebook: All quotes'
 

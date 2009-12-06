@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090719051603) do
+ActiveRecord::Schema.define(:version => 20091206031423) do
 
   create_table "comments", :force => true do |t|
     t.integer  "quote_id",   :null => false
@@ -55,10 +55,11 @@ ActiveRecord::Schema.define(:version => 20090719051603) do
   create_table "quotes", :force => true do |t|
     t.text     "quote_text"
     t.integer  "context_id"
-    t.integer  "quoter_id",  :null => false
-    t.integer  "quotee_id",  :null => false
+    t.integer  "quoter_id",                     :null => false
+    t.integer  "quotee_id",                     :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "hidden",     :default => false, :null => false
   end
 
   create_table "sessions", :force => true do |t|

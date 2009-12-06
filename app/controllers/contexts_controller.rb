@@ -16,7 +16,7 @@ class ContextsController < ApplicationController
   # GET /contexts/1
   # GET /contexts/1.xml
   def show
-    @quotes = Quote.all(:conditions => ['context_id = ?', @context.id], :order => 'created_at DESC', :limit => 10)
+    @quotes = Quote.all(:conditions => ['context_id = ? AND NOT hidden', @context.id], :order => 'created_at DESC', :limit => 10)
 
     #For new quote form
     @quote = Quote.new
@@ -91,7 +91,7 @@ class ContextsController < ApplicationController
   # GET /contexts/1/latest
   # GET /contexts/1/latest.xml
   def latest #Show latest quote in this context
-    @quote = Quote.first(:conditions => ['context_id = ?', params[:id]], :order => 'created_at DESC')
+    @quote = Quote.first(:conditions => ['context_id = ? AND NOT hidden', params[:id]], :order => 'created_at DESC')
     respond_to do |format|
       format.html { render :template => 'quotes/show' }
       format.xml  { render :xml => @quote.to_xml(:include => [:context, :quotee, :quoter]) }
@@ -133,7 +133,7 @@ class ContextsController < ApplicationController
   # GET /contexts/1/quotes.atom
   def quotes
     order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
-    @quotes = Quote.all(:conditions => ['context_id = ?', @context.id], :order => order)
+    @quotes = Quote.all(:conditions => ['context_id = ? AND NOT hidden', @context.id], :order => order)
 
     @feed_title = "theQuotebook: #{@context.name} quotes"
 
