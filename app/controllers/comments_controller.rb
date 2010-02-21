@@ -82,7 +82,7 @@ class CommentsController < ApplicationController
     @comment.destroy
 
     respond_to do |format|
-      format.html { redirect_to quote_comments_path(@quote) }
+      format.html { redirect_to quote_path(@quote) }
       format.xml  { head :ok }
     end
   end

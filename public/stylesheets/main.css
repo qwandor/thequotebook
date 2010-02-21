@@ -100,7 +100,7 @@ textarea {display:block; width:100%; position:relative; z-index:2; font-size:1.5
      -moz-border-radius: 0.2em;
   -webkit-border-radius: 0.2em;}
 form div {position:relative;float:left;clear:left;width:100%;margin-bottom:1em;}
-form .button {float:right !important; margin-right:0; width:auto; }
+form .button {float:right !important; margin-right:0; margin-left:1em; width:auto; }
 input,
 .item,
 .checkbox label{width:100%;display:block;clear:left;text-align:left;position:static;top:auto;left:auto; border:0; font-size:1.5em;}

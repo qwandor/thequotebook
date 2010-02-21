@@ -2,7 +2,4 @@
 
 <h1>Editing comment</h1>
 
-<%= render :partial => 'form', :locals => {:button_label => 'Update comment'} %>
-
-<%= link_to 'Show', quote_comment_path(@quote, @comment) %> |
-<%= link_to 'Back to quote', @quote %>
+<%= render :partial => 'form', :locals => {:button_label => 'Update comment', :cancel_label => 'Back to quote', :cancel_link => @quote} %>

@@ -4,4 +4,7 @@
   <h2><%= link_to_user(current_user) %> says:</h2>
   <%= f.text_area :body %>
   <%= f.submit button_label, :class => 'button' %>
+<% if cancel_link %>
+  <%= link_to cancel_label, cancel_link, :class => 'button' %>
+<% end %>
 <% end %>
