@@ -5,12 +5,23 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title>theQuotebook<%= yield :title %></title>
-  <%= stylesheet_link_tag 'scaffold', 'style' %>
+  <%= stylesheet_link_tag 'main' %>
+  <!--[if lte IE7]><link href="/stylesheets/ie.css" type="text/css" rel="stylesheet" /><![endif]-->
+  <link rel="alternate stylesheet" type="text/css" href="css/narrow.css" title="narrow" />
+  <!-- iphone specific -->
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <!--[if !IE]>-->
+    <link media="only screen and (max-width: 480px)" rel="stylesheet" type="text/css" href="/stylesheets/narrow.css" />
+    <link media="only screen and (max-width: 480px)" rel="stylesheet" type="text/css" href="/stylesheets/iphone.css" />
+  <!--<![endif]-->
   <%= javascript_include_tag :defaults %>
   <%= javascript_include_tag 'jquery-1.3.1.min', 'open-selector' %>
   <script type="text/javascript">
     function selector_init() {
       open_selector.openid_form_id = 'openid_form';
+      open_selector.openid_block_id = 'openid_block';
       open_selector.openid_box_id = 'openid';
       open_selector.show_credits = false;
       open_selector.init();
@@ -19,7 +30,12 @@
   </script>
   <%= yield :head %>
 </head>
-<body onload="selector_init()">
+<body class="no-sidebars" onload="selector_init()">
+
+<div id="header">
+  <h1 id="logo"><%= link_to 'theQuotebook.net', '/' %></h1>
+  <%= yield :header %>
+</div>
 
 <div id="content">
 <% if flash[:notice] %>

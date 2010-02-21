@@ -35,7 +35,7 @@
 var providers = {
     livejournal: {
         name: 'LiveJournal',
-        label: 'Enter your Livejournal username',
+        label: 'LiveJournal username',
         ask_username: true,
         icon: 'http://livejournal.com/favicon.ico',
         url: 'http://{username}.livejournal.com/'
@@ -59,7 +59,7 @@ var providers = {
 
     aol: {
         name: 'AOL',
-        label: 'Enter your AOL screenname',
+        label: 'AOL screenname',
         ask_username: true,
         icon: 'http://aol.com/favicon.ico',
         url: 'http://openid.aol.com/{username}/'
@@ -67,7 +67,7 @@ var providers = {
 
     flickr: {
         name: 'Flickr',
-        label: 'Enter your flickr username',
+        label: 'Flickr username',
         ask_username: true,
         icon: 'http://flickr.com/favicon.ico',
         url: 'http://flickr.com/{username}/'
@@ -75,7 +75,7 @@ var providers = {
 
     technorati: {
         name: 'Technorati',
-        label: 'Enter your Technorati username',
+        label: 'Technorati username',
         ask_username: true,
         icon: 'http://technorati.com/favicon.ico',
         url: 'http://technorati.com/people/technorati/{username}/'
@@ -83,7 +83,7 @@ var providers = {
 
     wordpress: {
         name: 'Wordpress',
-        label: 'Enter your Wordpress.com username',
+        label: 'Wordpress.com username',
         ask_username: true,
         icon: 'http://wordpress.com/favicon.ico',
         url: 'http://{username}.wordpress.com/'
@@ -91,14 +91,14 @@ var providers = {
     
     blogger: {
         name: 'Blogger',
-        label: 'Your Blogger account',
+        label: 'Blogger account',
         ask_username: true,
         icon: 'http://blogger.com/favicon.ico',
         url: 'http://{username}.blogspot.com/'
     },
     
     myopenid: {
-        name: 'MyOpenid',
+        name: 'MyOpenID',
         ask_username: true,
         icon: "https://www.myopenid.com/favicon.ico?version=1",
         url: 'http://{username}.myopenid.com/'
@@ -106,7 +106,7 @@ var providers = {
 
     openid: {
         name: 'Other OpenID provider',
-        label: 'Your OpenID identifier',
+        label: 'OpenID identifier',
         info: 'You know what OpenID is.',
         ask_username: true,
         icon: 'http://openid.net/favicon.ico',
@@ -120,6 +120,10 @@ var open_selector = {
 
     // ID of the OpenID Login form
     openid_form_id: 'openid_form',
+
+    // ID of the block containing the OpenID URL box and related content, which we will replace with our own
+    // If this is false, it will default to openid_box_id.
+    openid_block_id: false,
 
     // ID of the OpenID URL box
     openid_box_id: 'openid_url',
@@ -141,7 +145,11 @@ var open_selector = {
     update_openid_url: true,
 
     init: function(){
+        if (this.openid_block_id == false) {
+            this.openid_block_id = this.openid_box_id;
+        }
         var openid_form = $('#' + this.openid_form_id);
+        var openid_block = $('#' + this.openid_block_id);
         var openid_box = $('#' + this.openid_box_id);
         var openid_box_label = $('label[for=' + this.openid_box_id + ']');
         var button = $('#' + this.openid_form_id + ' input[type=submit]');
@@ -149,23 +157,23 @@ var open_selector = {
         var open_user_html = '<input type="text" style="padding-left: 22px;" id="open-selector-username" disabled="disabled" size="' + this.textbox_size + '"/>';
         var select_html = '<select id="open-selector"><option value="0">Select provider</option></select> ';
         var html_credits = this.show_credits?'<p style="color:#DDD;font-size:80%;font-style:italic;">Powered by <a href="http://open-selector.com" title="Open-selector">Open-selector</a>.</p>':'';
-        var html_label = this.show_label?'<label for="open-selector">Choose an account to login with</label>:<br/> ':'';
+        var html_label = this.show_label?'<label for="open-selector">Account type</label>':'';
 
-        openid_box.hide();
+        openid_block.hide();
         openid_box_label.hide();
 
         if (this.inline) {
             button.before(select_html + open_user_html + '<span style="font-size:90%;font-style:italic;color:#BBB;float:left;" class="open-selector-endpoint">http://your-open-id/</span> ');
         } else {
-            openid_box.after('<p>' + html_label + select_html + '</p><p id="open-selector-user-block" style="display:none;"><label for="open-selector-username">Username</label>:<br/> ' + open_user_html + '<br/><span style="font-size: 90%;font-style:italic;color:#BBB" class="open-selector-endpoint"></span></p> <p id="open-selector-info"></p>' + html_credits);
+            openid_block.after('<div>' + html_label + select_html + '<label id="open-selector-info" class="note"></label></div> <div id="open-selector-user-block" style="display:none;"><label id="open-selector-username-label" for="open-selector-username">Username</label>' + open_user_html + '<label class="open-selector-endpoint note" for="open-selector-username"></label></div>' + html_credits);
         }
 
         var open_selector = $('#open-selector');
         var open_user = $('#open-selector-username');
         var open_user_block = $('#open-selector-user-block');
-        var info = $('#open-selector-info'); 
-        var label = $('#open-selector-user-block label');
-        var span = $('span.open-selector-endpoint');
+        var info = $('#open-selector-info');
+        var label = $('#open-selector-username-label');
+        var span = $('.open-selector-endpoint');
 
         var provider, selected_provider, provider_id;
         var endpoint = '';
@@ -206,10 +214,12 @@ var open_selector = {
                             }
                         }
 
-                        open_user.css('background', "url(" + selected_provider.icon + ") no-repeat 3px center");
+                        open_user.css('background-image', "url(" + selected_provider.icon + ")");
+                        open_user.css('background-position', "3px center")
+                        open_user.css('background-repeat', "no-repeat");
                         span.html(endpoint);
                         if ( selected_provider.ask_username) {
-                            label.html(selected_provider.label?selected_provider.label:"Enter your username");
+                            label.html(selected_provider.label ? selected_provider.label : "Username");
 
                             if (!that.inline) open_user_block.show();
                             open_user.removeAttr('disabled');
