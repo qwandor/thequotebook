@@ -98,9 +98,9 @@ class UsersController < ApplicationController
       @user = User.new
       @user.openid = session[:new_user_openid]
       regdata = session[:new_user_registration]
-      @user.username = regdata['nickname'] || regdata['http://axschema.org/namePerson/friendly']
-      @user.fullname = regdata['fullname'] || regdata['http://axschema.org/namePerson']
-      @user.email_address = regdata['email'] || regdata['http://axschema.org/contact/email']
+      @user.username = regdata['nickname'] || ((nn = regdata['http://axschema.org/namePerson/friendly']) && nn[0])
+      @user.fullname = regdata['fullname'] || ((fn = regdata['http://axschema.org/namePerson']) && fn[0])
+      @user.email_address = regdata['email'] || ((email = regdata['http://axschema.org/contact/email']) && email[0])
 
       #Clear session out now that we are done with it
       session[:new_user_registration] = nil
