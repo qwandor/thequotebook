@@ -23,7 +23,7 @@ tweet_quote_text = trim_if_needed(quote_marks_if_needed(@quote.quote_text), 80)
 <%
 @comment = @quote.comments.build #For new comment form; must be after above list of comments or it will show up there
 %>
-<%= render :partial => 'comments/form', :locals => {:button_label => 'Comment'} %>
+<%= render :partial => 'comments/form', :locals => {:button_label => 'Comment', :cancel_link => nil} %>
 <% else %>
 <p>
   <%= link_to 'Login to post a comment', new_quote_comment_path(@quote) %>
