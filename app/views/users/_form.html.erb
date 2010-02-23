@@ -39,5 +39,8 @@
   </div>
   <div>
     <%= f.submit button_label, :class => 'button' %>
+<% if cancel_link %>
+    <%= link_to cancel_label, cancel_link, :class => 'button' %>
+<% end %>
   </div>
 <% end %>

@@ -4,6 +4,4 @@
 <h1>Edit Profile</h1>
 <% end %>
 
-<%= render :partial => 'form', :locals => {:button_label => 'Save'} %>
-
-<%= link_to 'Cancel', @user, :class => 'button' %>
+<%= render :partial => 'form', :locals => {:button_label => 'Save', :cancel_link => @user, :cancel_label => 'Cancel'} %>
