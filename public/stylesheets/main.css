@@ -120,8 +120,7 @@ form .note {font-style:italic;position:static;top:auto;width:auto;text-align:lef
 .border .input div {padding:0 2em 0 2.6em;}
 .border .input input {width:100%; float:none;}
 .border .input label {position:absolute; left:0; top:0; display:block; text-align:left;}
-.border .button {width:20%;text-align:center;clear:none;}
-
+.border .button {width:20%; text-align:center; clear:none; margin-left: 0em;}
 
 .border,
 .fleuron{background:url('/images/corners-fleurons.png') no-repeat;}
