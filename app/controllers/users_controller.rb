@@ -30,7 +30,7 @@ class UsersController < ApplicationController
   # GET /users/1/quotes.atom
   def quotes
     order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
-    @quotes = Quote.find(:all, :conditions => ['quotee_id = ?', @user.id], :order => order)
+    @quotes = Quote.find(:all, :conditions => ['quotee_id = ? AND NOT hidden', @user.id], :order => order)
 
     @feed_title = "theQuotebook: Quotes by #{@user.fullname}"
 
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
   # GET /users/1/relevant_quotes.atom
   def relevant_quotes #Quotes from quotebooks of which the person is a member
     order = params[:format] == 'atom' ? 'updated_at DESC' : 'created_at DESC'
-    @quotes = Quote.all(:joins => 'INNER JOIN contexts_users ON quotes.context_id=contexts_users.context_id', :conditions => ['contexts_users.user_id = ?', @user.id], :order => order)
+    @quotes = Quote.all(:joins => 'INNER JOIN contexts_users ON quotes.context_id=contexts_users.context_id', :conditions => ['contexts_users.user_id = ? AND NOT hidden', @user.id], :order => order)
 
     @feed_title = "theQuotebook: Quotes of interest to #{@user.fullname}"
 

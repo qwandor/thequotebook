@@ -24,10 +24,10 @@ protected
 
   def get_random_quote
     if logged_in?
-      @random_quote = Quote.first(:conditions => ['context_id in (?)', current_user.context_ids], :order => 'random()')
+      @random_quote = Quote.first(:conditions => ['context_id IN (?) AND NOT hidden', current_user.context_ids], :order => 'random()')
     end
     if @random_quote.nil? #Either not logged in, or user is not a member of any quotebooks, or their quotebooks have no quotes
-      @random_quote = Quote.first(:order => 'random()')
+      @random_quote = Quote.first(:conditions => ['NOT hidden'], :order => 'random()')
     end
   end
 end

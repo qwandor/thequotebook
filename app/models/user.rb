@@ -8,11 +8,11 @@ class User < ActiveRecord::Base
   validates_length_of :openid, :minimum => 7, :allow_nil => true
   validates_uniqueness_of :openid, :case_sensitive => false, :allow_nil => true
 
-  validates_length_of :fullname, :minimum => 5
+  validates_length_of :fullname, :minimum => 4
   validates_uniqueness_of :fullname, :case_sensitive => false
   validates_format_of :fullname, :with => Authentication.name_regex, :message => Authentication.bad_name_message
 
-  has_many :said_quotes, :class_name => "Quote", :foreign_key => "quotee_id", :order => 'created_at DESC'
+  has_many :said_quotes, :class_name => "Quote", :foreign_key => "quotee_id", :conditions => ['NOT hidden'], :order => 'created_at DESC'
   has_and_belongs_to_many :contexts, :uniq => true
 
   include Authentication
