@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   validates_length_of :username, :minimum => 3, :allow_nil => true
   validates_uniqueness_of :username, :case_sensitive => false, :allow_nil => true
-  validates_format_of :username, :with => Authentication.login_regex, :message => Authentication.bad_login_message, :allow_nil => true
+  validates_format_of :username, :with => Authentication.name_regex, :message => Authentication.bad_name_message, :allow_nil => true
 
   validates_uniqueness_of :email_address, :case_sensitive => false, :allow_nil => true
 
