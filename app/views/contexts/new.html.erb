@@ -8,6 +8,4 @@
   Before you create a new quotebook, take a look at the <%= link_to 'list of quotebooks', contexts_path %> to make sure that nobody else has already created the one you want.
 </p>
 
-<%= render :partial => "form" %>
-
-<%= link_to 'Back', contexts_path %>
+<%= render :partial => 'form', :locals => {:cancel_link => contexts_path, :cancel_label => 'Back'} %>

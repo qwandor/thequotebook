@@ -1,5 +1,3 @@
 <h1>Editing quotebook</h1>
 
-<%= render :partial => "form" %>
-
-<%= link_to 'Return without saving', @context %>
+<%= render :partial => 'form', :locals => {:cancel_link => @context, :cancel_label => 'Return without saving'} %>
