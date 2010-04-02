@@ -2,10 +2,10 @@
 
 <ul>
 <% for context in @contexts %>
-  <li>
+  <li class="text">
     <% if current_user && current_user.contexts.include?(context) %><strong><%= link_to h(context.name), context %></strong><% else %><%= link_to h(context.name), context %><% end %> &mdash; <%=h context.description %> (<%= context.quote_count %> quotes)
   </li>
 <% end %>
 </ul>
 
-<%= link_to 'New quotebook', new_context_path %>
+<%= link_to 'New quotebook', new_context_path, :class => 'button' %>

@@ -1,29 +1,29 @@
 <% content_for :title do %>: Signing up<% end %>
 
-<h1>Sign up as a new user — but do we already know you?</h1>
+<h1>Sign up as a new user<span class="tagline">But do we already know you?</span></h1>
 
-<p>
+<p class="text">
   Are you one of these people, perchance?
 </p>
 
 <ul>
 <% @possible_matches.each do |possible_match| %>
   <li>
-    <%= link_to_user(possible_match, :content_method => :fullname) %>
-    <% form_for(@user) do |f| %>
+    <% form_for(@user, :html => {:class => 'plain'}) do |f| %>
+    <%= link_to_user(possible_match, :content_method => :fullname, :class => 'text') %>
       <div>
         <%= hidden_field_tag :mode, 'claimpartial' %>
         <%= hidden_field_tag :id, possible_match.id %>
         <%= f.hidden_field :username %>
         <%= f.hidden_field :fullname %>
         <%= f.hidden_field :email_address %>
-        <%= f.submit 'Yep, that is me.' %>
+        <%= f.submit 'Yep, that is me.', :class => 'button', :style => 'float: none !important; ' %>
       </div>
     <% end %>
-    <form>
-    </form>
   </li>
 <% end %>
 </ul>
 
-<%= link_to 'Back', new_user_path %>
+<div style="clear: both;">
+  <%= link_to 'Back', new_user_path, :class => 'button' %>
+</div>

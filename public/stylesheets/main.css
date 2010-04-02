@@ -94,6 +94,7 @@ blockquote.single .meta{font-size:0.4em;background:url('/images/rule-main.png') 
 
 /** New Quote Form */
 form {max-width:75%; margin:0 auto; padding:0;}
+form.plain {max-width:auto; margin: 0; }
 form h2 {margin:0; position:relative; top:-0.5em;}
 select {display:block;}
 textarea {display:block; width:100%; position:relative; z-index:2; font-size:1.5em; height:5em; border:0; margin:0 0 1em;
@@ -156,3 +157,40 @@ div.fleuron {width:73px; height:73px; position:absolute; z-index:1;}
 
 /** qwandor added some stuff. */
 a img {border-width: 0; }
+.text {font-size: 1.5em; }
+
+/* Form errors */
+.fieldWithErrors input {
+  border: 2px solid #ea6066;
+}
+
+#errorExplanation {
+  width: 400px;
+  border: 2px solid #ea6066;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #ea6066;
+  color: #fff;
+  top: 0;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
