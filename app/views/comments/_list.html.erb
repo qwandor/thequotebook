@@ -1,7 +1,4 @@
-<% if @quote.comments.empty? %>
-<p>(No comments yet.)</p>
-<% else %>
-<%   @quote.comments.each do |comment| %>
+<% @quote.comments.each do |comment| %>
 <blockquote class="comment">
   <div>
     <%= comment.body.bbcode_to_html %>
@@ -15,5 +12,4 @@
 <% end %>
   </div>
 </blockquote>
-<%   end %>
 <% end %>
