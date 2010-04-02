@@ -66,7 +66,10 @@
   <h2>Latest comments</h2>
   <%= render :partial => 'comments/list_sidebar', :locals => {:comments => @current_user_comments, :show_context => true} %>
 
-  <p><%= link_to 'All comments on your quotebooks', {:controller => 'users', :id => current_user.id, :action => 'relevant_comments'} %></p>
+  <hr />
+  <ul>
+    <li><%= link_to 'All comments on your quotebooks', {:controller => 'users', :id => current_user.id, :action => 'relevant_comments'} %></li>
+  </ul>
 <% end %>
 </div>
 <% end %>

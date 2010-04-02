@@ -20,7 +20,7 @@ a:active {color:black !important;}
 .button:focus {background:#14181A;/*rgba(0,0,0,0.9)*/ color:white !important;}
 .button:active {background:black; color:white !important;}
 
-.sidebar .hr {height:1em; border:0; width:100%; margin:0; padding:0; background:url('/images/rule-sidebar.png') no-repeat center transparent; border:0; color:transparent; margin:0 0 2em; border-width:0;} /*hr elements were causing me trouble. this doesn't bother me much. */
+.sidebar hr {height:1em; border:0; width:100%; margin:0; padding:0; background:url('/images/rule-sidebar.png') no-repeat center transparent; border:0; color:transparent; margin:0 0 2em; border-width:0;} /*hr elements were causing me trouble. this doesn't bother me much. */
 .sidebar ul {list-style-type:none; margin:0 0 2em; padding:0 0 2em; text-indent:0; background:url('/images/rule-sidebar.png') no-repeat bottom center;}
 .sidebar li {margin:0; font-size:1.6em;}
 .sidebar li a {text-decoration:none;}
