@@ -35,10 +35,9 @@
       <div class="notice"><%=h flash[:notice] %></div><!--TODO: Use p rather than div -->
 <%   end %>
 <%   if flash[:error] %>
-      <div class="error"><%=h flash[:error] %></div><!--TODO: Change classes. Currently notice, alert and warning are in the stylesheet. -->
+      <div class="error"><%=h flash[:error] %></div>
 <%   end %>
       <!-- <div class="alert">Logged in successfully</div> -->
-      <!-- <div class="warning">Logged in successfully</div> -->
     </div>
 <% end %>
 
