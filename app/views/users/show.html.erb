@@ -6,14 +6,13 @@
 
 <% content_for :header do %>
   <div class="vcard">
-    <h1 class="fn"><%=h @user.fullname %></h1>
+    <h1>
+      <span class="fn"><%=h @user.fullname %></span>
+<% if !@user.username.nil? %>
+      <div class="tagline"><%= gravatar_for @user, :size => 24, :default => 'identicon', :class => 'photo' %><span class="nickname"><%=h @user.username %></span></div>
+<% end %>
+    </h1>
 
-    <%= gravatar_for @user, :size => 60, :default => 'identicon', :class => 'photo' %>
-
-    <p>
-      <b>Username:</b>
-      <span class="nickname"><%=h @user.username %></span>
-    </p>
 <% if !@user.openid.nil? %>
     <p>
       <b>OpenID:</b>
