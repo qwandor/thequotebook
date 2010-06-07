@@ -76,8 +76,10 @@ h1#logo a {text-indent:-9999px; display:block; height:100%;}
 blockquote {max-width:75%; margin: 0 auto 3em; padding:0; font-size:2em; line-height:1.2;}
 blockquote a.quote {} /*float:left; firefox and old ie's*/
 blockquote a {text-decoration:none;}
+blockquote.comment a {text-decoration:underline;}
 blockquote:hover a{color:#14181a;/*rgba(0,0,0,0.9)*/}
 blockquote p {padding:0; margin:0; text-indent:-0.4em;}
+blockquote.comment p {margin-top:0.6em;}
 blockquote .author {display:block; float:right; background:center right no-repeat; padding:0 30px 0 0; height:1.2em; white-space:nowrap;} 
 .meta {font-size:0.6em; color:#8fa9b3;/*rgba(0,0,0,0.3)*/ font-style:italic; line-height:1.2em; clear:right; }
 div.meta a {text-decoration:underline; color:inherit;}
