@@ -14,7 +14,8 @@
     </h1>
 
 <% if !@user.openid.nil? %>
-    <p>
+    <!--TODO: How to display this nicely?-->
+    <p style="display: none;">
       <b>OpenID:</b>
       <%= link_to h(@user.openid), h(@user.openid), :class => 'url', :rel => 'me' %>
     </p>
