@@ -53,7 +53,7 @@ class ContextsController < ApplicationController
 
     respond_to do |format|
       if @context.save
-        flash[:notice] = 'Context was successfully created.'
+        flash[:notice] = 'Quotebook was successfully created.'
         format.html { redirect_to(@context) }
         format.xml  { render :xml => @context, :status => :created, :location => @context }
       else
@@ -68,7 +68,7 @@ class ContextsController < ApplicationController
   def update
     respond_to do |format|
       if @context.update_attributes(params[:context])
-        flash[:notice] = 'Context was successfully updated.'
+        flash[:notice] = 'Quotebook was successfully updated.'
         format.html { redirect_to(@context) }
         format.xml  { head :ok }
       else
@@ -107,7 +107,7 @@ class ContextsController < ApplicationController
         format.html { redirect_to(@context) }
         format.xml  { head :ok }
       else
-        flash[:error] = 'Error joining context'
+        flash[:error] = 'Error joining quotebook'
         format.html { redirect_to(@context) }
         format.xml  { render :xml => @context.errors, :status => :unprocessable_entity }
       end
@@ -122,7 +122,7 @@ class ContextsController < ApplicationController
         format.html { redirect_to(@context) }
         format.xml  { head :ok }
       else
-        flash[:error] = 'Error leaving context'
+        flash[:error] = 'Error leaving quotebook'
         format.html { redirect_to(@context) }
         format.xml  { render :xml => @context.errors, :status => :unprocessable_entity }
       end
