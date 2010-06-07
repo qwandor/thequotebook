@@ -112,7 +112,7 @@ class QuotesController < ApplicationController
     @quote.destroy
 
     respond_to do |format|
-      format.html { redirect_to(quotes_url) }
+      format.html { redirect_to(@quote.context) }
       format.xml  { head :ok }
     end
   end
