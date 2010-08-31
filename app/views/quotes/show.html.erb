@@ -4,7 +4,9 @@
 <%= auto_discovery_link_tag :atom, {:controller => 'comments', :quote_id => @quote.id, :action => 'index', :format => :atom}, {:title => 'Comments for this quote'} %>
 <% end %>
 
+<% content_for :header do %>
 <%= formatted_quote(@quote, :single => true, :show_comments => false) %>
+<% end %>
 
 <ul class="commands">
   <% if @quote.quoter == current_user %>
