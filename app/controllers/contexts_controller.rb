@@ -1,6 +1,7 @@
 class ContextsController < ApplicationController
   before_filter :find_context, :only => [:show, :edit, :update, :destroy, :join, :leave, :quotes]
   before_filter :login_required, :only => [:new, :create, :edit, :update, :destroy, :join, :leave]
+  after_filter :store_location, :only => [:show]
 
   # GET /contexts
   # GET /contexts.xml

@@ -5,18 +5,18 @@
 <% form_for(@user) do |f| %>
   <%= f.error_messages %>
 
-  <p>
-    <%= f.label :fullname, 'Full name' %><br />
+  <div>
+    <%= f.label :fullname, 'Full name' %>
     <%= f.text_field :fullname %>
-  </p>
-  <p>
-    <%= f.label :email_address %><br />
+    <%= f.label :fullname, 'Put their full name, so that others can find and quote them.', :class => 'note' %>
+  </div>
+  <div>
+    <%= f.label :email_address %>
     <%= f.text_field :email_address %>
-  </p>
-  <p>
+    <%= f.label :email_address, 'This will help us to identify the person if they later want to claim their account.', :class => 'note' %>
+  </div>
+  <div>
     <%= hidden_field_tag :mode, 'partial' %>
-    <%= f.submit 'Create user' %>
-  </p>
+    <%= f.submit 'Create user', :class => 'button' %>
+  </div>
 <% end %>
-
-<%= link_to 'Back', users_path %>

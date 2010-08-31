@@ -136,7 +136,8 @@ class UsersController < ApplicationController
         if @user.save
           #Return to add quote page, or whereever we were
           flash[:notice] = 'User added.'
-          format.html { redirect_back_or_default(users_path) }
+          session[:quote_in_progress].quotee_id = @user.id if session[:quote_in_progress]
+          format.html { if session[:quote_in_progress] then redirect_to(new_quote_path) else redirect_back_or_default(@user) end }
           format.xml  { render :xml => @user, :status => :created, :location => @user }
         else
           format.html { render :action => 'new_partial' }
