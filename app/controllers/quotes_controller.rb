@@ -78,7 +78,7 @@ class QuotesController < ApplicationController
         format.html { redirect_to(@quote) }
         format.xml  { render :xml => @quote, :status => :created, :location => @quote }
       else
-        format.html { render :action => "new" }
+        format.html { render :action => 'new' }
         format.xml  { render :xml => @quote.errors, :status => :unprocessable_entity }
       end
     end
