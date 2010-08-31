@@ -161,6 +161,8 @@ div.fleuron {width:73px; height:73px; position:absolute; z-index:1;}
 /** qwandor added some stuff. */
 a img {border-width: 0; }
 .text {font-size: 1.5em; }
+.list-heading {margin-bottom: 0; }
+ul {margin-top: 0}
 
 /* Form errors */
 .fieldWithErrors input {
