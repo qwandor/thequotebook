@@ -1,5 +1,7 @@
 <% content_for :title do %>: New quote<% end %>
 
+<% content_for :header do %>
 <h1>New quote</h1>
+<% end %>
 
 <%= render :partial => 'form', :locals => {:button_label => 'Add quote'} %>

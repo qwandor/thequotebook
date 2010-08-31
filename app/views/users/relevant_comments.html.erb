@@ -4,7 +4,10 @@
 <%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => "Comments of interest to #{h(@user.fullname)}"} %>
 <% end %>
 
+<% content_for :header do %>
 <h1>All comments of interest to <%=h @user.fullname %></h1>
+<% end %>
+
 <p>
   These are all the comments on quotes in your quotebooks.
 </p>

@@ -1,6 +1,8 @@
 <% content_for :title do %>: Editing quote<% end %>
 
+<% content_for :header do %>
 <h1>Editing quote</h1>
+<% end %>
 
 <%= render :partial => 'form', :locals => {:button_label => "Save quote"} %>
 

@@ -4,7 +4,9 @@
 <%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => "Quotes by #{h(@user.fullname)}"} %>
 <% end %>
 
+<% content_for :header do %>
 <h1>All quotes by <%=h @user.fullname %></h1>
+<% end %>
 
 <% for quote in @quotes %>
 <%= formatted_quote quote %>

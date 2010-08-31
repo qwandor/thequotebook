@@ -1,6 +1,8 @@
 <% content_for :title do %>: Comment<% end %>
 
+<% content_for :header do %>
 <h1>Comment on <%= quote_marks_if_needed(@quote.quote_text).gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics]) %></h1>
+<% end %>
 
 <table>
   <tr>

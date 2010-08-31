@@ -4,6 +4,8 @@
 <%= auto_discovery_link_tag :atom, {:format => :atom}, {:title => 'All comments'} %>
 <% end %>
 
+<% content_for :header do %>
 <h1>All comments</h1>
+<% end %>
 
 <%= render :partial => 'comments/list_all' %>
