@@ -15,7 +15,7 @@
 <% end %>
 
 <ul class="pagination">
-  <%= my_paginate @quotes %>
+  <%= my_paginate(@quotes) %>
   <li><%= link_to 'All', quotes_context_path(@context), {:class => 'button'} %></li>
 </ul>
 

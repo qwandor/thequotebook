@@ -32,6 +32,7 @@ module WillPaginate::ViewHelpers
   def my_paginate(collection)
     renderer = PaginationListLinkRenderer.new()
     options = {:inner_window => 1, :outer_window => 0, :container => false}
+    options = options.symbolize_keys.reverse_merge WillPaginate::ViewHelpers.pagination_options
     renderer.prepare(collection, options, self)
     renderer.to_html
   end
