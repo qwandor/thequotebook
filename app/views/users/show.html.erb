@@ -23,12 +23,12 @@
   </div>
 <% end %>
 
-<% for quote in @user.said_quotes %>
+<% for quote in @quotes %>
 <%= formatted_quote quote, :quotee_link => false %>
 <% end %>
 
 <ul class="pagination">
-  <li><span class="button">1</span></li>
+  <%= my_paginate(@quotes) %>
   <li><%= link_to 'All', quotes_user_path(@user), {:class => 'button'} %></li>
 </ul>
 

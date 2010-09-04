@@ -1,4 +1,5 @@
 require 'bb-ruby'
+require 'pagination_renderer'
 
 module QuotesHelper
   #Nicely formatted version of the quote ready to display

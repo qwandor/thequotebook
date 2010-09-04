@@ -17,7 +17,7 @@ class ContextsController < ApplicationController
   # GET /contexts/1
   # GET /contexts/1.xml
   def show
-    @quotes = Quote.all(:conditions => ['context_id = ? AND NOT hidden', @context.id], :order => 'created_at DESC', :limit => 10)
+    @quotes = Quote.paginate(:page => params[:page], :conditions => ['context_id = ? AND NOT hidden', @context.id], :order => 'created_at DESC')
     @context_comments = Comment.all(:joins => 'INNER JOIN quotes ON quotes.id=comments.quote_id', :conditions => ['context_id = ? AND NOT hidden', @context.id], :order => 'created_at DESC', :limit => 5)
 
     #For new quote form

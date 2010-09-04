@@ -5,6 +5,10 @@ class Quote < ActiveRecord::Base
 
   after_create :send_notification
 
+  #For pagination with will_paginate
+  cattr_reader :per_page
+  @@per_page = 10
+
 protected
   #If quotee has email notification enabled, then send them an email telling them that they have been quoted
   def send_notification()

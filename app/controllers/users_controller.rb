@@ -18,6 +18,7 @@ class UsersController < ApplicationController
   # GET /users/1.xml
   def show
     @comments = Comment.all(:joins => 'INNER JOIN quotes ON quotes.id=comments.quote_id', :conditions => ['comments.user_id = ?', @user.id], :order => 'created_at DESC', :limit => 5)
+    @quotes = Quote.paginate(:page => params[:page], :conditions => ['quotes.quotee_id = ? AND NOT hidden', @user.id], :order => 'created_at DESC')
 
     respond_to do |format|
       format.html # show.html.erb
