@@ -37,4 +37,12 @@ module QuotesHelper
       '"' + text + '"'
     end
   end
+
+  #Improved version of text_field_with_auto_complete which lets the controller for the call be set
+  def my_text_field_with_auto_complete(controller, object, method, tag_options = {}, completion_options = {})
+    (completion_options[:skip_style] ? "" : auto_complete_stylesheet) +
+    text_field(object, method, tag_options) +
+    content_tag("div", "", :id => "#{object}_#{method}_auto_complete", :class => "auto_complete") +
+    auto_complete_field("#{object}_#{method}", { :url => { :controller => controller,  :action => "auto_complete_for_#{object}_#{method}" } }.update(completion_options))
+  end
 end

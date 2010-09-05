@@ -10,7 +10,7 @@ ActionController::Routing::Routes.draw do |map|
   map.login_external '/login_external', :controller => 'sessions', :action => 'create'
 
   map.resources :quotes, :has_many => :comments
-  map.resources :quotes, :collection => { :auto_complete_for_context_name => :post }
+  map.resources :quotes, :collection => {:auto_complete_for_context_name => :post, :auto_complete_for_quotee_name => :post}
 
   map.resources :users, :member => {:quotes => :get, :relevant_quotes => :get, :relevant_comments => :get}
 

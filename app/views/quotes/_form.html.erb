@@ -24,8 +24,8 @@
 
   <%= f.text_area :quote_text, {:rows => 4, :cols => 80} %>
   <div class="input"><div>
-    <%= f.label :quotee, 'by' %>
-    <%= text_field_tag :quotee, @quote.quotee && (@quote.quotee.username || @quote.quotee.fullname) || params[:quotee] %>
+    <%= label_tag :quotee_name, 'by' %>
+    <%= my_text_field_with_auto_complete('quotes', :quotee, :name, {:value => @quote.quotee && (@quote.quotee.username || @quote.quotee.fullname) || params[:quotee]}, {:skip_style => true}) %>
   </div></div>
   <div class="input"><div>
     <%= label_tag :context_name, 'in' %>

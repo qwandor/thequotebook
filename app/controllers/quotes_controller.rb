@@ -5,7 +5,14 @@ class QuotesController < ApplicationController
   after_filter :store_location, :only => [:new, :update]
 
   auto_complete_for :context, :name
-  protect_from_forgery :except => [:auto_complete_for_context_name]
+  protect_from_forgery :except => [:auto_complete_for_context_name, :auto_complete_for_quotee_name]
+
+  def auto_complete_for_quotee_name
+    @term = params[:quotee][:name].downcase
+    @items = User.all({:conditions => ['fullname ILIKE ? OR username ILIKE ?', "%#{@term}%", "%#{@term}%"], :order => 'username ASC, fullname ASC', :limit => 10})
+    # TODO: Do we want to show username rather than fullname if that was what we matched, or even for all users with one?
+    render :inline => "<%= auto_complete_result(@items, 'fullname', @term) %>"
+  end
 
   layout 'no_sidebars'
 
@@ -56,7 +63,7 @@ class QuotesController < ApplicationController
   def create
     properties = params[:quote]
 
-    properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee], current_user)
+    properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee][:name], current_user)
 
     properties[:context] = Context.first(:conditions => ['name = ?', params[:context][:name]])
     # TODO: give helpful error if quotee or context is nil (i.e. could not match name), rather than just error about it being blank
@@ -90,7 +97,7 @@ class QuotesController < ApplicationController
     properties = params[:quote]
     properties.delete(:quoter) #Cannot change quoter
 
-    properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee], current_user)
+    properties[:quotee], @possible_quotee_matches = User.find_from_string(params[:quotee][:name], current_user)
 
     properties[:context] = Context.first(:conditions => ['name = ?', params[:context][:name]])
 
