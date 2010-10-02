@@ -143,6 +143,8 @@ div.fleuron {width:73px; height:73px; position:absolute; z-index:1;}
 .pagination span:focus,
 .pagination span:active {background:transparent; border:#667880 0.1em solid; color:#667880 !important;/*rgba(0,0,0,0.5)*/}
 .pagination a, .commands a, .commands input {border:1px solid transparent;}
+.pagination .gap {width:auto; display:block; font-size:1.5em; float:left; padding:0.2em 0em; margin:0 1em 0 0; font-weight:bold; }
+.pagination span.gap {border: none;} /** Need to be more specific to override border set for span:hover &c. */
 
 /* Alerts */
 #notices {margin-bottom:6em;}

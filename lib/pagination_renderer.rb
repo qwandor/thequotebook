@@ -1,4 +1,8 @@
 class PaginationListLinkRenderer < WillPaginate::LinkRenderer
+  def initialize()
+    @gap_marker = '<li><span class="gap">&hellip;</span></li>'
+  end
+
   def to_html()
     html = windowed_links().join(@options[:separator])
     @options[:container] ? @template.content_tag(:ul, html, html_attributes) : html
@@ -6,7 +10,14 @@ class PaginationListLinkRenderer < WillPaginate::LinkRenderer
 
 protected
   def windowed_links()
-    visible_page_numbers.map { |n| page_link_or_span(n, 'button') }
+    links = []
+    prev = nil
+    visible_page_numbers.each do |n|
+      links << gap_marker if prev and n > prev + 1
+      links << page_link_or_span(n, 'button')
+      prev = n
+    end
+    links
   end
 
   def page_link_or_span(page, span_class, text = nil)
