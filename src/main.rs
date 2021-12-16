@@ -1,4 +1,6 @@
+mod contexts;
 mod home;
+mod types;
 
 use axum::{
     http::StatusCode,
@@ -18,6 +20,7 @@ async fn main() -> Result<(), Report> {
     let app = Router::new()
         .route("/", get(home::index))
         .route("/comments", get(home::comments))
+        .route("/contexts", get(contexts::index))
         .nest(
             "/images",
             get_service(ServeDir::new("public/images")).handle_error(

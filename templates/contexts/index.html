@@ -1,0 +1,17 @@
+{% extends "layouts/application.html" %}
+
+{% block header %}
+<h1>Listing quotebooks</h1>
+{% endblock %}
+
+{% block body %}
+<ul>
+{% for context in contexts %}
+  <li class="text">
+    {% if false %}<strong><a href="/contexts/{{ context.id }}">{{ context.name }}</a></strong>{% else %}<a href="/contexts/{{ context.id }}">{{ context.name }}</a>{% endif %} &mdash; {{ context.description }} ({{ context.quote_count }} quotes)
+  </li>
+{% endfor %}
+</ul>
+
+<a href="/contexts/new" class="button">New quotebook</a>
+{% endblock %}

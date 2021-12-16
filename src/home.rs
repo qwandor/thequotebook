@@ -1,3 +1,4 @@
+use super::types::{Context, Flash};
 use askama::Template;
 use axum::response::Html;
 
@@ -45,16 +46,4 @@ struct IndexTemplate {
 #[template(path = "home/comments.html")]
 struct CommentsTemplate {
     flash: Flash,
-}
-
-struct Context {
-    id: u32,
-    name: String,
-    description: String,
-    quote_count: u32,
-}
-
-struct Flash {
-    notice: Option<String>,
-    error: Option<String>,
 }
