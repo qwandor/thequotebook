@@ -1,7 +1,7 @@
 use askama::Template;
 use axum::response::Html;
 
-pub async fn handle() -> Result<Html<String>, String> {
+pub async fn index() -> Result<Html<String>, String> {
     let template = IndexTemplate {
         flash: Flash {
             notice: None,

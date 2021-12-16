@@ -1,4 +1,4 @@
-mod index;
+mod home;
 
 use axum::{
     http::StatusCode,
@@ -16,7 +16,7 @@ async fn main() -> Result<(), Report> {
     color_backtrace::install();
 
     let app = Router::new()
-        .route("/", get(index::handle))
+        .route("/", get(home::index))
         .nest(
             "/images",
             get_service(ServeDir::new("public/images")).handle_error(
