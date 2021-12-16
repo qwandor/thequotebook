@@ -3,6 +3,10 @@ use axum::response::Html;
 
 pub async fn handle() -> Result<Html<String>, String> {
     let template = IndexTemplate {
+        flash: Flash {
+            notice: None,
+            error: None,
+        },
         logged_in: false,
         quotes: vec![],
         top_contexts: vec![],
@@ -17,6 +21,7 @@ pub async fn handle() -> Result<Html<String>, String> {
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexTemplate {
+    flash: Flash,
     logged_in: bool,
     quotes: Vec<String>,
     top_contexts: Vec<Context>,
@@ -31,4 +36,9 @@ struct Context {
     name: String,
     description: String,
     quote_count: u32,
+}
+
+struct Flash {
+    notice: Option<String>,
+    error: Option<String>,
 }

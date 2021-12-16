@@ -28,17 +28,21 @@
 
 <div class="holygrail">
   <div id="content">
-<% if !flash.empty? %>
+{% if flash.notice.is_some() || flash.error.is_some() %}
     <div id="notices">
-<%   if flash[:notice] %>
-      <div class="notice"><%=h flash[:notice] %></div><!--TODO: Use p rather than div -->
-<%   end %>
-<%   if flash[:error] %>
-      <div class="error"><%=h flash[:error] %></div>
-<%   end %>
+{%   match flash.notice %}
+{%   when Some with (notice) %}
+      <div class="notice">{{ notice }}</div><!--TODO: Use p rather than div -->
+{%   when None %}
+{%   endmatch %}
+{%   match flash.error %}
+{%   when Some with (error) %}
+      <div class="error">{{ error }}</div>
+{%   when None %}
+{%   endmatch %}
       <!-- <div class="alert">Logged in successfully</div> -->
     </div>
-<% end %>
+{% endif %}
 
     {% block body %}{% endblock %}
   </div>
