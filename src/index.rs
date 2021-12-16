@@ -19,7 +19,7 @@ pub async fn handle() -> Result<Html<String>, String> {
 }
 
 #[derive(Template)]
-#[template(path = "index.html")]
+#[template(path = "home/index.html")]
 struct IndexTemplate {
     flash: Flash,
     logged_in: bool,
