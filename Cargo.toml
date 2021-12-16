@@ -4,3 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+axum = "0.4.2"
+color-backtrace = "0.5.1"
+eyre = "0.6.5"
+pretty_env_logger = "0.4.0"
+stable-eyre = "0.2.2"
+tokio = { version = "1.15.0", features = ["macros", "rt-multi-thread"] }
