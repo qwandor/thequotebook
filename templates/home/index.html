@@ -2,8 +2,8 @@
 
 {% block head %}
 {%   if logged_in %}
-<link rel="alternate" type="application/atom+xml" title="Quotes of interest to {{ current_user_fullname }}" href="users/{{ current_user_id }}/relevant_quotes.atom" />
-<link rel="alternate" type="application/atom+xml" title="Comments of interest to {{ current_user_fullname }}" href="users/{{ current_user_id }}/relevant_comments.atom" />
+<link rel="alternate" type="application/atom+xml" title="Quotes of interest to {{ current_user_fullname }}" href="/users/{{ current_user_id }}/relevant_quotes.atom" />
+<link rel="alternate" type="application/atom+xml" title="Comments of interest to {{ current_user_fullname }}" href="/users/{{ current_user_id }}/relevant_comments.atom" />
 {%   endif %}
 {% endblock %}
 
