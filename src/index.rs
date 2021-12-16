@@ -2,10 +2,33 @@ use askama::Template;
 use axum::response::Html;
 
 pub async fn handle() -> Result<Html<String>, String> {
-    let template = IndexTemplate {};
+    let template = IndexTemplate {
+        logged_in: false,
+        quotes: vec![],
+        top_contexts: vec![],
+        current_user_contexts: vec![],
+        current_user_comments: vec![],
+        current_user_id: 0,
+        current_user_fullname: "".to_string(),
+    };
     Ok(Html(template.render().map_err(|e| e.to_string())?))
 }
 
 #[derive(Template)]
 #[template(path = "index.html")]
-struct IndexTemplate {}
+struct IndexTemplate {
+    logged_in: bool,
+    quotes: Vec<String>,
+    top_contexts: Vec<Context>,
+    current_user_contexts: Vec<Context>,
+    current_user_comments: Vec<String>,
+    current_user_id: u32,
+    current_user_fullname: String,
+}
+
+struct Context {
+    id: u32,
+    name: String,
+    description: String,
+    quote_count: u32,
+}

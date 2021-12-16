@@ -1,72 +1,70 @@
 {% extends "home.html" %}
 
-{% if logged_in %}
-{%   block head %}
-<%= auto_discovery_link_tag :atom, {:controller => 'users', :id => current_user.id, :action => 'relevant_quotes', :format => :atom}, {:title => "Quotes of interest to #{h(current_user.fullname)}"} %>
-<%= auto_discovery_link_tag :atom, {:controller => 'users', :id => current_user.id, :action => 'relevant_comments', :format => :atom}, {:title => "Comments of interest to #{h(current_user.fullname)}"} %>
-{%   endblock %}
-{% endif %}
-
-<% if @quotes %>
-<%   if @quotes.empty? %>
-<p>Once you join some quotebooks or add quotes to your quotebooks, they will show up here.</p>
-<%   else %>
-<%     for quote in @quotes %>
-<%= formatted_quote quote %>
-<%     end %>
-  <ul class="pagination">
-    <%= my_paginate(@quotes) %>
-    <li><%= link_to 'All', logged_in? ? {:controller => 'users', :id => current_user.id, :action => 'relevant_quotes'} : quotes_path, {:class => 'button'} %></li>
-  </ul>
-<%   end %>
-<% end %>
-
-{% block sidebars %}
-<div class="sidebar left">
-<% if @current_user_contexts %>
-  <h2>Your quotebooks</h2>
-<%   if @current_user_contexts.empty? %>
-  <p>
-    You are not part of any quotebooks yet. Perhaps you would like to look through the <%= link_to 'list of quotebooks', contexts_path %> to find some to join, or <%= link_to 'create a new quotebook', new_context_path %> for quotes from your group of friends?
-  </p>
-<%   else %>
-  <ul>
-<%     for context in @current_user_contexts %>
-    <li>
-      <%= link_to h(context.name), context, {:title => h(context.description)} %> (<%= context.quotes.size %>)
-    </li>
-<%     end %>
-  </ul>
-<%   end %>
+{% block head %}
+{%   if logged_in %}
+<link rel="alternate" type="application/atom+xml" title="Quotes of interest to {{ current_user_fullname }}" href="users/{{ current_user_id }}/relevant_quotes.atom" />
+<link rel="alternate" type="application/atom+xml" title="Comments of interest to {{ current_user_fullname }}" href="users/{{ current_user_id }}/relevant_comments.atom" />
+{%   endif %}
 {% endblock %}
 
 {% block body %}
+{% if quotes.is_empty() %}
+<p>Once you join some quotebooks or add quotes to your quotebooks, they will show up here.</p>
+{% else %}
+{%   for quote in quotes %}
+<%= formatted_quote quote %>
+{%   endfor %}
+  <ul class="pagination">
+    <%= my_paginate(@quotes) %>
+    <li><a href="{% if logged_in %}/users/{{ current_user_id }}/relevant_quotes{% else %}/quotes{% endif %}" class="button">All</a>
+  </ul>
+{% endif %}
+{% endblock %}
+
+{% block sidebars %}
+<div class="sidebar left">
+{% if logged_in %}
+  <h2>Your quotebooks</h2>
+{%   if current_user_contexts.is_empty() %}
+  <p>
+    You are not part of any quotebooks yet. Perhaps you would like to look through the <a href="/contexts">list of quotebooks</a> to find some to join, or <a href="/contexts/new">create a new quotebook</a> for quotes from your group of friends?
+  </p>
+{%   else %}
+  <ul>
+{%     for context in current_user_contexts %}
+    <li>
+      <a href="/contexts/{{ context.id }}" title="{{ context.description }}">{{ context.name }}</a> ({{ context.quote_count }})
+    </li>
+{%     endfor %}
+  </ul>
+{%   endif %}
+{% endif %}
+
   <h2>Top quotebooks</h2>
   <ul>
-<% for context in @top_contexts %>
+{% for context in top_contexts %}
     <li>
-      <%= link_to h(context.name), context, {:title => h(context.description)} %> (<%= context.quote_count %>)
+      <a href="/contexts/{{ context.id }}" title="{{ context.description }}">{{ context.name }}</a> ({{ context.quote_count }})
     </li>
-<% end %>
+{% endfor %}
   </ul>
 
   <ul>
-    <li><%= link_to 'Create a new quotebook', new_context_path %></li>
-    <li><%= link_to 'All quotebooks', contexts_path %></li>
+    <li><a href="/contexts/new">Create a new quotebook</a></li>
+    <li><a href="/contexts">All quotebooks</a></li>
   </ul>
 </div>
 
-<% if @current_user_comments && !@current_user_comments.empty? %>
+{% if !current_user_comments.is_empty() %}
 <div class="sidebar right" id="comments">
   <h2>Latest comments</h2>
   <%= render :partial => 'comments/list_sidebar', :locals => {:comments => @current_user_comments, :show_context => true} %>
 
   <hr />
   <ul>
-    <li><%= link_to 'All comments on your quotebooks', {:controller => 'users', :id => current_user.id, :action => 'relevant_comments'} %></li>
+    <li><a href="/users/{{ current_user_id }}/relevant_comments">All comments on your quotebooks</a></li>
   </ul>
 </div>
-<% end %>
-<% end %>
+{% endif %}
 
 {% endblock %}
