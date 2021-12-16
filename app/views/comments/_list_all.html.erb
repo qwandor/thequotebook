@@ -1,6 +1,0 @@
-<% for comment in @comments %>
-<p>
-  <%=link_to_user comment.user %> commented on <%=link_to_user comment.quote.quotee %>'s quote <%=link_to trim_if_needed(quote_marks_if_needed(comment.quote.quote_text), 40).gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics]), comment.quote %>:
-  <%= comment.body.gsub(/[\r\n]+/, ' ').bbcode_to_html({}, :enable, true, false, [:bold, :italics, :underline, :insert, :delete, :link, :email]) %>
-</p>
-<% end %>

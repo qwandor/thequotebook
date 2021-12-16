@@ -1,7 +1,0 @@
-<% content_for :title do %>: New comment<% end %>
-
-<% content_for :header do %>
-<h1>New comment</h1>
-<% end %>
-
-<%= render :partial => 'form', :locals => {:button_label => 'Post comment', :cancel_label => 'Back to quote', :cancel_link => @quote} %>

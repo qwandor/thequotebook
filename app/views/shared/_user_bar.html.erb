@@ -1,9 +1,0 @@
-<div id="nav">
-<% if logged_in? %>
-  <%= link_to "Logged in as <strong>#{current_user.username}</strong>", current_user %>
-  <%= link_to 'Edit profile', edit_user_path(current_user), {:class => 'button'} %>
-  <%= link_to 'Log out', logout_path, {:title => 'Log out', :class => 'button'} %>
-<% else %>
-  <%= link_to 'Log in', login_path,  {:title => 'Log in', :class => 'button'} %>
-<% end %>
-</div>
