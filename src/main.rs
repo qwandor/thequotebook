@@ -17,6 +17,7 @@ async fn main() -> Result<(), Report> {
 
     let app = Router::new()
         .route("/", get(home::index))
+        .route("/comments", get(home::comments))
         .nest(
             "/images",
             get_service(ServeDir::new("public/images")).handle_error(

@@ -18,6 +18,16 @@ pub async fn index() -> Result<Html<String>, String> {
     Ok(Html(template.render().map_err(|e| e.to_string())?))
 }
 
+pub async fn comments() -> Result<Html<String>, String> {
+    let template = CommentsTemplate {
+        flash: Flash {
+            notice: None,
+            error: None,
+        },
+    };
+    Ok(Html(template.render().map_err(|e| e.to_string())?))
+}
+
 #[derive(Template)]
 #[template(path = "home/index.html")]
 struct IndexTemplate {
@@ -29,6 +39,12 @@ struct IndexTemplate {
     current_user_comments: Vec<String>,
     current_user_id: u32,
     current_user_fullname: String,
+}
+
+#[derive(Template)]
+#[template(path = "home/comments.html")]
+struct CommentsTemplate {
+    flash: Flash,
 }
 
 struct Context {
