@@ -1,0 +1,230 @@
+/**= Elements **/
+body {margin:0 0 1px; padding:0 0 1px; width:100%;  border:0; min-width:87em; background:#ccf1ff;/*rgba(0,184,255,0.2);*/}
+body, 
+input,
+textarea {font:62.5%/1.5 "garamond premiere pro", garamond, georgia, serif;}
+h1 {text-align:center; height:auto; padding:0; font-weight:normal; font-size:7.2em; margin:1.3em 0;line-height:1;}
+h1 .tagline {display:block; text-align:center; font-size:0.3em;  margin-bottom:-1em;}
+.tagline img {margin-bottom: -4px; }
+h2 {font-size:2.2em; font-weight:normal; margin:0 0 0.9em;}
+a:link,
+a:visited {color:#14181A;/*rgba(0,0,0,0.9)*/}
+a:hover,
+a:focus, 
+a:active {color:black !important;}
+.button {background:#283033;/*rgba(0,0,0,0.8)*/color:white !important; width:auto; text-transform:capitalize; display:block; font-size:1.5em; float:left; text-decoration:none; padding:0.2em 0.5em; margin:0 1em 0 0; cursor:pointer;
+         border-radius: 0.3em; 
+    -moz-border-radius: 0.3em; 
+ -webkit-border-radius: 0.3em; }
+.button:hover, 
+.button:focus {background:#14181A;/*rgba(0,0,0,0.9)*/ color:white !important;}
+.button:active {background:black; color:white !important;}
+
+.sidebar hr {height:1em; border:0; width:100%; margin:0; padding:0; background:url('/images/rule-sidebar.png') no-repeat center transparent; border:0; color:transparent; margin:0 0 2em; border-width:0;} /*hr elements were causing me trouble. this doesn't bother me much. */
+.sidebar ul {list-style-type:none; margin:0 0 2em; padding:0 0 2em; text-indent:0; background:url('/images/rule-sidebar.png') no-repeat bottom center;}
+.sidebar li {margin:0; font-size:1.6em;}
+.sidebar li a {text-decoration:none;}
+
+table{max-width:50em;margin:0 auto; border:0;border-collapse:collapse;}
+td {font-size:1.5em;padding:0.5em;vertical-align:top;margin:0; border:0;}
+tr:nth-child(odd) {background:#b8EBFF;/*rgba(0,184,255,0.1)*/}
+td+td {width:100%;}
+td .button {font-size:1em;float:right;margin-right:0;}
+/**= Navigation **/
+#nav {list-style-type:none; position:absolute; top:0; right:0; padding:1em 0 1em 1em; margin:0; text-indent:0;}
+#nav a {float:left; font-size:1.5em; text-decoration:none; margin:0 1em 0 0; padding:0.2em 0;}
+#nav a.button {padding:0.2em 0.5em;}
+
+
+/**= Layout */
+
+/* from alistapart.com/articles/holygrail/ */
+.sidebar {width:19.5em; padding:2em 2em 0; background:#b8EBFF;/*rgba(0,184,255,0.1)*/; 
+          border-radius: 0.4em; 
+     -moz-border-radius: 0.4em; 
+  -webkit-border-radius: 0.4em; }
+.holygrail {padding:0 31.5em 1px 23.5em; background:url('/images/rule-main.png') no-repeat center bottom; margin:0 0 4em;}
+#content,
+.sidebar {position:relative; float:left;}
+#content {width:100%;  padding: 0 4em;}
+.left { right:31.5em; margin-left:-100%;  
+	    border-radius-topleft:   0; 
+        border-radius-bottomleft:0;
+   -moz-border-radius-topleft:   0; 
+   -moz-border-radius-bottomleft:0; 
+-webkit-border-radius-topleft:   0; 
+-webkit-border-radius-bottomleft:0; } 
+.right {margin-right: -31.5em;
+        border-radius-topright:   0; 
+        border-radius-bottomright:0;
+   -moz-border-radius-topright:   0; 
+   -moz-border-radius-bottomright:0; 
+-webkit-border-radius-topright:   0; 
+-webkit-border-radius-bottomright:0; }
+
+
+body.no-sidebars {padding:0 4em;width:auto;}
+body.no-sidebars #content {width:100%;padding:0 0 75px;}
+
+/**= Logos */
+h1#logo {font-size:1em; height:25px; width:187px; background:url('/images/logo-small.png') no-repeat center; position:absolute; top:0;left:0;padding:1em; margin:0;}
+h1#logo a {text-indent:-9999px; display:block; height:100%;}
+.home h1#logo {padding:7em 2em;width:auto; position:static; font-size:1em;line-height:1em; text-indent:0;text-align:center;background:none;height:auto;}
+.home h1#logo img {width:100%;max-width:694px;display:inline; vertical-align:middle;}
+
+/**= Quote */
+blockquote {max-width:75%; margin: 0 auto 3em; padding:0; font-size:2em; line-height:1.2;}
+blockquote a.quote {} /*float:left; firefox and old ie's*/
+blockquote a {text-decoration:none;}
+blockquote.comment a {text-decoration:underline;}
+blockquote:hover a{color:#14181a;/*rgba(0,0,0,0.9)*/}
+blockquote p {padding:0; margin:0; text-indent:-0.4em;}
+blockquote.comment p {margin-top:0.6em;}
+blockquote .author {display:block; float:right; background:center right no-repeat; padding:0 30px 0 0; height:1.2em; white-space:nowrap;} 
+.meta {font-size:0.6em; color:#8fa9b3;/*rgba(0,0,0,0.3)*/ font-style:italic; line-height:1.2em; clear:right; }
+div.meta a {text-decoration:underline; color:inherit;}
+.meta a:hover {color:#3d484d !important; /*rgba(0,0,0,0.7)*/ }
+blockquote:hover .meta {color:rgba(0,0,0,0.5);}
+.sidebar blockquote {font-size:1.4em; line-height:16px; margin:0 0 1.4em;max-width:100%;}
+.sidebar blockquote .author {height:1.6em; padding:0;}
+.sidebar .meta{line-height:1.4em; color:#6e8d99;}
+blockquote.comment p {text-indent:0;}
+
+blockquote.single {font-size:4em;max-width:13.5em;background:url('/images/rule-main-top.png') no-repeat center top; padding-top:65px; margin:3em auto;}
+blockquote.single .author {padding-right:56px;}
+blockquote.single .meta{font-size:0.4em;background:url('/images/rule-main.png') no-repeat center bottom; padding-bottom:75px;}
+
+/** New Quote Form */
+form {max-width:75%; margin:0 auto; padding:0;}
+form.plain {max-width:auto; margin: 0; }
+form h2 {margin:0; position:relative; top:-0.5em;}
+select {display:block;}
+textarea {display:block; width:100%; position:relative; z-index:2; font-size:1.5em; height:5em; border:0; margin:0 0 1em;
+		  border-radius: 0.2em;
+     -moz-border-radius: 0.2em;
+  -webkit-border-radius: 0.2em;}
+form div {position:relative;float:left;clear:left;width:100%;margin-bottom:1em;}
+form .button {float:right !important; margin-right:0; margin-left:1em; width:auto; }
+input,
+.item,
+.checkbox label{width:100%;display:block;clear:left;text-align:left;position:static;top:auto;left:auto; border:0; font-size:1.5em;}
+label, 
+.label, 
+.checkbox input{position:absolute; text-align:right; width:20em; left:-21em;top:0.2em;font-size:1.5em;}
+.checkbox input{width:auto;left:-2em;}
+label img,
+.label img {float:left;margin:0 0.5em 0.5em 0;}
+.note {font-size:1.3em; }
+form .note {font-style:italic;position:static;top:auto;width:auto;text-align:left;}
+#content h2 label {float:none; font-size:1em; width:auto;position:static;top:auto;width:auto;text-align:center;}
+.border input {font-size:1.5em; position:relative; z-index:2; width:9em; float:left; border:0; display:block;}
+.border label {width:1.3em; float:left; font-size:2em; text-align:center; display:block;}
+
+.border div.input {width:40%; position:relative; float:left;}
+.border div {float:none;clear:none;width:auto;margin:0;}
+.border .input div {padding:0 2em 0 2.6em;}
+.border .input input {width:100%; float:none;}
+.border .input label {position:absolute; left:0; top:0; display:block; text-align:left;}
+.border .button {width:20%; text-align:center; clear:none; margin-left: 0em;}
+
+.border,
+.fleuron{background:url('/images/corners-fleurons.png') no-repeat;}
+.border {background-position:-73px -73px; min-height:146px; padding:0 4em 4em; margin-bottom:4em; position:relative;}
+div.fleuron {width:73px; height:73px; position:absolute; z-index:1;}
+.tr {top:0; right:0; background-position:bottom left;}
+.br {bottom:0; right:0; background-position:top left;}
+.bl {bottom:0; left:0; background-position:top right;}
+
+/** Pagination and command buttons */
+.pagination,.commands {text-align:center; padding-right:1.5em;}
+.pagination li, .commands li{display:inline-block;}
+.pagination span,
+.pagination span:hover,
+.pagination span:focus,
+.pagination span:active {background:transparent; border:#667880 0.1em solid; color:#667880 !important;/*rgba(0,0,0,0.5)*/}
+.pagination a, .commands a, .commands input {border:1px solid transparent;}
+.pagination .gap {width:auto; display:block; font-size:1.5em; float:left; padding:0.2em 0em; margin:0 1em 0 0; font-weight:bold; }
+.pagination span.gap {border: none;} /** Need to be more specific to override border set for span:hover &c. */
+
+/* Alerts */
+#notices {margin-bottom:6em;}
+.notice,
+.alert,
+.error {max-width:75%; padding:0.6em; margin:0 auto 1em; display:block; background:#ea6066;/*rgba(255,0,0,0.6)*/ font-size:1.5em;
+          border-radius: 0.4em;
+     -moz-border-radius: 0.4em;
+  -webkit-border-radius: 0.4em; }
+.notice {background:#51f966;/*rgba(0,255,0,0.6)*/}
+.alert  {background:#eaf966;/*rgba(255,255,0,0.6);*/}
+
+/** Utility */
+.clearfix:after {content:"."; display:block; height:0; clear:both; visibility:hidden;}
+
+/** qwandor added some stuff. */
+a img {border-width: 0; }
+.text {font-size: 1.5em; }
+.list-heading {margin-bottom: 0; }
+ul {margin-top: 0}
+
+/* Form errors */
+.fieldWithErrors input {
+  border: 2px solid #ea6066;
+}
+
+#errorExplanation {
+  width: 400px;
+  border: 2px solid #ea6066;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #ea6066;
+  color: #fff;
+  top: 0;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
+
+/* Stuff for text_field_with_auto_complete */
+div.auto_complete {
+  width: 350px;
+  background: #fff;
+  padding: 0 !important;
+}
+div.auto_complete ul {
+  border:1px solid #888;
+  margin:0;
+  padding:0;
+  width:100%;
+  list-style-type:none;
+}
+div.auto_complete ul li {
+  margin:0;
+  padding:3px;
+  font-size: 1.5em;
+}
+div.auto_complete ul li.selected {
+  background-color: #ffb;
+}
+div.auto_complete ul strong.highlight {
+  color: #800; 
+  margin:0;
+  padding:0;
+}

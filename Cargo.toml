@@ -11,3 +11,4 @@ eyre = "0.6.5"
 pretty_env_logger = "0.4.0"
 stable-eyre = "0.2.2"
 tokio = { version = "1.15.0", features = ["macros", "rt-multi-thread"] }
+tower-http = { version = "0.2.0", features = ["fs"] }
