@@ -1,4 +1,4 @@
-use crate::types::Quote;
+use crate::types::{Quote, QuoteWithUsers, User};
 use askama::Template;
 
 fn quote_marks_if_needed(text: &str) -> String {
@@ -15,7 +15,7 @@ fn bbcode_to_html(bbcode: String) -> String {
 }
 
 pub fn formatted_quote(
-    &quote: &&Quote,
+    &quote: &&QuoteWithUsers,
     &single: &bool,
     &quoter_link: &bool,
     &quotee_link: &bool,
@@ -23,21 +23,23 @@ pub fn formatted_quote(
     &show_comments: &bool,
 ) -> askama::Result<String> {
     let quote_link = !single;
-    let text = bbcode_to_html(quote_marks_if_needed(&quote.quote_text));
+    let text = bbcode_to_html(quote_marks_if_needed(&quote.quote.quote_text));
     let comments_text = if show_comments {
-        if quote.comments_count == 0 {
+        if quote.quote.comments_count == 0 {
             "No comments (yet).".to_string()
-        } else if quote.comments_count == 1 {
+        } else if quote.quote.comments_count == 1 {
             "1 comment.".to_string()
         } else {
-            format!("{} comments.", quote.comments_count)
+            format!("{} comments.", quote.quote.comments_count)
         }
     } else {
         "".to_string()
     };
 
     let template = QuoteTemplate {
-        quote: quote.to_owned(),
+        quote: quote.quote.to_owned(),
+        quoter: quote.quoter.to_owned(),
+        quotee: quote.quotee.to_owned(),
         single,
         quote_link,
         quoter_link,
@@ -54,6 +56,8 @@ pub fn formatted_quote(
 #[template(path = "shared/quote.html")]
 struct QuoteTemplate {
     quote: Quote,
+    quoter: User,
+    quotee: User,
     single: bool,
     quote_link: bool,
     quoter_link: bool,

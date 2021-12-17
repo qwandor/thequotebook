@@ -1,4 +1,4 @@
-use sqlx::FromRow;
+use sqlx::{postgres::PgRow, FromRow, Row};
 
 pub struct Flash {
     pub notice: Option<String>,
@@ -25,24 +25,6 @@ pub struct Quote {
 }
 
 impl Quote {
-    pub fn quotee(&self) -> User {
-        User {
-            id: 0,
-            email: "user@domain.com".to_string(),
-            username: "quotee".to_string(),
-            fullname: "Full Quotee".to_string(),
-        }
-    }
-
-    pub fn quoter(&self) -> User {
-        User {
-            id: 0,
-            email: "user@domain.com".to_string(),
-            username: "quoter".to_string(),
-            fullname: "Full Quoter".to_string(),
-        }
-    }
-
     pub fn context(&self) -> Context {
         Context {
             id: 0,
@@ -56,7 +38,34 @@ impl Quote {
 #[derive(Clone, Debug, FromRow)]
 pub struct User {
     pub id: i32,
-    pub email: String,
-    pub username: String,
+    pub email_address: Option<String>,
+    pub username: Option<String>,
     pub fullname: String,
+}
+
+#[derive(Clone, Debug)]
+pub struct QuoteWithUsers {
+    pub quote: Quote,
+    pub quoter: User,
+    pub quotee: User,
+}
+
+impl<'r> FromRow<'r, PgRow> for QuoteWithUsers {
+    fn from_row(row: &'r PgRow) -> Result<Self, sqlx::Error> {
+        Ok(QuoteWithUsers {
+            quote: Quote::from_row(row)?,
+            quoter: User {
+                id: row.try_get("quoter_id")?,
+                email_address: row.try_get("quoter_email_address")?,
+                username: row.try_get("quoter_username")?,
+                fullname: row.try_get("quoter_fullname")?,
+            },
+            quotee: User {
+                id: row.try_get("quotee_id")?,
+                email_address: row.try_get("quotee_email_address")?,
+                username: row.try_get("quotee_username")?,
+                fullname: row.try_get("quotee_fullname")?,
+            },
+        })
+    }
 }

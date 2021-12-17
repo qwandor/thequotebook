@@ -1,12 +1,23 @@
 use super::filters;
-use super::types::{Context, Flash, Quote};
+use super::types::{Context, Flash, QuoteWithUsers};
 use askama::Template;
 use axum::{extract::Extension, response::Html};
 use sqlx::{Pool, Postgres};
 
 pub async fn index(Extension(pool): Extension<Pool<Postgres>>) -> Result<Html<String>, String> {
-    let quotes = sqlx::query_as::<_, Quote>(
-        "SELECT *, (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count FROM quotes WHERE NOT hidden ORDER BY created_at DESC LIMIT 5",
+    let quotes = sqlx::query_as::<_, QuoteWithUsers>(
+        "SELECT quotes.*,
+           (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
+           quoter.username AS quoter_username,
+           quoter.fullname AS quoter_fullname,
+           quoter.email_address AS quoter_email_address,
+           quotee.username AS quotee_username,
+           quotee.fullname AS quotee_fullname,
+           quotee.email_address AS quotee_email_address
+         FROM quotes
+           INNER JOIN users AS quoter ON quoter.id = quoter_id
+           INNER JOIN users AS quotee ON quotee.id = quotee_id
+         WHERE NOT hidden ORDER BY quotes.created_at DESC LIMIT 5",
     )
     .fetch_all(&pool)
     .await
@@ -42,7 +53,7 @@ pub async fn comments() -> Result<Html<String>, String> {
 struct IndexTemplate {
     flash: Flash,
     logged_in: bool,
-    quotes: Vec<Quote>,
+    quotes: Vec<QuoteWithUsers>,
     top_contexts: Vec<Context>,
     current_user_contexts: Vec<Context>,
     current_user_comments: Vec<String>,
