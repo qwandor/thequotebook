@@ -21,14 +21,10 @@ pub struct Quote {
     pub quoter_id: i32,
     pub quotee_id: i32,
     pub hidden: bool,
+    pub comments_count: i64,
 }
 
 impl Quote {
-    pub fn comments_count(&self) -> u32 {
-        // TODO
-        0
-    }
-
     pub fn quotee(&self) -> User {
         User {
             id: 0,

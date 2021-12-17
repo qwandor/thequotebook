@@ -6,7 +6,7 @@ use sqlx::{Pool, Postgres};
 
 pub async fn index(Extension(pool): Extension<Pool<Postgres>>) -> Result<Html<String>, String> {
     let quotes = sqlx::query_as::<_, Quote>(
-        "SELECT * FROM quotes WHERE NOT hidden ORDER BY created_at DESC LIMIT 5",
+        "SELECT *, (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count FROM quotes WHERE NOT hidden ORDER BY created_at DESC LIMIT 5",
     )
     .fetch_all(&pool)
     .await
