@@ -44,6 +44,12 @@ pub struct User {
     pub openid: Option<String>,
 }
 
+impl User {
+    pub fn username_or_fullname(&self) -> &str {
+        self.username.as_deref().unwrap_or(&self.fullname)
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct QuoteWithUsers {
     pub quote: Quote,

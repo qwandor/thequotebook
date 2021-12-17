@@ -11,8 +11,8 @@ pub fn link_to_user(
     prefix: &str,
     class: &str,
 ) -> askama::Result<String> {
-    let username = user.username.as_ref().unwrap_or(&user.fullname);
-    let fullname = &user.fullname;
+    let username = user.username_or_fullname();
+    let fullname: &str = &user.fullname;
     let (content_text, title) = if swap_names {
         (fullname, username)
     } else {
