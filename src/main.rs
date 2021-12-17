@@ -2,6 +2,7 @@ mod contexts;
 mod filters;
 mod home;
 mod types;
+mod users;
 
 use axum::{
     http::StatusCode,
@@ -28,6 +29,7 @@ async fn main() -> Result<(), Report> {
         .route("/", get(home::index))
         .route("/comments", get(home::comments))
         .route("/contexts", get(contexts::index))
+        .route("/users", get(users::index))
         .nest(
             "/images",
             get_service(ServeDir::new("public/images")).handle_error(

@@ -5,13 +5,19 @@ pub fn link_to_user(
     user: &User,
     &avatar: &bool,
     &actually_link: &bool,
+    &swap_names: &bool,
     &css_avatar: &bool,
     &avatar_size: &u16,
     prefix: &str,
+    class: &str,
 ) -> askama::Result<String> {
-    let content_text = user.username.as_ref().unwrap_or(&user.fullname);
-    let title = &user.fullname;
-    let mut class = "nickname";
+    let username = user.username.as_ref().unwrap_or(&user.fullname);
+    let fullname = &user.fullname;
+    let (content_text, title) = if swap_names {
+        (fullname, username)
+    } else {
+        (username, fullname)
+    };
     let mut style = "".to_string();
     let email_address = user.email_address.as_deref().unwrap_or("");
     let gravatar = if avatar && !css_avatar {
@@ -23,7 +29,6 @@ pub fn link_to_user(
 
     if css_avatar {
         let image = gravatar_url(email_address, avatar_size);
-        class = "author";
         style = format!("background-image:url({})", escape(&image));
     }
 
