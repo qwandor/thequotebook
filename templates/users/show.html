@@ -1,0 +1,63 @@
+{% extends "layouts/application.html" %}
+
+{% block title %}: {{ user.fullname }}{% endblock %}
+
+{% block head %}
+<%= auto_discovery_link_tag :atom, {:action => :quotes, :format => :atom}, {:title => "Quotes by #{h(@user.fullname)}"} %>
+{% endblock %}
+
+{% block header %}
+  <div class="vcard">
+    <h1>
+      <span class="fn">{{ user.fullname }}</span>
+{% match user.username %}
+{% when Some with (username) %}
+      <div class="tagline">{{ user|gravatar_for(24, "photo")|safe }}<span class="nickname">{{ username }}</span></div>
+{% when None %}
+{% endmatch %}
+    </h1>
+
+{% match user.openid %}
+{% when Some with (openid) %}
+    <!--TODO: How to display this nicely?-->
+    <p style="display: none;">
+      <b>OpenID:</b>
+      <a href="{{ openid }}" class="url" rel="me">{{ openid }}</a>
+    </p>
+{% when None %}
+{% endmatch %}
+  </div>
+{% endblock %}
+
+{% block body %}
+{% for quote in quotes %}
+<%= formatted_quote quote, :quotee_link => false %>
+{% endfor %}
+
+<ul class="pagination">
+  <%= my_paginate(@quotes) %>
+  <li><%= link_to 'All', quotes_user_path(@user), {:class => 'button'} %></li>
+</ul>
+{% endblock %}
+
+{% block sidebars %}
+<div class="sidebar left">
+<% if !@user.contexts.empty? %>
+  <h2><%=h @user.username || @user.fullname %>'s quotebooks</h2>
+  <ul>
+<%   for context in @user.contexts %>
+    <li>
+      <%= link_to h(context.name), context, {:title => h(context.description)} %> (<%= context.quotes.size %>)
+    </li>
+<%   end %>
+  </ul>
+<% end %>
+</div>
+
+<div class="sidebar right" id="comments">
+<% if !@comments.empty? %>
+  <h2><%=h @user.username || @user.fullname %>'s comments</h2>
+  <%= render :partial => 'comments/list_sidebar', :locals => {:comments => @comments, :show_context => false} %>
+<% end %>
+</div>
+{% endblock %}

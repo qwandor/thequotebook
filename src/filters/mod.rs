@@ -3,6 +3,7 @@ mod user;
 
 use askama::Html;
 pub use quote::formatted_quote;
+pub use user::gravatar_for;
 pub use user::link_to_user;
 
 fn escape(text: &str) -> String {

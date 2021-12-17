@@ -21,7 +21,7 @@ pub fn link_to_user(
     let mut style = "".to_string();
     let email_address = user.email_address.as_deref().unwrap_or("");
     let gravatar = if avatar && !css_avatar {
-        gravatar(email_address, avatar_size)
+        gravatar(email_address, avatar_size, "gravatar")
     } else {
         "".to_string()
     };
@@ -49,10 +49,16 @@ pub fn link_to_user(
     })
 }
 
-fn gravatar(email_address: &str, avatar_size: u16) -> String {
+pub fn gravatar_for(user: &User, &avatar_size: &u16, class: &str) -> askama::Result<String> {
+    let email_address = user.email_address.as_deref().unwrap_or("");
+    Ok(gravatar(email_address, avatar_size, class))
+}
+
+fn gravatar(email_address: &str, avatar_size: u16, class: &str) -> String {
     let url = gravatar_url(email_address, avatar_size);
     format!(
-        "<img class=\"gravatar\" alt=\"avatar\" width=\"{}\" height=\"{}\" src=\"{}\"/>",
+        "<img class=\"{}\" alt=\"avatar\" width=\"{}\" height=\"{}\" src=\"{}\"/>",
+        class,
         avatar_size,
         avatar_size,
         escape(&url)

@@ -13,9 +13,11 @@ pub async fn index(Extension(pool): Extension<Pool<Postgres>>) -> Result<Html<St
            quoter.username AS quoter_username,
            quoter.fullname AS quoter_fullname,
            quoter.email_address AS quoter_email_address,
+           quoter.openid AS quoter_openid,
            quotee.username AS quotee_username,
            quotee.fullname AS quotee_fullname,
-           quotee.email_address AS quotee_email_address
+           quotee.email_address AS quotee_email_address,
+           quotee.openid AS quotee_openid
          FROM quotes
            INNER JOIN users AS quoter ON quoter.id = quoter_id
            INNER JOIN users AS quotee ON quotee.id = quotee_id

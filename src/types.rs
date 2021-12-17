@@ -41,6 +41,7 @@ pub struct User {
     pub email_address: Option<String>,
     pub username: Option<String>,
     pub fullname: String,
+    pub openid: Option<String>,
 }
 
 #[derive(Clone, Debug)]
@@ -59,12 +60,14 @@ impl<'r> FromRow<'r, PgRow> for QuoteWithUsers {
                 email_address: row.try_get("quoter_email_address")?,
                 username: row.try_get("quoter_username")?,
                 fullname: row.try_get("quoter_fullname")?,
+                openid: row.try_get("quoter_openid")?,
             },
             quotee: User {
                 id: row.try_get("quotee_id")?,
                 email_address: row.try_get("quotee_email_address")?,
                 username: row.try_get("quotee_username")?,
                 fullname: row.try_get("quotee_fullname")?,
+                openid: row.try_get("quotee_openid")?,
             },
         })
     }
