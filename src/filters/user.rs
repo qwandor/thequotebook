@@ -11,7 +11,8 @@ pub fn link_to_user(
 ) -> askama::Result<String> {
     let content_text = user.username.as_ref().unwrap_or(&user.fullname);
     let title = &user.fullname;
-    let class = "nickname";
+    let mut class = "nickname";
+    let mut style = "".to_string();
     let email_address = user.email_address.as_deref().unwrap_or("");
     let gravatar = if avatar && !css_avatar {
         gravatar(email_address, avatar_size)
@@ -19,19 +20,24 @@ pub fn link_to_user(
         "".to_string()
     };
     let link_text = format!("{}{}{}", prefix, gravatar, escape(content_text));
+
+    if css_avatar {
+        let image = gravatar_url(email_address, avatar_size);
+        class = "author";
+        style = format!("background-image:url({})", escape(&image));
+    }
+
     Ok(if actually_link {
         // TODO: Support full_url
         let user_url = format!("/user/{}", user.id);
         format!(
-            "<a href=\"{}\" class=\"{}\" title=\"{}\">{}</a>",
-            user_url, class, title, link_text
+            "<a href=\"{}\" class=\"{}\" title=\"{}\" style=\"{}\">{}</a>",
+            user_url, class, title, style, link_text
         )
     } else if css_avatar {
-        let image = gravatar_url(email_address, avatar_size);
         format!(
-            "<span class=\"author\" style=\"background-image:url({})\">{}</span>",
-            escape(&image),
-            link_text
+            "<span class=\"{}\" style=\"{}\">{}</span>",
+            class, style, link_text
         )
     } else {
         link_text
@@ -51,7 +57,7 @@ fn gravatar(email_address: &str, avatar_size: u16) -> String {
 fn gravatar_url(email_address: &str, avatar_size: u16) -> String {
     let email_hash = md5::compute(email_address);
     format!(
-        "http://www.gravatar.com/avatar.php?gravatar_id={:x}&avatar_size={}&rating=PG",
+        "http://www.gravatar.com/avatar.php?gravatar_id={:x}&size={}&rating=PG",
         email_hash, avatar_size
     )
 }
