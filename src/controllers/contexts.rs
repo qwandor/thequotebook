@@ -1,4 +1,4 @@
-use super::types::{Context, Flash};
+use crate::types::{Context, Flash};
 use askama::Template;
 use axum::response::Html;
 

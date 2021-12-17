@@ -1,14 +1,13 @@
-mod contexts;
+mod controllers;
 mod filters;
-mod home;
 mod types;
-mod users;
 
 use axum::{
     http::StatusCode,
     routing::{get, get_service},
     AddExtensionLayer, Router,
 };
+use controllers::{contexts, home, users};
 use eyre::Report;
 use sqlx::postgres::PgPoolOptions;
 use std::io;

@@ -1,5 +1,7 @@
-use super::filters;
-use super::types::{Context, Flash, QuoteWithUsers};
+use crate::{
+    filters,
+    types::{Context, Flash, QuoteWithUsers},
+};
 use askama::Template;
 use axum::{extract::Extension, response::Html};
 use sqlx::{Pool, Postgres};

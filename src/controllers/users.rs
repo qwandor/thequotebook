@@ -1,5 +1,7 @@
-use super::filters;
-use super::types::{Flash, User};
+use crate::{
+    filters,
+    types::{Flash, User},
+};
 use askama::Template;
 use axum::{extract::Extension, response::Html};
 use sqlx::{Pool, Postgres};
