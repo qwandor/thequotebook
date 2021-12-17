@@ -1,6 +1,6 @@
 use crate::{
     filters,
-    types::{Flash, User, Quote},
+    types::{Context, Flash, Quote, User},
 };
 use askama::Template;
 use axum::{
@@ -47,6 +47,13 @@ pub async fn show(
         },
         user,
         quotes: vec![],
+        comments: vec!["Comment".to_string()],
+        contexts: vec![Context {
+            id: 0,
+            name: "Context".to_string(),
+            description: "Description".to_string(),
+            quote_count: 32,
+        }],
     };
     Ok(Html(template.render().map_err(|e| e.to_string())?))
 }
@@ -57,4 +64,6 @@ struct ShowTemplate {
     flash: Flash,
     user: User,
     quotes: Vec<Quote>,
+    comments: Vec<String>,
+    contexts: Vec<Context>,
 }

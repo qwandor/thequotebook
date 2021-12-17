@@ -3,7 +3,7 @@
 {% block title %}: {{ user.fullname }}{% endblock %}
 
 {% block head %}
-<%= auto_discovery_link_tag :atom, {:action => :quotes, :format => :atom}, {:title => "Quotes by #{h(@user.fullname)}"} %>
+<link rel="alternate" type="application/atom+xml" title="Quotes by {{ user.fullname }}" href="/users/{{ user.id }}/quotes.atom" />
 {% endblock %}
 
 {% block header %}
@@ -36,28 +36,28 @@
 
 <ul class="pagination">
   <%= my_paginate(@quotes) %>
-  <li><%= link_to 'All', quotes_user_path(@user), {:class => 'button'} %></li>
+  <li><a href="/user/{{ user.id }}/quotes" class="button">All</a></li>
 </ul>
 {% endblock %}
 
 {% block sidebars %}
 <div class="sidebar left">
-<% if !@user.contexts.empty? %>
-  <h2><%=h @user.username || @user.fullname %>'s quotebooks</h2>
+{% if !contexts.is_empty() %}
+  <h2>{{ user.username_or_fullname() }}'s quotebooks</h2>
   <ul>
-<%   for context in @user.contexts %>
+{%   for context in contexts %}
     <li>
-      <%= link_to h(context.name), context, {:title => h(context.description)} %> (<%= context.quotes.size %>)
+      <a href="/contexts/{{ context.id }}" title="{{ context.description }}">{{ context.name }}</a> ({{ context.quote_count }})
     </li>
-<%   end %>
+{%   endfor %}
   </ul>
-<% end %>
+{% endif %}
 </div>
 
 <div class="sidebar right" id="comments">
-<% if !@comments.empty? %>
-  <h2><%=h @user.username || @user.fullname %>'s comments</h2>
+{% if !comments.is_empty() %}
+  <h2>{{ user.username_or_fullname() }}'s comments</h2>
   <%= render :partial => 'comments/list_sidebar', :locals => {:comments => @comments, :show_context => false} %>
-<% end %>
+{% endif %}
 </div>
 {% endblock %}
