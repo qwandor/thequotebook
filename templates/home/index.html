@@ -12,7 +12,7 @@
 <p>Once you join some quotebooks or add quotes to your quotebooks, they will show up here.</p>
 {% else %}
 {%   for quote in quotes %}
-<%= formatted_quote quote %>
+{{ quote|formatted_quote(false, true, true, true, true)|safe }}
 {%   endfor %}
   <ul class="pagination">
     <%= my_paginate(@quotes) %>

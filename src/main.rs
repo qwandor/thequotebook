@@ -1,13 +1,15 @@
 mod contexts;
+mod filters;
 mod home;
 mod types;
 
 use axum::{
     http::StatusCode,
     routing::{get, get_service},
-    Router,
+    AddExtensionLayer, Router,
 };
 use eyre::Report;
+use sqlx::postgres::PgPoolOptions;
 use std::io;
 use tower_http::services::ServeDir;
 
@@ -16,6 +18,11 @@ async fn main() -> Result<(), Report> {
     stable_eyre::install()?;
     pretty_env_logger::init();
     color_backtrace::install();
+
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect("postgres://qwandor:password@localhost/quoteyou")
+        .await?;
 
     let app = Router::new()
         .route("/", get(home::index))
@@ -42,7 +49,8 @@ async fn main() -> Result<(), Report> {
                     )
                 },
             ),
-        );
+        )
+        .layer(AddExtensionLayer::new(pool));
 
     axum::Server::bind(&"0.0.0.0:3000".parse()?)
         .serve(app.into_make_service())

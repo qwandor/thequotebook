@@ -1,15 +1,23 @@
-use super::types::{Context, Flash};
+use super::filters;
+use super::types::{Context, Flash, Quote};
 use askama::Template;
-use axum::response::Html;
+use axum::{extract::Extension, response::Html};
+use sqlx::{Pool, Postgres};
 
-pub async fn index() -> Result<Html<String>, String> {
+pub async fn index(Extension(pool): Extension<Pool<Postgres>>) -> Result<Html<String>, String> {
+    let quotes = sqlx::query_as::<_, Quote>(
+        "SELECT * FROM quotes WHERE NOT hidden ORDER BY created_at DESC LIMIT 5",
+    )
+    .fetch_all(&pool)
+    .await
+    .map_err(|e| e.to_string())?;
     let template = IndexTemplate {
         flash: Flash {
             notice: None,
             error: None,
         },
         logged_in: false,
-        quotes: vec![],
+        quotes,
         top_contexts: vec![],
         current_user_contexts: vec![],
         current_user_comments: vec![],
@@ -34,7 +42,7 @@ pub async fn comments() -> Result<Html<String>, String> {
 struct IndexTemplate {
     flash: Flash,
     logged_in: bool,
-    quotes: Vec<String>,
+    quotes: Vec<Quote>,
     top_contexts: Vec<Context>,
     current_user_contexts: Vec<Context>,
     current_user_comments: Vec<String>,

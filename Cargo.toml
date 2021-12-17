@@ -8,7 +8,9 @@ askama = "0.10.5"
 axum = "0.4.2"
 color-backtrace = "0.5.1"
 eyre = "0.6.5"
+md5 = "0.7.0"
 pretty_env_logger = "0.4.0"
+sqlx = { version = "0.5.9", features = ["postgres", "runtime-tokio-rustls"] }
 stable-eyre = "0.2.2"
 tokio = { version = "1.15.0", features = ["macros", "rt-multi-thread"] }
 tower-http = { version = "0.2.0", features = ["fs"] }
