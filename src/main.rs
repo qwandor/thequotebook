@@ -1,16 +1,16 @@
 mod controllers;
+mod errors;
 mod filters;
 mod types;
 
 use axum::{
-    http::StatusCode,
     routing::{get, get_service},
     AddExtensionLayer, Router,
 };
 use controllers::{contexts, home, users};
+use errors::internal_error;
 use eyre::Report;
 use sqlx::postgres::PgPoolOptions;
-use std::io;
 use tower_http::services::ServeDir;
 
 #[tokio::main]
@@ -32,25 +32,11 @@ async fn main() -> Result<(), Report> {
         .route("/user/:id", get(users::show))
         .nest(
             "/images",
-            get_service(ServeDir::new("public/images")).handle_error(
-                |error: io::Error| async move {
-                    (
-                        StatusCode::INTERNAL_SERVER_ERROR,
-                        format!("Unhandled internal error: {}", error),
-                    )
-                },
-            ),
+            get_service(ServeDir::new("public/images")).handle_error(internal_error),
         )
         .nest(
             "/stylesheets",
-            get_service(ServeDir::new("public/stylesheets")).handle_error(
-                |error: io::Error| async move {
-                    (
-                        StatusCode::INTERNAL_SERVER_ERROR,
-                        format!("Unhandled internal error: {}", error),
-                    )
-                },
-            ),
+            get_service(ServeDir::new("public/stylesheets")).handle_error(internal_error),
         )
         .layer(AddExtensionLayer::new(pool));
 

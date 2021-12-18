@@ -1,4 +1,5 @@
 use crate::{
+    errors::InternalError,
     filters,
     types::{Context, Flash, QuoteWithUsers},
 };
@@ -6,7 +7,9 @@ use askama::Template;
 use axum::{extract::Extension, response::Html};
 use sqlx::{Pool, Postgres};
 
-pub async fn index(Extension(pool): Extension<Pool<Postgres>>) -> Result<Html<String>, String> {
+pub async fn index(
+    Extension(pool): Extension<Pool<Postgres>>,
+) -> Result<Html<String>, InternalError> {
     let quotes = sqlx::query_as::<_, QuoteWithUsers>(
         "SELECT quotes.*,
            (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
@@ -24,8 +27,7 @@ pub async fn index(Extension(pool): Extension<Pool<Postgres>>) -> Result<Html<St
          WHERE NOT hidden ORDER BY quotes.created_at DESC LIMIT 5",
     )
     .fetch_all(&pool)
-    .await
-    .map_err(|e| e.to_string())?;
+    .await?;
     let template = IndexTemplate {
         flash: Flash {
             notice: None,
@@ -39,17 +41,17 @@ pub async fn index(Extension(pool): Extension<Pool<Postgres>>) -> Result<Html<St
         current_user_id: 0,
         current_user_fullname: "".to_string(),
     };
-    Ok(Html(template.render().map_err(|e| e.to_string())?))
+    Ok(Html(template.render()?))
 }
 
-pub async fn comments() -> Result<Html<String>, String> {
+pub async fn comments() -> Result<Html<String>, InternalError> {
     let template = CommentsTemplate {
         flash: Flash {
             notice: None,
             error: None,
         },
     };
-    Ok(Html(template.render().map_err(|e| e.to_string())?))
+    Ok(Html(template.render()?))
 }
 
 #[derive(Template)]

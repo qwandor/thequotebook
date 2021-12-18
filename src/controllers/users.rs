@@ -1,4 +1,5 @@
 use crate::{
+    errors::InternalError,
     filters,
     types::{Context, Flash, Quote, User},
 };
@@ -9,11 +10,12 @@ use axum::{
 };
 use sqlx::{Pool, Postgres};
 
-pub async fn index(Extension(pool): Extension<Pool<Postgres>>) -> Result<Html<String>, String> {
+pub async fn index(
+    Extension(pool): Extension<Pool<Postgres>>,
+) -> Result<Html<String>, InternalError> {
     let users = sqlx::query_as::<_, User>("SELECT * FROM users ORDER BY created_at DESC")
         .fetch_all(&pool)
-        .await
-        .map_err(|e| e.to_string())?;
+        .await?;
     let template = IndexTemplate {
         flash: Flash {
             notice: None,
@@ -21,7 +23,7 @@ pub async fn index(Extension(pool): Extension<Pool<Postgres>>) -> Result<Html<St
         },
         users,
     };
-    Ok(Html(template.render().map_err(|e| e.to_string())?))
+    Ok(Html(template.render()?))
 }
 
 #[derive(Template)]
@@ -34,12 +36,11 @@ struct IndexTemplate {
 pub async fn show(
     Extension(pool): Extension<Pool<Postgres>>,
     Path(user_id): Path<i32>,
-) -> Result<Html<String>, String> {
+) -> Result<Html<String>, InternalError> {
     let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
         .bind(user_id)
         .fetch_one(&pool)
-        .await
-        .map_err(|e| e.to_string())?;
+        .await?;
     let template = ShowTemplate {
         flash: Flash {
             notice: None,
@@ -55,7 +56,7 @@ pub async fn show(
             quote_count: 32,
         }],
     };
-    Ok(Html(template.render().map_err(|e| e.to_string())?))
+    Ok(Html(template.render()?))
 }
 
 #[derive(Template)]
