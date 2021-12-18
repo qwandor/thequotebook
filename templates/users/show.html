@@ -31,7 +31,7 @@
 
 {% block body %}
 {% for quote in quotes %}
-<%= formatted_quote quote, :quotee_link => false %>
+{{ quote|formatted_quote(false, true, false, true, true)|safe }}
 {% endfor %}
 
 <ul class="pagination">
