@@ -12,6 +12,7 @@ pub async fn index(
 ) -> Result<Html<String>, InternalError> {
     let quotes = sqlx::query_as::<_, QuoteWithUsers>(
         "SELECT quotes.*,
+           quotes.created_at AT TIME ZONE 'UTC' AS created_at,
            (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
            quoter.username AS quoter_username,
            quoter.fullname AS quoter_fullname,

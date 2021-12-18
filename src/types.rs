@@ -1,4 +1,8 @@
-use sqlx::{postgres::PgRow, FromRow, Row};
+use sqlx::{
+    postgres::PgRow,
+    types::chrono::{DateTime, Utc},
+    FromRow, Row,
+};
 
 pub struct Flash {
     pub notice: Option<String>,
@@ -20,6 +24,7 @@ pub struct Quote {
     pub context_id: i32,
     pub quoter_id: i32,
     pub quotee_id: i32,
+    pub created_at: DateTime<Utc>,
     pub hidden: bool,
 }
 

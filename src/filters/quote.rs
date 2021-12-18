@@ -70,7 +70,8 @@ struct QuoteTemplate {
     comments_text: String,
 }
 
-// filters::link_to_user needs to be in scope for the Template derive macro above.
+// Some filters need to be in scope for the Template derive macro above.
 mod filters {
-    pub use super::super::user::link_to_user;
+    pub use super::super::link_to_user;
+    pub use super::super::long_datetime;
 }

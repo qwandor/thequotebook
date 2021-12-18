@@ -1,8 +1,10 @@
 mod quote;
+mod time;
 mod user;
 
 use askama::Html;
 pub use quote::formatted_quote;
+pub use time::long_datetime;
 pub use user::gravatar_for;
 pub use user::link_to_user;
 
