@@ -1,0 +1,9 @@
+<div id="nav">
+{% if logged_in %}
+  <%= link_to "Logged in as <strong>#{current_user.username}</strong>", current_user %>
+  <%= link_to 'Edit profile', edit_user_path(current_user), {:class => 'button'} %>
+  <a href="/logout" title="Log out" class="button">Log out</a>
+{% else %}
+  <a href="/login" title="Log in" class="button">Log in</a>
+{% endif %}
+</div>

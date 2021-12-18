@@ -54,6 +54,7 @@ pub async fn comments() -> Result<Html<String>, InternalError> {
             notice: None,
             error: None,
         },
+        logged_in: false,
     };
     Ok(Html(template.render()?))
 }
@@ -75,4 +76,5 @@ struct IndexTemplate {
 #[template(path = "home/comments.html")]
 struct CommentsTemplate {
     flash: Flash,
+    logged_in: bool,
 }

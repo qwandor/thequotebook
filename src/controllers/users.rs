@@ -21,6 +21,7 @@ pub async fn index(
             notice: None,
             error: None,
         },
+        logged_in: false,
         users,
     };
     Ok(Html(template.render()?))
@@ -30,6 +31,7 @@ pub async fn index(
 #[template(path = "users/index.html")]
 struct IndexTemplate {
     flash: Flash,
+    logged_in: bool,
     users: Vec<User>,
 }
 
@@ -71,6 +73,7 @@ pub async fn show(
             notice: None,
             error: None,
         },
+        logged_in: false,
         user,
         quotes,
         comments: vec!["Comment".to_string()],
@@ -88,6 +91,7 @@ pub async fn show(
 #[template(path = "users/show.html")]
 struct ShowTemplate {
     flash: Flash,
+    logged_in: bool,
     user: User,
     quotes: Vec<QuoteWithUsers>,
     comments: Vec<String>,

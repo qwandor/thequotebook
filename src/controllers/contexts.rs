@@ -11,6 +11,7 @@ pub async fn index() -> Result<Html<String>, InternalError> {
             notice: None,
             error: None,
         },
+        logged_in: false,
         contexts: vec![],
     };
     Ok(Html(template.render()?))
@@ -20,5 +21,6 @@ pub async fn index() -> Result<Html<String>, InternalError> {
 #[template(path = "contexts/index.html")]
 struct IndexTemplate {
     flash: Flash,
+    logged_in: bool,
     contexts: Vec<Context>,
 }
