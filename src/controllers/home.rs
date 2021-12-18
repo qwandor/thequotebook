@@ -20,10 +20,13 @@ pub async fn index(
            quotee.username AS quotee_username,
            quotee.fullname AS quotee_fullname,
            quotee.email_address AS quotee_email_address,
-           quotee.openid AS quotee_openid
+           quotee.openid AS quotee_openid,
+           contexts.name AS context_name,
+           contexts.description AS context_description
          FROM quotes
            INNER JOIN users AS quoter ON quoter.id = quoter_id
            INNER JOIN users AS quotee ON quotee.id = quotee_id
+           INNER JOIN contexts ON contexts.id = context_id
          WHERE NOT hidden ORDER BY quotes.created_at DESC LIMIT 5",
     )
     .fetch_all(&pool)

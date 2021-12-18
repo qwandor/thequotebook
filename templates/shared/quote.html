@@ -17,6 +17,6 @@
     {% else %}
     {{ comments_text }}
     {% endif %}
-    Quoted by {{ quoter|link_to_user(true, quoter_link, false, false, 16, "", "nickname")|safe }} on <%=h quote.created_at %>{% if show_context %} in <a href="/contexts/{{ quote.context().id }}">{{ quote.context().name }}</a>{% endif %}.
+    Quoted by {{ quoter|link_to_user(true, quoter_link, false, false, 16, "", "nickname")|safe }} on <%=h quote.created_at %>{% if show_context %} in <a href="/contexts/{{ context.id }}">{{ context.name }}</a>{% endif %}.
   </div>
 </blockquote>

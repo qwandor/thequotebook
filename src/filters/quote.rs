@@ -1,4 +1,4 @@
-use crate::types::{Quote, QuoteWithUsers, User};
+use crate::types::{Context, Quote, QuoteWithUsers, User};
 use askama::Template;
 
 fn quote_marks_if_needed(text: &str) -> String {
@@ -40,6 +40,7 @@ pub fn formatted_quote(
         quote: quote.quote.to_owned(),
         quoter: quote.quoter.to_owned(),
         quotee: quote.quotee.to_owned(),
+        context: quote.context.to_owned(),
         single,
         quote_link,
         quoter_link,
@@ -58,6 +59,7 @@ struct QuoteTemplate {
     quote: Quote,
     quoter: User,
     quotee: User,
+    context: Context,
     single: bool,
     quote_link: bool,
     quoter_link: bool,

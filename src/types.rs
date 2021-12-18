@@ -24,17 +24,6 @@ pub struct Quote {
     pub comments_count: i64,
 }
 
-impl Quote {
-    pub fn context(&self) -> Context {
-        Context {
-            id: 0,
-            name: "Context".to_string(),
-            description: "Description".to_string(),
-            quote_count: 0,
-        }
-    }
-}
-
 #[derive(Clone, Debug, FromRow)]
 pub struct User {
     pub id: i32,
@@ -55,6 +44,7 @@ pub struct QuoteWithUsers {
     pub quote: Quote,
     pub quoter: User,
     pub quotee: User,
+    pub context: Context,
 }
 
 impl<'r> FromRow<'r, PgRow> for QuoteWithUsers {
@@ -74,6 +64,12 @@ impl<'r> FromRow<'r, PgRow> for QuoteWithUsers {
                 username: row.try_get("quotee_username")?,
                 fullname: row.try_get("quotee_fullname")?,
                 openid: row.try_get("quotee_openid")?,
+            },
+            context: Context {
+                id: row.try_get("context_id")?,
+                name: row.try_get("context_name")?,
+                description: row.try_get("context_description")?,
+                quote_count: 0,
             },
         })
     }
