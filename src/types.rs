@@ -21,7 +21,6 @@ pub struct Quote {
     pub quoter_id: i32,
     pub quotee_id: i32,
     pub hidden: bool,
-    pub comments_count: i64,
 }
 
 #[derive(Clone, Debug, FromRow)]
@@ -45,6 +44,7 @@ pub struct QuoteWithUsers {
     pub quoter: User,
     pub quotee: User,
     pub context: Context,
+    pub comments_count: i64,
 }
 
 impl<'r> FromRow<'r, PgRow> for QuoteWithUsers {
@@ -71,6 +71,7 @@ impl<'r> FromRow<'r, PgRow> for QuoteWithUsers {
                 description: row.try_get("context_description")?,
                 quote_count: 0,
             },
+            comments_count: row.try_get("comments_count")?,
         })
     }
 }

@@ -25,12 +25,12 @@ pub fn formatted_quote(
     let quote_link = !single;
     let text = bbcode_to_html(quote_marks_if_needed(&quote.quote.quote_text));
     let comments_text = if show_comments {
-        if quote.quote.comments_count == 0 {
+        if quote.comments_count == 0 {
             "No comments (yet).".to_string()
-        } else if quote.quote.comments_count == 1 {
+        } else if quote.comments_count == 1 {
             "1 comment.".to_string()
         } else {
-            format!("{} comments.", quote.quote.comments_count)
+            format!("{} comments.", quote.comments_count)
         }
     } else {
         "".to_string()
