@@ -28,6 +28,7 @@ async fn main() -> Result<(), Report> {
         .route("/", get(home::index))
         .route("/comments", get(home::comments))
         .route("/contexts", get(contexts::index))
+        .route("/contexts/:id", get(contexts::show))
         .route("/users", get(users::index))
         .route("/users/:id", get(users::show))
         .nest(

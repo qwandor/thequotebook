@@ -1,0 +1,45 @@
+<% form_for(@quote, :html => {:class => 'border clearfix'}) do |f| %>
+  <h2><%= f.label :quote_text, 'Add Quote' %></h2>
+
+  <% if @possible_quotee_matches %>
+    <p class="text">
+      Sorry, we cannot find anyone called '<%=h params[:quotee] %>'.
+    </p>
+    <% unless @possible_quotee_matches.empty? %>
+      <p class="text list-heading">
+        Did you mean one of these people:
+      </p>
+      <ul>
+      <% @possible_quotee_matches.each do |possible_quotee_match| %>
+        <li class="text"><%= link_to_function "#{h(possible_quotee_match.fullname)} (#{h(possible_quotee_match.username)})", "javascript:document.getElementById('quotee').value='#{ escape_javascript(possible_quotee_match.username || possible_quotee_match.fullname) }'" %></li>
+      <% end %>
+      </ul>
+    <% end %>
+    <p class="text">
+      Would you like to <%= link_to "create a new person called '#{h(params[:quotee])}'", new_user_path(:mode => 'partial', :fullname => params[:quotee]) %>?
+    </p>
+  <% end %>
+
+  <%= f.error_messages %>
+
+  <%= f.text_area :quote_text, {:rows => 4, :cols => 80} %>
+  <div class="input"><div>
+    <%= label_tag :quotee_name, 'by' %>
+    <%= my_text_field_with_auto_complete('quotes', :quotee, :name, {:value => @quote.quotee && (@quote.quotee.username || @quote.quotee.fullname) || params[:quotee]}, {:skip_style => true}) %>
+  </div></div>
+  <div class="input"><div>
+    <%= label_tag :context_name, 'in' %>
+<% if @context %>
+    <%= text_field_tag :context_dummy, @context.name, {:disabled => 'disabled'} %>
+    <%= hidden_field_tag 'context[name]', @context.name %>
+<% else %>
+    <%= text_field_with_auto_complete(:context, :name, {:value => @quote.context && @quote.context.name}, {:skip_style => true}) %>
+<% end %>
+  </div></div>
+
+  <%= f.submit button_label, {:class => 'button'} %>
+
+  <div class="fleuron tr"></div>
+  <div class="fleuron bl"></div>
+  <div class="fleuron br"></div>
+<% end %>

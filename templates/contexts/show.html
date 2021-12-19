@@ -1,0 +1,62 @@
+{% extends "layouts/application.html" %}
+
+{% block head %}
+<link rel="alternate" type="application/atom+xml" title="{{ context.name }} quotes" href="/contexts/{{ context.id }}/quotes.atom" />
+{% endblock %}
+
+{% block header %}
+  <h1 id="title">{{ context.name }}<span class="tagline">{{ context.description }}</span></h1>
+{% endblock %}
+
+{% block body %}
+{% if logged_in %}
+{% let button_label = "Quote" %}
+{% include "quotes/form.html" %}
+{% endif %}
+
+{% for quote in quotes %}
+{{ quote|formatted_quote(false, true, true, false, true)|safe }}
+{% endfor %}
+
+<ul class="pagination">
+  <%= my_paginate(@quotes) %>
+  <li>
+    <a href="/contexts/{{ context.id }}/quotes" class="button">All</a>
+  </li>
+</ul>
+
+<ul class="commands">
+{% if logged_in %}
+  <li>
+<% if @context.users.exists?(current_user) %>
+    <%= button_to 'Leave this quotebook', leave_context_path(@context), :class => 'button' %>
+<% else %>
+    <%= button_to 'Join this quotebook', join_context_path(@context), :class => 'button' %>
+<% end %>
+  </li>
+{% endif %}
+
+  <li>
+    <a href="/contexts/{{ context.id }}/edit" class="button">Edit {{ context.name }}</a>
+  </li>
+</ul>
+{% endblock %}
+
+{% block sidebars %}
+<div class="sidebar left">
+  <h2>In this quotebook</h2>
+  <ul>
+{% for user in users %}
+    <li>{{ user|link_to_user(true, true, false, false, 16, "", "nickname")|safe }}</li>
+{% endfor %}
+  </ul>
+</div>
+
+<div class="sidebar right" id="comments">
+{% if !comments.is_empty() %}
+  <h2>Latest comments</h2>
+  {% let show_context = false %}
+  {% include "comments/list_sidebar.html" %}
+{% endif %}
+</div>
+{% endblock %}
