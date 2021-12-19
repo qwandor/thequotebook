@@ -7,7 +7,7 @@ use axum::{
     routing::{get, get_service},
     AddExtensionLayer, Router,
 };
-use controllers::{contexts, home, users};
+use controllers::{contexts, home, quotes, users};
 use errors::internal_error;
 use eyre::Report;
 use sqlx::postgres::PgPoolOptions;
@@ -31,6 +31,7 @@ async fn main() -> Result<(), Report> {
         .route("/contexts/:id", get(contexts::show))
         .route("/users", get(users::index))
         .route("/users/:id", get(users::show))
+        .route("/quotes", get(quotes::index))
         .nest(
             "/images",
             get_service(ServeDir::new("public/images")).handle_error(internal_error),

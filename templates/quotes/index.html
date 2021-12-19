@@ -1,0 +1,19 @@
+{% extends "layouts/application.html" %}
+
+{% block title %}: All quotes{% endblock %}
+
+{% block head %}
+<link rel="alternate" type="application/atom+xml" title="All quotes" href="/quotes.atom" />
+{% endblock %}
+
+{% block header %}
+<h1>Listing quotes</h1>
+{% endblock %}
+
+{% block body %}
+{% for quote in quotes %}
+{{ quote|formatted_quote(false, true, true, true, true)|safe }}
+{% endfor %}
+
+<a href="/quotes/new" class="button">New quote</a>
+{% endblock %}
