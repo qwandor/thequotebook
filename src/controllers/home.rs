@@ -32,6 +32,14 @@ pub async fn index(
     )
     .fetch_all(&pool)
     .await?;
+    let top_contexts = sqlx::query_as::<_, Context>(
+        "SELECT contexts.*,
+           (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) AS quotes_count
+         FROM contexts
+         ORDER BY quotes_count DESC LIMIT 5",
+    )
+    .fetch_all(&pool)
+    .await?;
     let template = IndexTemplate {
         flash: Flash {
             notice: None,
@@ -39,7 +47,7 @@ pub async fn index(
         },
         logged_in: false,
         quotes,
-        top_contexts: vec![],
+        top_contexts,
         current_user_contexts: vec![],
         current_user_comments: vec![],
         current_user_id: 0,
