@@ -1,0 +1,27 @@
+{% extends "layouts/application.html" %}
+
+{% block title %}: Comment{% endblock %}
+
+{% block header %}
+<h1>Comment on {{ comment.quote_text|comment_title_quote }}</h1>
+{% endblock %}
+
+{% block body %}
+<table>
+  <tr>
+    <td class="comment-date">
+      On <a href="/quotes/{{ comment.comment.quote_id }}/comments/{{ comment.comment.id }}">{{ comment.comment.created_at|long_datetime }}</a>,<br />
+      {{ comment.user|link_to_user(true, true, false, false, 16, "", "nickname")|safe }} said:<br />
+      {% if comment.user.id == current_user_id %}
+        (<a href="/quotes/{{ comment.comment.quote_id }}/comments/{{ comment.comment.id }}/edit">Edit</a> |
+        <%= link_to 'Destroy', quote_comment_path(@quote, @comment), :confirm => 'Are you sure?', :method => :delete %>)
+      {% endif %}
+    </td>
+    <td>
+      {{ comment.comment.body|comment_format(true) }}
+    </td>
+  </tr>
+</table>
+
+<a href="/quotes/{{ comment.comment.quote_id }}">Back to quote</a>
+{% endblock %}

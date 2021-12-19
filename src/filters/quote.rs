@@ -24,6 +24,11 @@ pub fn short_quote(text: &str) -> askama::Result<String> {
     //bbcode_to_html({}, :enable, true, false, [:bold, :italics])
 }
 
+pub fn comment_title_quote(text: &str) -> askama::Result<String> {
+    Ok(bbcode_to_html(&quote_marks_if_needed(text)?, false))
+    //bbcode_to_html({}, :enable, true, false, [:bold, :italics])
+}
+
 pub fn tweet_quote_text(text: &str) -> askama::Result<String> {
     Ok(trim_if_needed(&quote_marks_if_needed(text)?, 80))
 }
