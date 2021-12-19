@@ -55,10 +55,11 @@
   </ul>
 </div>
 
-{% if !current_user_comments.is_empty() %}
+{% if !comments.is_empty() %}
 <div class="sidebar right" id="comments">
   <h2>Latest comments</h2>
-  <%= render :partial => 'comments/list_sidebar', :locals => {:comments => @current_user_comments, :show_context => true} %>
+  {% let show_context = true %}
+  {% include "comments/list_sidebar.html" %}
 
   <hr />
   <ul>

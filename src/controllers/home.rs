@@ -2,7 +2,7 @@ use crate::{
     errors::InternalError,
     filters,
     session::Session,
-    types::{CommentWithQuotee, Context, QuoteWithUsers},
+    types::{CommentWithQuote, CommentWithQuotee, Context, QuoteWithUsers},
 };
 use askama::Template;
 use axum::{extract::Extension, response::Html};
@@ -47,7 +47,7 @@ pub async fn index(
         quotes,
         top_contexts,
         current_user_contexts: vec![],
-        current_user_comments: vec![],
+        comments: vec![],
     };
     Ok(Html(template.render()?))
 }
@@ -59,7 +59,7 @@ struct IndexTemplate {
     quotes: Vec<QuoteWithUsers>,
     top_contexts: Vec<Context>,
     current_user_contexts: Vec<Context>,
-    current_user_comments: Vec<String>,
+    comments: Vec<CommentWithQuote>,
 }
 
 pub async fn comments(
