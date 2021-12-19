@@ -34,7 +34,7 @@ pub fn link_to_user(
 
     Ok(if actually_link {
         // TODO: Support full_url
-        let user_url = format!("/user/{}", user.id);
+        let user_url = format!("/users/{}", user.id);
         format!(
             "<a href=\"{}\" class=\"{}\" title=\"{}\" style=\"{}\">{}</a>",
             user_url, class, title, style, link_text
