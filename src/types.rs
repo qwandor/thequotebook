@@ -14,7 +14,7 @@ pub struct Context {
     pub id: i32,
     pub name: String,
     pub description: String,
-    pub quote_count: u32,
+    pub quotes_count: i64,
 }
 
 #[derive(Clone, Debug, FromRow)]
@@ -83,7 +83,7 @@ impl<'r> FromRow<'r, PgRow> for QuoteWithUsers {
                 id: row.try_get("context_id")?,
                 name: row.try_get("context_name")?,
                 description: row.try_get("context_description")?,
-                quote_count: 0,
+                quotes_count: 0,
             },
             comments_count: row.try_get("comments_count")?,
         })
@@ -114,7 +114,7 @@ impl<'r> FromRow<'r, PgRow> for CommentWithQuote {
                 id: row.try_get("context_id")?,
                 name: row.try_get("context_name")?,
                 description: row.try_get("context_description")?,
-                quote_count: 0,
+                quotes_count: 0,
             },
         })
     }

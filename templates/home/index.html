@@ -33,7 +33,7 @@
   <ul>
 {%     for context in current_user_contexts %}
     <li>
-      <a href="/contexts/{{ context.id }}" title="{{ context.description }}">{{ context.name }}</a> ({{ context.quote_count }})
+      <a href="/contexts/{{ context.id }}" title="{{ context.description }}">{{ context.name }}</a> ({{ context.quotes_count }})
     </li>
 {%     endfor %}
   </ul>
@@ -44,7 +44,7 @@
   <ul>
 {% for context in top_contexts %}
     <li>
-      <a href="/contexts/{{ context.id }}" title="{{ context.description }}">{{ context.name }}</a> ({{ context.quote_count }})
+      <a href="/contexts/{{ context.id }}" title="{{ context.description }}">{{ context.name }}</a> ({{ context.quotes_count }})
     </li>
 {% endfor %}
   </ul>

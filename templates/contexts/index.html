@@ -8,7 +8,7 @@
 <ul>
 {% for context in contexts %}
   <li class="text">
-    {% if false %}<strong><a href="/contexts/{{ context.id }}">{{ context.name }}</a></strong>{% else %}<a href="/contexts/{{ context.id }}">{{ context.name }}</a>{% endif %} &mdash; {{ context.description }} ({{ context.quote_count }} quotes)
+    {% if false %}<strong><a href="/contexts/{{ context.id }}">{{ context.name }}</a></strong>{% else %}<a href="/contexts/{{ context.id }}">{{ context.name }}</a>{% endif %} &mdash; {{ context.description }} ({{ context.quotes_count }} quotes)
   </li>
 {% endfor %}
 </ul>
