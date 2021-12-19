@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block body %}
-{% if logged_in %}
+{% if session.logged_in %}
 {% let button_label = "Quote" %}
 {% include "quotes/form.html" %}
 {% endif %}
@@ -26,7 +26,7 @@
 </ul>
 
 <ul class="commands">
-{% if logged_in %}
+{% if session.logged_in %}
   <li>
 <% if @context.users.exists?(current_user) %>
     <%= button_to 'Leave this quotebook', leave_context_path(@context), :class => 'button' %>

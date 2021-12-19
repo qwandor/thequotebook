@@ -4,11 +4,6 @@ use sqlx::{
     FromRow, Row,
 };
 
-pub struct Flash {
-    pub notice: Option<String>,
-    pub error: Option<String>,
-}
-
 #[derive(Clone, Debug, FromRow)]
 pub struct Context {
     pub id: i32,

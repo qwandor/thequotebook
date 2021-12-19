@@ -1,5 +1,5 @@
 <div id="nav">
-{% if logged_in %}
+{% if session.logged_in %}
   <%= link_to "Logged in as <strong>#{current_user.username}</strong>", current_user %>
   <%= link_to 'Edit profile', edit_user_path(current_user), {:class => 'button'} %>
   <a href="/logout" title="Log out" class="button">Log out</a>

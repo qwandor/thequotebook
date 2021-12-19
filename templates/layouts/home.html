@@ -28,14 +28,14 @@
 
 <div class="holygrail">
   <div id="content">
-{% if flash.notice.is_some() || flash.error.is_some() %}
+{% if session.flash.notice.is_some() || session.flash.error.is_some() %}
     <div id="notices">
-{%   match flash.notice %}
+{%   match session.flash.notice %}
 {%   when Some with (notice) %}
       <div class="notice">{{ notice }}</div><!--TODO: Use p rather than div -->
 {%   when None %}
 {%   endmatch %}
-{%   match flash.error %}
+{%   match session.flash.error %}
 {%   when Some with (error) %}
       <div class="error">{{ error }}</div>
 {%   when None %}

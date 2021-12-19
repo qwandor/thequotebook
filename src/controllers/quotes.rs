@@ -1,7 +1,8 @@
 use crate::{
     errors::InternalError,
     filters,
-    types::{CommentWithQuote, Flash, QuoteWithUsers},
+    session::Session,
+    types::{CommentWithQuote, QuoteWithUsers},
 };
 use askama::Template;
 use axum::{
@@ -12,6 +13,7 @@ use sqlx::{Pool, Postgres};
 
 pub async fn index(
     Extension(pool): Extension<Pool<Postgres>>,
+    session: Session,
 ) -> Result<Html<String>, InternalError> {
     let quotes = sqlx::query_as::<_, QuoteWithUsers>(
         "SELECT quotes.*,
@@ -37,27 +39,21 @@ pub async fn index(
     .fetch_all(&pool)
     .await?;
 
-    let template = IndexTemplate {
-        flash: Flash {
-            notice: None,
-            error: None,
-        },
-        logged_in: false,
-        quotes,
-    };
+    let template = IndexTemplate { session, quotes };
     Ok(Html(template.render()?))
 }
 
 #[derive(Template)]
 #[template(path = "quotes/index.html")]
 struct IndexTemplate {
-    flash: Flash,
-    logged_in: bool,
+    session: Session,
     quotes: Vec<QuoteWithUsers>,
 }
 
 pub async fn show(
     Extension(pool): Extension<Pool<Postgres>>,
+    session: Session,
+
     Path(quote_id): Path<i32>,
 ) -> Result<Html<String>, InternalError> {
     let quote = sqlx::query_as::<_, QuoteWithUsers>(
@@ -107,14 +103,9 @@ pub async fn show(
     .await?;
 
     let template = ShowTemplate {
-        flash: Flash {
-            notice: None,
-            error: None,
-        },
-        logged_in: false,
+        session,
         quote,
         comments,
-        current_user_id: 1,
     };
     Ok(Html(template.render()?))
 }
@@ -122,9 +113,7 @@ pub async fn show(
 #[derive(Template)]
 #[template(path = "quotes/show.html")]
 struct ShowTemplate {
-    flash: Flash,
-    logged_in: bool,
+    session: Session,
     quote: QuoteWithUsers,
     comments: Vec<CommentWithQuote>,
-    current_user_id: i32,
 }

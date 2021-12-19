@@ -1,6 +1,7 @@
 mod controllers;
 mod errors;
 mod filters;
+mod session;
 mod types;
 
 use axum::{

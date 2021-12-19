@@ -1,7 +1,8 @@
 use crate::{
     errors::InternalError,
     filters,
-    types::{CommentWithQuote, Context, Flash, QuoteWithUsers, User},
+    session::Session,
+    types::{CommentWithQuote, Context, QuoteWithUsers, User},
 };
 use askama::Template;
 use axum::{
@@ -12,31 +13,25 @@ use sqlx::{Pool, Postgres};
 
 pub async fn index(
     Extension(pool): Extension<Pool<Postgres>>,
+    session: Session,
 ) -> Result<Html<String>, InternalError> {
     let users = sqlx::query_as::<_, User>("SELECT * FROM users ORDER BY created_at DESC")
         .fetch_all(&pool)
         .await?;
-    let template = IndexTemplate {
-        flash: Flash {
-            notice: None,
-            error: None,
-        },
-        logged_in: false,
-        users,
-    };
+    let template = IndexTemplate { session, users };
     Ok(Html(template.render()?))
 }
 
 #[derive(Template)]
 #[template(path = "users/index.html")]
 struct IndexTemplate {
-    flash: Flash,
-    logged_in: bool,
+    session: Session,
     users: Vec<User>,
 }
 
 pub async fn show(
     Extension(pool): Extension<Pool<Postgres>>,
+    session: Session,
     Path(user_id): Path<i32>,
 ) -> Result<Html<String>, InternalError> {
     let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
@@ -101,11 +96,7 @@ pub async fn show(
     .await?;
 
     let template = ShowTemplate {
-        flash: Flash {
-            notice: None,
-            error: None,
-        },
-        logged_in: false,
+        session,
         user,
         quotes,
         comments,
@@ -117,8 +108,7 @@ pub async fn show(
 #[derive(Template)]
 #[template(path = "users/show.html")]
 struct ShowTemplate {
-    flash: Flash,
-    logged_in: bool,
+    session: Session,
     user: User,
     quotes: Vec<QuoteWithUsers>,
     comments: Vec<CommentWithQuote>,

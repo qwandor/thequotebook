@@ -1,9 +1,9 @@
 {% extends "layouts/home.html" %}
 
 {% block head %}
-{%   if logged_in %}
-<link rel="alternate" type="application/atom+xml" title="Quotes of interest to {{ current_user_fullname }}" href="/users/{{ current_user_id }}/relevant_quotes.atom" />
-<link rel="alternate" type="application/atom+xml" title="Comments of interest to {{ current_user_fullname }}" href="/users/{{ current_user_id }}/relevant_comments.atom" />
+{%   if session.logged_in %}
+<link rel="alternate" type="application/atom+xml" title="Quotes of interest to {{ session.current_user_fullname }}" href="/users/{{ session.current_user_id }}/relevant_quotes.atom" />
+<link rel="alternate" type="application/atom+xml" title="Comments of interest to {{ session.current_user_fullname }}" href="/users/{{ session.current_user_id }}/relevant_comments.atom" />
 {%   endif %}
 {% endblock %}
 
@@ -16,14 +16,14 @@
 {%   endfor %}
   <ul class="pagination">
     <%= my_paginate(@quotes) %>
-    <li><a href="{% if logged_in %}/users/{{ current_user_id }}/relevant_quotes{% else %}/quotes{% endif %}" class="button">All</a>
+    <li><a href="{% if session.logged_in %}/users/{{ session.current_user_id }}/relevant_quotes{% else %}/quotes{% endif %}" class="button">All</a>
   </ul>
 {% endif %}
 {% endblock %}
 
 {% block sidebars %}
 <div class="sidebar left">
-{% if logged_in %}
+{% if session.logged_in %}
   <h2>Your quotebooks</h2>
 {%   if current_user_contexts.is_empty() %}
   <p>
@@ -62,7 +62,7 @@
 
   <hr />
   <ul>
-    <li><a href="/users/{{ current_user_id }}/relevant_comments">All comments on your quotebooks</a></li>
+    <li><a href="/users/{{ session.current_user_id }}/relevant_comments">All comments on your quotebooks</a></li>
   </ul>
 </div>
 {% endif %}

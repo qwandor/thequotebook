@@ -6,7 +6,7 @@
   </div>
   <div class="meta">
     <a href="/quotes/{{ comment.comment.quote_id }}/comments/{{ comment.comment.id }}">{{ comment.comment.created_at|long_datetime }}</a>
-{% if comment.user.id == current_user_id %}
+{% if comment.user.id == session.current_user_id %}
     (<a href="/quotes/{{ comment.comment.quote_id }}/comments/{{ comment.comment.id }}/edit">Edit</a> |
     <%= link_to 'Destroy', quote_comment_path(@quote, comment), :confirm => 'Are you sure?', :method => :delete %>)
 {% endif %}
