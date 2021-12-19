@@ -5,7 +5,9 @@ mod user;
 
 use askama::Html;
 pub use comment::comment_format;
-pub use quote::{formatted_quote, quote_marks_if_needed, short_quote};
+pub use quote::{
+    formatted_quote, formatted_single_quote, quote_marks_if_needed, short_quote, tweet_quote_text,
+};
 use regex::Regex;
 pub use time::long_datetime;
 pub use user::gravatar_for;

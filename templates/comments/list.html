@@ -1,0 +1,15 @@
+{% for comment in comments %}
+<blockquote class="comment">
+  <div>
+    {{ comment.comment.body|comment_format(true) }}
+    {{ comment.user|link_to_user(true, true, false, true, 24, "&mdash; ", "author")|safe }}
+  </div>
+  <div class="meta">
+    <a href="/quotes/{{ comment.comment.quote_id }}/comments/{{ comment.comment.id }}">{{ comment.comment.created_at|long_datetime }}</a>
+{% if comment.user.id == current_user_id %}
+    (<a href="/quotes/{{ comment.comment.quote_id }}/comments/{{ comment.comment.id }}/edit">Edit</a> |
+    <%= link_to 'Destroy', quote_comment_path(@quote, comment), :confirm => 'Are you sure?', :method => :delete %>)
+{% endif %}
+  </div>
+</blockquote>
+{% endfor %}

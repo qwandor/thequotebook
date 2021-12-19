@@ -1,0 +1,34 @@
+{% extends "layouts/application.html" %}
+
+{% block title %}: Quote by {{ quote.quotee.fullname }}{% endblock %}
+
+{% block head %}
+<link rel="alternate" type="application/atom+xml" title="Comments for this quote" href="/quotes/{{ quote.quote.id }}/comments.atom" />
+{% endblock %}
+
+{% block header %}
+{{ quote|formatted_single_quote|safe }}
+{% endblock %}
+
+{% block body %}
+<ul class="commands">
+  {% if quote.quoter.id == current_user_id %}
+  <li><a href="/quotes/{{ quote.quote.id }}/edit" class="button">Edit</a></li>
+  <li><%= link_to 'Destroy', @quote, :confirm => 'Are you sure?', :method => :delete, :class => 'button' %></li>
+  {% endif %}
+  <li><a href="http://twitter.com?status={{ quote.quotee.fullname }} said {{ quote.quote.quote_text|tweet_quote_text }} https://TODO/quotes/{{ quote.quote.id }}" class="button">Tweet this</a></li>
+</ul>
+
+{% include "comments/list.html" %}
+
+{% if logged_in %}
+<%
+@comment = @quote.comments.build #For new comment form; must be after above list of comments or it will show up there
+%>
+<%= render :partial => 'comments/form', :locals => {:button_label => 'Comment', :cancel_link => nil} %>
+{% else %}
+<p>
+  <a href="/quotes/{{ quote.quote.id }}/comments/new">Login to post a comment</a>
+</p>
+{% endif %}
+{% endblock %}

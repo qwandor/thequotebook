@@ -2,7 +2,7 @@
   <blockquote class="comment">
     <p>
       <a href="/quotes/{{ comment.comment.quote_id }}">
-        {{ comment.comment.body|comment_format()|safe }}
+        {{ comment.comment.body|comment_format(false)|safe }}
       </a>
       <span class="author">&mdash; {{ comment.user|link_to_user(true, true, false, false, 16, "", "nickname")|safe }}</span>
     </p>

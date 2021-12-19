@@ -1,7 +1,7 @@
 use crate::{
     errors::InternalError,
     filters,
-    types::{Flash, QuoteWithUsers},
+    types::{CommentWithQuote, Flash, QuoteWithUsers},
 };
 use askama::Template;
 use axum::{
@@ -54,4 +54,77 @@ struct IndexTemplate {
     flash: Flash,
     logged_in: bool,
     quotes: Vec<QuoteWithUsers>,
+}
+
+pub async fn show(
+    Extension(pool): Extension<Pool<Postgres>>,
+    Path(quote_id): Path<i32>,
+) -> Result<Html<String>, InternalError> {
+    let quote = sqlx::query_as::<_, QuoteWithUsers>(
+        "SELECT quotes.*,
+		   quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+           (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
+           quoter.username AS quoter_username,
+           quoter.fullname AS quoter_fullname,
+           quoter.email_address AS quoter_email_address,
+           quoter.openid AS quoter_openid,
+           quotee.username AS quotee_username,
+           quotee.fullname AS quotee_fullname,
+           quotee.email_address AS quotee_email_address,
+           quotee.openid AS quotee_openid,
+           contexts.name AS context_name,
+           contexts.description AS context_description
+         FROM quotes
+           INNER JOIN users AS quoter ON quoter.id = quoter_id
+           INNER JOIN users AS quotee ON quotee.id = quotee_id
+           INNER JOIN contexts ON contexts.id = context_id
+         WHERE quotes.id = $1
+         ORDER BY contexts.created_at DESC",
+    )
+    .bind(quote_id)
+    .fetch_one(&pool)
+    .await?;
+    let comments = sqlx::query_as::<_, CommentWithQuote>(
+        "SELECT comments.*,
+           comments.created_at AT TIME ZONE 'UTC' AS created_at,
+           quotes.quote_text,
+           quotes.context_id,
+           users.email_address AS user_email_address,
+           users.username AS user_username,
+           users.fullname AS user_fullname,
+           users.openid AS user_openid,
+           contexts.name AS context_name,
+           contexts.description AS context_description
+         FROM comments
+           INNER JOIN quotes ON quotes.id = comments.quote_id
+           INNER JOIN users ON users.id = comments.user_id
+           INNER JOIN contexts ON contexts.id = quotes.context_id
+         WHERE comments.quote_id = $1
+         ORDER BY comments.created_at ASC",
+    )
+    .bind(quote_id)
+    .fetch_all(&pool)
+    .await?;
+
+    let template = ShowTemplate {
+        flash: Flash {
+            notice: None,
+            error: None,
+        },
+        logged_in: false,
+        quote,
+        comments,
+        current_user_id: 1,
+    };
+    Ok(Html(template.render()?))
+}
+
+#[derive(Template)]
+#[template(path = "quotes/show.html")]
+struct ShowTemplate {
+    flash: Flash,
+    logged_in: bool,
+    quote: QuoteWithUsers,
+    comments: Vec<CommentWithQuote>,
+    current_user_id: i32,
 }

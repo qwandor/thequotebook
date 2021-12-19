@@ -32,6 +32,7 @@ async fn main() -> Result<(), Report> {
         .route("/users", get(users::index))
         .route("/users/:id", get(users::show))
         .route("/quotes", get(quotes::index))
+        .route("/quotes/:id", get(quotes::show))
         .nest(
             "/images",
             get_service(ServeDir::new("public/images")).handle_error(internal_error),
