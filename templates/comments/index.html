@@ -1,0 +1,20 @@
+{% extends "layouts/application.html" %}
+
+{% block title %}: Comments for quote{% endblock %}
+
+{% block head %}
+<link rel="alternate" type="application/atom+xml" title="Comments" href="/quotes/{{ quote.id }}/comments.atom" />
+{% endblock %}
+
+{% block header %}
+<h1>Comments for {{ quote.quote_text|comment_title_quote }}</h1>
+{% endblock %}
+
+{% block body %}
+{% include "comments/list.html" %}
+
+<br />
+
+<a href="/quotes/{{ quote.id }}/comments/new">New comment</a>
+<a href="/quotes/{{ quote.id }}">Back to quote</a>
+{% endblock %}
