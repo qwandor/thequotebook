@@ -1,5 +1,7 @@
 {% extends "layouts/application.html" %}
 
+{% block title %}: {{ context.name }}{% endblock %}
+
 {% block head %}
 <link rel="alternate" type="application/atom+xml" title="{{ context.name }} quotes" href="/contexts/{{ context.id }}/quotes.atom" />
 {% endblock %}
