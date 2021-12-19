@@ -1,7 +1,7 @@
 use crate::{
     errors::InternalError,
     filters,
-    types::{Context, Flash, QuoteWithUsers, User},
+    types::{CommentWithQuote, Context, Flash, QuoteWithUsers, User},
 };
 use askama::Template;
 use axum::{
@@ -43,6 +43,27 @@ pub async fn show(
         .bind(user_id)
         .fetch_one(&pool)
         .await?;
+    let comments = sqlx::query_as::<_, CommentWithQuote>(
+        "SELECT comments.*,
+           comments.created_at AT TIME ZONE 'UTC' AS created_at,
+           quotes.quote_text,
+           quotes.context_id,
+           users.email_address AS user_email_address,
+           users.username AS user_username,
+           users.fullname AS user_fullname,
+           users.openid AS user_openid,
+           contexts.name AS context_name,
+           contexts.description AS context_description
+         FROM comments
+           INNER JOIN quotes ON quotes.id = comments.quote_id
+           INNER JOIN users ON users.id = comments.user_id
+           INNER JOIN contexts ON contexts.id = quotes.context_id
+         WHERE comments.user_id = $1
+         ORDER BY comments.created_at DESC LIMIT 5",
+    )
+    .bind(user_id)
+    .fetch_all(&pool)
+    .await?;
     let quotes = sqlx::query_as::<_, QuoteWithUsers>(
             "SELECT quotes.*,
                quotes.created_at AT TIME ZONE 'UTC' AS created_at,
@@ -76,7 +97,7 @@ pub async fn show(
         logged_in: false,
         user,
         quotes,
-        comments: vec!["Comment".to_string()],
+        comments,
         contexts: vec![Context {
             id: 0,
             name: "Context".to_string(),
@@ -94,6 +115,6 @@ struct ShowTemplate {
     logged_in: bool,
     user: User,
     quotes: Vec<QuoteWithUsers>,
-    comments: Vec<String>,
+    comments: Vec<CommentWithQuote>,
     contexts: Vec<Context>,
 }

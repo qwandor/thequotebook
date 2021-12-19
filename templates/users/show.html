@@ -57,7 +57,8 @@
 <div class="sidebar right" id="comments">
 {% if !comments.is_empty() %}
   <h2>{{ user.username_or_fullname() }}'s comments</h2>
-  <%= render :partial => 'comments/list_sidebar', :locals => {:comments => @comments, :show_context => false} %>
+  {% let show_context = false %}
+  {% include "comments/list_sidebar.html" %}
 {% endif %}
 </div>
 {% endblock %}

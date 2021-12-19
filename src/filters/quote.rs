@@ -1,17 +1,27 @@
+use super::bbcode_to_html;
 use crate::types::{Context, Quote, QuoteWithUsers, User};
 use askama::Template;
 
-fn quote_marks_if_needed(text: &str) -> String {
-    if text.contains('"') {
+pub fn quote_marks_if_needed(text: &str) -> askama::Result<String> {
+    Ok(if text.contains('"') {
         text.to_string()
     } else {
         format!("\"{}\"", text)
+    })
+}
+
+fn trim_if_needed(text: &str, max_length: usize) -> String {
+    if text.len() > max_length {
+        format!("{}...", &text[0..max_length - 3])
+    } else {
+        text.to_string()
     }
 }
 
-fn bbcode_to_html(bbcode: String) -> String {
-    //TODO
-    bbcode
+pub fn short_quote(text: &str) -> askama::Result<String> {
+    let trimmed = trim_if_needed(&quote_marks_if_needed(text)?, 40);
+    Ok(bbcode_to_html(&trimmed, false))
+    //bbcode_to_html({}, :enable, true, false, [:bold, :italics])
 }
 
 pub fn formatted_quote(
@@ -23,7 +33,7 @@ pub fn formatted_quote(
     &show_comments: &bool,
 ) -> askama::Result<String> {
     let quote_link = !single;
-    let text = bbcode_to_html(quote_marks_if_needed(&quote.quote.quote_text));
+    let text = bbcode_to_html(&quote_marks_if_needed(&quote.quote.quote_text)?, true);
     let comments_text = if show_comments {
         if quote.comments_count == 0 {
             "No comments (yet).".to_string()

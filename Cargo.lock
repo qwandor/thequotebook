@@ -1423,6 +1423,7 @@ dependencies = [
  "eyre",
  "md5",
  "pretty_env_logger",
+ "regex",
  "sqlx",
  "stable-eyre",
  "tokio",

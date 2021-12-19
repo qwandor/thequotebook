@@ -1,0 +1,22 @@
+{% for comment in comments %}
+  <blockquote class="comment">
+    <p>
+      <a href="/quotes/{{ comment.comment.quote_id }}">
+        {{ comment.comment.body|comment_format()|safe }}
+      </a>
+      <span class="author">&mdash; {{ comment.user|link_to_user(true, true, false, false, 16, "", "nickname")|safe }}</span>
+    </p>
+    <div class="meta">
+      <span>
+        On
+        <a href="/quotes/{{ comment.comment.quote_id }}" title="{{ comment.quote_text|quote_marks_if_needed }}">
+          {{ comment.quote_text|short_quote|safe }}
+        </a>
+{% if show_context %}
+        in
+        <a href="/contexts/{{ comment.context.id }}">{{ comment.context.name }}</a>
+{% endif %}
+      </span>
+    </div>
+  </blockquote>
+{% endfor %}

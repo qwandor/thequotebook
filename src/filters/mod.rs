@@ -1,15 +1,28 @@
+mod comment;
 mod quote;
 mod time;
 mod user;
 
 use askama::Html;
-pub use quote::formatted_quote;
+pub use comment::comment_format;
+pub use quote::{formatted_quote, quote_marks_if_needed, short_quote};
+use regex::Regex;
 pub use time::long_datetime;
 pub use user::gravatar_for;
 pub use user::link_to_user;
 
 fn escape(text: &str) -> String {
     askama::filters::escape(Html, text).unwrap().to_string()
+}
+
+fn bbcode_to_html(bbcode: &str, newlines_allowed: bool) -> String {
+    //TODO
+    if newlines_allowed {
+        bbcode.to_string()
+    } else {
+        let newlines = Regex::new(r"[\r\n]+").unwrap();
+        newlines.replace_all(bbcode, " ").into_owned()
+    }
 }
 
 #[cfg(test)]
