@@ -1,0 +1,10 @@
+{% for comment in comments %}
+<p>
+  {{ comment.user|link_to_user(true, true, false, false, 16, "", "nickname")|safe }}
+  commented on
+  {{ comment.quotee|link_to_user(true, true, false, false, 16, "", "nickname")|safe }}'s
+  quote
+  <a href="/quotes/{{ comment.comment.quote_id }}">{{ comment.quote_text|short_quote }}</a>:
+  {{ comment.comment.body|comment_format(false) }}
+</p>
+{% endfor %}
