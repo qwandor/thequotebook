@@ -30,6 +30,7 @@ async fn main() -> Result<(), Report> {
         .route("/comments", get(home::comments))
         .route("/contexts", get(contexts::index))
         .route("/contexts/:context_id", get(contexts::show))
+        .route("/contexts/:context_id/quotes", get(contexts::quotes))
         .route("/users", get(users::index))
         .route("/users/:user_id", get(users::show))
         .route("/users/:user_id/quotes", get(users::quotes))

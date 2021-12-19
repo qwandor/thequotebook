@@ -1,0 +1,21 @@
+{% extends "layouts/no_sidebars.html" %}
+
+{% block title %}: {{ context.name }} quotes{% endblock %}
+
+{% block head %}
+<link rel="alternate" type="application/atom+xml" title="{{ context.name }} quotes" href="/contexts/{{ context.id }}/quotes.atom" />
+{% endblock %}
+
+{% block header %}
+<h1>All {{ context.name }} quotes</h1>
+{% endblock %}
+
+{% block body %}
+{% for quote in quotes %}
+{{ quote|formatted_quote(false, true, true, false, true)|safe }}
+{% endfor %}
+
+<p>
+  <a href="/contexts/{{ context.id }}">Back to {{ context.name }}</a>
+</p>
+{% endblock %}

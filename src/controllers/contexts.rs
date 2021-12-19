@@ -123,3 +123,57 @@ struct ShowTemplate {
     users: Vec<User>,
     comments: Vec<CommentWithQuote>,
 }
+
+pub async fn quotes(
+    Extension(pool): Extension<Pool<Postgres>>,
+    session: Session,
+    Path(context_id): Path<i32>,
+) -> Result<Html<String>, InternalError> {
+    let context = sqlx::query_as::<_, Context>(
+        "SELECT contexts.*,
+           (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) as quotes_count
+        FROM contexts WHERE id = $1",
+    )
+    .bind(context_id)
+    .fetch_one(&pool)
+    .await?;
+    let quotes = sqlx::query_as::<_, QuoteWithUsers>(
+        "SELECT quotes.*,
+           quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+           (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
+           quoter.username AS quoter_username,
+           quoter.fullname AS quoter_fullname,
+           quoter.email_address AS quoter_email_address,
+           quoter.openid AS quoter_openid,
+           quotee.username AS quotee_username,
+           quotee.fullname AS quotee_fullname,
+           quotee.email_address AS quotee_email_address,
+           quotee.openid AS quotee_openid,
+           contexts.name AS context_name,
+           contexts.description AS context_description
+         FROM quotes
+           INNER JOIN users AS quoter ON quoter.id = quoter_id
+           INNER JOIN users AS quotee ON quotee.id = quotee_id
+           INNER JOIN contexts ON contexts.id = context_id
+         WHERE quotes.context_id = $1 AND NOT hidden
+         ORDER BY quotes.created_at DESC",
+    )
+    .bind(context_id)
+    .fetch_all(&pool)
+    .await?;
+
+    let template = QuotesTemplate {
+        session,
+        context,
+        quotes,
+    };
+    Ok(Html(template.render()?))
+}
+
+#[derive(Template)]
+#[template(path = "contexts/quotes.html")]
+struct QuotesTemplate {
+    session: Session,
+    context: Context,
+    quotes: Vec<QuoteWithUsers>,
+}
