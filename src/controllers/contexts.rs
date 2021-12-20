@@ -20,14 +20,7 @@ pub async fn index(
     Extension(pool): Extension<Pool<Postgres>>,
     session: Session,
 ) -> Result<Html<String>, InternalError> {
-    let contexts = sqlx::query_as::<_, Context>(
-        "SELECT contexts.*,
-           (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) as quotes_count
-         FROM contexts
-         ORDER BY contexts.created_at DESC",
-    )
-    .fetch_all(&pool)
-    .await?;
+    let contexts = Context::fetch_all(&pool).await?;
 
     let template = IndexTemplate { session, contexts };
     Ok(Html(template.render()?))
@@ -46,14 +39,7 @@ pub async fn show(
     Path(context_id): Path<i32>,
     Query(query): Query<QueryPage>,
 ) -> Result<Html<String>, InternalError> {
-    let context = sqlx::query_as::<_, Context>(
-        "SELECT contexts.*,
-           (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) as quotes_count
-        FROM contexts WHERE id = $1",
-    )
-    .bind(context_id)
-    .fetch_one(&pool)
-    .await?;
+    let context = Context::fetch_one(&pool, context_id).await?;
 
     let quote_count = sqlx::query_scalar::<_, i64>(
         "SELECT COUNT(*) FROM quotes WHERE quotes.context_id = $1 AND NOT hidden",
@@ -153,14 +139,7 @@ pub async fn quotes(
     session: Session,
     Path(context_id): Path<i32>,
 ) -> Result<Html<String>, InternalError> {
-    let context = sqlx::query_as::<_, Context>(
-        "SELECT contexts.*,
-           (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) as quotes_count
-        FROM contexts WHERE id = $1",
-    )
-    .bind(context_id)
-    .fetch_one(&pool)
-    .await?;
+    let context = Context::fetch_one(&pool, context_id).await?;
     let quotes = sqlx::query_as::<_, QuoteWithUsers>(
         "SELECT quotes.*,
            quotes.created_at AT TIME ZONE 'UTC' AS created_at,

@@ -40,10 +40,7 @@ pub async fn show(
     Path(user_id): Path<i32>,
     Query(query): Query<QueryPage>,
 ) -> Result<Html<String>, InternalError> {
-    let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
-        .bind(user_id)
-        .fetch_one(&pool)
-        .await?;
+    let user = User::fetch_one(&pool, user_id).await?;
     let comments = sqlx::query_as::<_, CommentWithQuote>(
         "SELECT comments.*,
            comments.created_at AT TIME ZONE 'UTC' AS created_at,
@@ -144,10 +141,7 @@ pub async fn quotes(
     session: Session,
     Path(user_id): Path<i32>,
 ) -> Result<Html<String>, InternalError> {
-    let user = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
-        .bind(user_id)
-        .fetch_one(&pool)
-        .await?;
+    let user = User::fetch_one(&pool, user_id).await?;
     let quotes = sqlx::query_as::<_, QuoteWithUsers>(
             "SELECT quotes.*,
                quotes.created_at AT TIME ZONE 'UTC' AS created_at,

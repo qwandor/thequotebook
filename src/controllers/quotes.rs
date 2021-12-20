@@ -53,33 +53,9 @@ struct IndexTemplate {
 pub async fn show(
     Extension(pool): Extension<Pool<Postgres>>,
     session: Session,
-
     Path(quote_id): Path<i32>,
 ) -> Result<Html<String>, InternalError> {
-    let quote = sqlx::query_as::<_, QuoteWithUsers>(
-        "SELECT quotes.*,
-		   quotes.created_at AT TIME ZONE 'UTC' AS created_at,
-           (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
-           quoter.username AS quoter_username,
-           quoter.fullname AS quoter_fullname,
-           quoter.email_address AS quoter_email_address,
-           quoter.openid AS quoter_openid,
-           quotee.username AS quotee_username,
-           quotee.fullname AS quotee_fullname,
-           quotee.email_address AS quotee_email_address,
-           quotee.openid AS quotee_openid,
-           contexts.name AS context_name,
-           contexts.description AS context_description
-         FROM quotes
-           INNER JOIN users AS quoter ON quoter.id = quoter_id
-           INNER JOIN users AS quotee ON quotee.id = quotee_id
-           INNER JOIN contexts ON contexts.id = context_id
-         WHERE quotes.id = $1
-         ORDER BY contexts.created_at DESC",
-    )
-    .bind(quote_id)
-    .fetch_one(&pool)
-    .await?;
+    let quote = QuoteWithUsers::fetch_one(&pool, quote_id).await?;
     let comments = sqlx::query_as::<_, CommentWithQuote>(
         "SELECT comments.*,
            comments.created_at AT TIME ZONE 'UTC' AS created_at,

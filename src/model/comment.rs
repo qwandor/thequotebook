@@ -3,7 +3,7 @@ use super::user::User;
 use sqlx::{
     postgres::PgRow,
     types::chrono::{DateTime, Utc},
-    FromRow, Row,
+    FromRow, Pool, Postgres, Row,
 };
 
 #[derive(Clone, Debug, FromRow)]
@@ -21,6 +21,38 @@ pub struct CommentWithQuote {
     pub quote_text: String,
     pub user: User,
     pub context: Context,
+}
+
+impl CommentWithQuote {
+    /// Fetches the comment with the given ID, if it exists and is for the given quote.
+    pub async fn fetch_one(
+        pool: &Pool<Postgres>,
+        quote_id: i32,
+        comment_id: i32,
+    ) -> sqlx::Result<Self> {
+        sqlx::query_as::<_, CommentWithQuote>(
+            "SELECT comments.*,
+               comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.quote_text,
+               quotes.context_id,
+               users.email_address AS user_email_address,
+               users.username AS user_username,
+               users.fullname AS user_fullname,
+               users.openid AS user_openid,
+               contexts.name AS context_name,
+               contexts.description AS context_description
+             FROM comments
+               INNER JOIN quotes ON quotes.id = comments.quote_id
+               INNER JOIN users ON users.id = comments.user_id
+               INNER JOIN contexts ON contexts.id = quotes.context_id
+             WHERE comments.quote_id = $1
+               AND comments.id = $2",
+        )
+        .bind(quote_id)
+        .bind(comment_id)
+        .fetch_one(pool)
+        .await
+    }
 }
 
 impl<'r> FromRow<'r, PgRow> for CommentWithQuote {
@@ -51,6 +83,33 @@ pub struct CommentWithQuotee {
     pub quote_text: String,
     pub user: User,
     pub quotee: User,
+}
+
+impl CommentWithQuotee {
+    /// Fetches all comments, starting with the most recently added.
+    pub async fn fetch_all(pool: &Pool<Postgres>) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, Self>(
+            "SELECT comments.*,
+               comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.quote_text,
+               quotes.quotee_id,
+               users.email_address AS user_email_address,
+               users.username AS user_username,
+               users.fullname AS user_fullname,
+               users.openid AS user_openid,
+               quotee.username AS quotee_username,
+               quotee.fullname AS quotee_fullname,
+               quotee.email_address AS quotee_email_address,
+               quotee.openid AS quotee_openid
+             FROM comments
+               INNER JOIN quotes ON quotes.id = comments.quote_id
+               INNER JOIN users ON users.id = comments.user_id
+               INNER JOIN users AS quotee ON quotee.id = quotes.quotee_id
+             ORDER BY comments.created_at DESC",
+        )
+        .fetch_all(pool)
+        .await
+    }
 }
 
 impl<'r> FromRow<'r, PgRow> for CommentWithQuotee {

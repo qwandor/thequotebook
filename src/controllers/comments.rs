@@ -16,15 +16,7 @@ pub async fn index(
     session: Session,
     Path(quote_id): Path<i32>,
 ) -> Result<Html<String>, InternalError> {
-    let quote = sqlx::query_as::<_, Quote>(
-        "SELECT quotes.*,
-           quotes.created_at AT TIME ZONE 'UTC' AS created_at
-         FROM quotes
-         WHERE id = $1",
-    )
-    .bind(quote_id)
-    .fetch_one(&pool)
-    .await?;
+    let quote = Quote::fetch_one(&pool, quote_id).await?;
     let comments = sqlx::query_as::<_, CommentWithQuote>(
         "SELECT comments.*,
            comments.created_at AT TIME ZONE 'UTC' AS created_at,
@@ -68,28 +60,7 @@ pub async fn show(
     session: Session,
     Path((quote_id, comment_id)): Path<(i32, i32)>,
 ) -> Result<Html<String>, InternalError> {
-    let comment = sqlx::query_as::<_, CommentWithQuote>(
-        "SELECT comments.*,
-           comments.created_at AT TIME ZONE 'UTC' AS created_at,
-           quotes.quote_text,
-           quotes.context_id,
-           users.email_address AS user_email_address,
-           users.username AS user_username,
-           users.fullname AS user_fullname,
-           users.openid AS user_openid,
-           contexts.name AS context_name,
-           contexts.description AS context_description
-         FROM comments
-           INNER JOIN quotes ON quotes.id = comments.quote_id
-           INNER JOIN users ON users.id = comments.user_id
-           INNER JOIN contexts ON contexts.id = quotes.context_id
-         WHERE comments.quote_id = $1
-           AND comments.id = $2",
-    )
-    .bind(quote_id)
-    .bind(comment_id)
-    .fetch_one(&pool)
-    .await?;
+    let comment = CommentWithQuote::fetch_one(&pool, quote_id, comment_id).await?;
 
     let template = ShowTemplate { session, comment };
     Ok(Html(template.render()?))

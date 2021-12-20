@@ -1,9 +1,10 @@
 use super::context::Context;
 use super::user::User;
+use paginate::{Page, Pages};
 use sqlx::{
     postgres::PgRow,
     types::chrono::{DateTime, Utc},
-    FromRow, Row,
+    FromRow, Pool, Postgres, Row,
 };
 
 #[derive(Clone, Debug, FromRow)]
@@ -17,6 +18,21 @@ pub struct Quote {
     pub hidden: bool,
 }
 
+impl Quote {
+    /// Fetches the quote with the given ID, if it exists.
+    pub async fn fetch_one(pool: &Pool<Postgres>, quote_id: i32) -> sqlx::Result<Self> {
+        sqlx::query_as::<_, Quote>(
+            "SELECT quotes.*,
+               quotes.created_at AT TIME ZONE 'UTC' AS created_at
+             FROM quotes
+             WHERE id = $1",
+        )
+        .bind(quote_id)
+        .fetch_one(pool)
+        .await
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct QuoteWithUsers {
     pub quote: Quote,
@@ -24,6 +40,78 @@ pub struct QuoteWithUsers {
     pub quotee: User,
     pub context: Context,
     pub comments_count: i64,
+}
+
+impl QuoteWithUsers {
+    /// Fetches the quote with the given ID, if it exists.
+    pub async fn fetch_one(pool: &Pool<Postgres>, quote_id: i32) -> sqlx::Result<Self> {
+        sqlx::query_as::<_, QuoteWithUsers>(
+            "SELECT quotes.*,
+               quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
+               quoter.username AS quoter_username,
+               quoter.fullname AS quoter_fullname,
+               quoter.email_address AS quoter_email_address,
+               quoter.openid AS quoter_openid,
+               quotee.username AS quotee_username,
+               quotee.fullname AS quotee_fullname,
+               quotee.email_address AS quotee_email_address,
+               quotee.openid AS quotee_openid,
+               contexts.name AS context_name,
+               contexts.description AS context_description
+             FROM quotes
+               INNER JOIN users AS quoter ON quoter.id = quoter_id
+               INNER JOIN users AS quotee ON quotee.id = quotee_id
+               INNER JOIN contexts ON contexts.id = context_id
+             WHERE quotes.id = $1",
+        )
+        .bind(quote_id)
+        .fetch_one(pool)
+        .await
+    }
+
+    /// Returns the number of non-hidden quotes.
+    pub async fn count(pool: &Pool<Postgres>) -> sqlx::Result<usize> {
+        Ok(
+            sqlx::query_scalar::<_, i64>("SELECT COUNT(*) FROM quotes WHERE NOT hidden")
+                .fetch_one(pool)
+                .await? as usize,
+        )
+    }
+
+    /// Fetches all non-hidden quotes within the given page.
+    pub async fn fetch_page(
+        pool: &Pool<Postgres>,
+        pages: &Pages,
+        page: &Page,
+    ) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, Self>(
+            "SELECT quotes.*,
+               quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
+               quoter.username AS quoter_username,
+               quoter.fullname AS quoter_fullname,
+               quoter.email_address AS quoter_email_address,
+               quoter.openid AS quoter_openid,
+               quotee.username AS quotee_username,
+               quotee.fullname AS quotee_fullname,
+               quotee.email_address AS quotee_email_address,
+               quotee.openid AS quotee_openid,
+               contexts.name AS context_name,
+               contexts.description AS context_description
+             FROM quotes
+               INNER JOIN users AS quoter ON quoter.id = quoter_id
+               INNER JOIN users AS quotee ON quotee.id = quotee_id
+               INNER JOIN contexts ON contexts.id = context_id
+             WHERE NOT hidden
+             ORDER BY quotes.created_at DESC
+             LIMIT $1 OFFSET $2",
+        )
+        .bind(pages.limit() as i64)
+        .bind(page.start as i64)
+        .fetch_all(pool)
+        .await
+    }
 }
 
 impl<'r> FromRow<'r, PgRow> for QuoteWithUsers {

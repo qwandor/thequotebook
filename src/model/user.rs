@@ -1,4 +1,4 @@
-use sqlx::FromRow;
+use sqlx::{FromRow, Pool, Postgres};
 
 #[derive(Clone, Debug, FromRow)]
 pub struct User {
@@ -12,5 +12,13 @@ pub struct User {
 impl User {
     pub fn username_or_fullname(&self) -> &str {
         self.username.as_deref().unwrap_or(&self.fullname)
+    }
+
+    /// Fetches the user with the given ID, if they exist.
+    pub async fn fetch_one(pool: &Pool<Postgres>, user_id: i32) -> sqlx::Result<Self> {
+        sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
+            .bind(user_id)
+            .fetch_one(pool)
+            .await
     }
 }
