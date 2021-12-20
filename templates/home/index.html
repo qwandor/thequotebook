@@ -15,7 +15,7 @@
 {{ quote|formatted_quote(false, true, true, true, true)|safe }}
 {%   endfor %}
   <ul class="pagination">
-    <%= my_paginate(@quotes) %>
+    {% include "shared/pages.html" %}
     <li><a href="{% if session.logged_in %}/users/{{ session.current_user_id }}/relevant_quotes{% else %}/quotes{% endif %}" class="button">All</a>
   </ul>
 {% endif %}

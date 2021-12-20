@@ -5,13 +5,32 @@ use crate::{
     session::Session,
 };
 use askama::Template;
-use axum::{extract::Extension, response::Html};
+use axum::{
+    extract::{Extension, Query},
+    response::Html,
+};
+use paginate::{Page, Pages};
+use serde::Deserialize;
 use sqlx::{Pool, Postgres};
+
+const QUOTES_PER_PAGE: usize = 5;
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
+pub struct QueryPage {
+    #[serde(default)]
+    pub page: usize,
+}
 
 pub async fn index(
     Extension(pool): Extension<Pool<Postgres>>,
     session: Session,
+    Query(query): Query<QueryPage>,
 ) -> Result<Html<String>, InternalError> {
+    let quote_count = sqlx::query_scalar::<_, i64>("SELECT COUNT(*) FROM quotes WHERE NOT hidden")
+        .fetch_one(&pool)
+        .await? as usize;
+    let pages = Pages::new(quote_count, QUOTES_PER_PAGE);
+    let current_page = pages.with_offset(query.page);
     let quotes = sqlx::query_as::<_, QuoteWithUsers>(
         "SELECT quotes.*,
            quotes.created_at AT TIME ZONE 'UTC' AS created_at,
@@ -30,8 +49,12 @@ pub async fn index(
            INNER JOIN users AS quoter ON quoter.id = quoter_id
            INNER JOIN users AS quotee ON quotee.id = quotee_id
            INNER JOIN contexts ON contexts.id = context_id
-         WHERE NOT hidden ORDER BY quotes.created_at DESC LIMIT 5",
+         WHERE NOT hidden
+         ORDER BY quotes.created_at DESC
+         LIMIT $1 OFFSET $2",
     )
+    .bind(pages.limit() as i64)
+    .bind(current_page.start as i64)
     .fetch_all(&pool)
     .await?;
     let top_contexts = sqlx::query_as::<_, Context>(
@@ -48,6 +71,8 @@ pub async fn index(
         top_contexts,
         current_user_contexts: vec![],
         comments: vec![],
+        pages,
+        current_page,
     };
     Ok(Html(template.render()?))
 }
@@ -60,6 +85,8 @@ struct IndexTemplate {
     top_contexts: Vec<Context>,
     current_user_contexts: Vec<Context>,
     comments: Vec<CommentWithQuote>,
+    pages: Pages,
+    current_page: Page,
 }
 
 pub async fn comments(
