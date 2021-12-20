@@ -21,7 +21,7 @@
 {% endfor %}
 
 <ul class="pagination">
-  <%= my_paginate(@quotes) %>
+  {% include "shared/pages.html" %}
   <li>
     <a href="/contexts/{{ context.id }}/quotes" class="button">All</a>
   </li>

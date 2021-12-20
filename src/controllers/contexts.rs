@@ -2,14 +2,19 @@ use crate::{
     errors::InternalError,
     filters,
     model::{CommentWithQuote, Context, QuoteWithUsers, User},
+    pagination::{PageOrGap, PaginationState, QueryPage},
     session::Session,
 };
 use askama::Template;
 use axum::{
-    extract::{Extension, Path},
+    extract::{Extension, Path, Query},
     response::Html,
 };
+use paginate::Pages;
 use sqlx::{Pool, Postgres};
+
+const QUOTES_PER_PAGE: usize = 10;
+const PAGINATION_WINDOW: usize = 2;
 
 pub async fn index(
     Extension(pool): Extension<Pool<Postgres>>,
@@ -39,6 +44,7 @@ pub async fn show(
     Extension(pool): Extension<Pool<Postgres>>,
     session: Session,
     Path(context_id): Path<i32>,
+    Query(query): Query<QueryPage>,
 ) -> Result<Html<String>, InternalError> {
     let context = sqlx::query_as::<_, Context>(
         "SELECT contexts.*,
@@ -48,6 +54,15 @@ pub async fn show(
     .bind(context_id)
     .fetch_one(&pool)
     .await?;
+
+    let quote_count = sqlx::query_scalar::<_, i64>(
+        "SELECT COUNT(*) FROM quotes WHERE quotes.context_id = $1 AND NOT hidden",
+    )
+    .bind(context_id)
+    .fetch_one(&pool)
+    .await? as usize;
+    let pages = Pages::new(quote_count, QUOTES_PER_PAGE);
+    let current_page = pages.with_offset(query.page);
     let quotes = sqlx::query_as::<_, QuoteWithUsers>(
         "SELECT quotes.*,
            quotes.created_at AT TIME ZONE 'UTC' AS created_at,
@@ -67,9 +82,12 @@ pub async fn show(
            INNER JOIN users AS quotee ON quotee.id = quotee_id
            INNER JOIN contexts ON contexts.id = context_id
          WHERE quotes.context_id = $1 AND NOT hidden
-         ORDER BY quotes.created_at DESC",
+         ORDER BY quotes.created_at DESC
+         LIMIT $2 OFFSET $3",
     )
     .bind(context_id)
+    .bind(pages.limit() as i64)
+    .bind(current_page.start as i64)
     .fetch_all(&pool)
     .await?;
     let users = sqlx::query_as::<_, User>(
@@ -110,6 +128,11 @@ pub async fn show(
         quotes,
         users,
         comments,
+        pagination: PaginationState {
+            pages,
+            current_page,
+            window_size: PAGINATION_WINDOW,
+        },
     };
     Ok(Html(template.render()?))
 }
@@ -122,6 +145,7 @@ struct ShowTemplate {
     quotes: Vec<QuoteWithUsers>,
     users: Vec<User>,
     comments: Vec<CommentWithQuote>,
+    pagination: PaginationState,
 }
 
 pub async fn quotes(
