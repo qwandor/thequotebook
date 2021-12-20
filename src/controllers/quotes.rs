@@ -1,8 +1,8 @@
 use crate::{
     errors::InternalError,
     filters,
+    model::{CommentWithQuote, QuoteWithUsers},
     session::Session,
-    types::{CommentWithQuote, QuoteWithUsers},
 };
 use askama::Template;
 use axum::{

@@ -1,8 +1,8 @@
 mod controllers;
 mod errors;
 mod filters;
+mod model;
 mod session;
-mod types;
 
 use axum::{
     routing::{get, get_service},

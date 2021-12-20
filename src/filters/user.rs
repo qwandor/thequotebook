@@ -1,5 +1,5 @@
 use super::escape;
-use crate::types::User;
+use crate::model::User;
 
 pub fn link_to_user(
     user: &User,

@@ -1,5 +1,5 @@
 use super::bbcode_to_html;
-use crate::types::{Context, Quote, QuoteWithUsers, User};
+use crate::model::{Context, Quote, QuoteWithUsers, User};
 use askama::Template;
 
 pub fn quote_marks_if_needed(text: &str) -> askama::Result<String> {
