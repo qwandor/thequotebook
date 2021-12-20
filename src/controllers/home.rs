@@ -71,8 +71,10 @@ pub async fn index(
         top_contexts,
         current_user_contexts: vec![],
         comments: vec![],
-        pages,
-        current_page,
+        pagination: PaginationState {
+            pages,
+            current_page,
+        },
     };
     Ok(Html(template.render()?))
 }
@@ -85,6 +87,10 @@ struct IndexTemplate {
     top_contexts: Vec<Context>,
     current_user_contexts: Vec<Context>,
     comments: Vec<CommentWithQuote>,
+    pagination: PaginationState,
+}
+
+struct PaginationState {
     pages: Pages,
     current_page: Page,
 }

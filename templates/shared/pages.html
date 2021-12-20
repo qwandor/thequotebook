@@ -1,5 +1,5 @@
-{% for page in pages.clone() %}
-{% if page == current_page %}
+{% for page in pagination.pages.clone() %}
+{% if page == pagination.current_page %}
 <li><span class="button">{{ page.offset + 1 }}</span></li>
 {% else %}
 <li><a class="button" href="?page={{ page.offset }}">{{ page.offset + 1 }}</a></li>
