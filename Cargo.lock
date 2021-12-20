@@ -915,7 +915,7 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 [[package]]
 name = "paginate"
 version = "1.0.1"
-source = "git+https://github.com/qwandor/paginate#be22ebc8d635d8af116ebdf1c20aa59d2d795cb7"
+source = "git+https://github.com/qwandor/paginate?branch=page_count#c002caf86ff294af0594c19c64a932bcb0d4407f"
 
 [[package]]
 name = "parking_lot"

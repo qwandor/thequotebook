@@ -1,7 +1,10 @@
-{% for page in pagination.pages.clone() %}
-{% if page == pagination.current_page %}
+{% for page in pagination.page_links() %}
+{% match page %}
+{% when PageOrGap::CurrentPage with (page) %}
 <li><span class="button">{{ page.offset + 1 }}</span></li>
-{% else %}
+{% when PageOrGap::Page with (page) %}
 <li><a class="button" href="?page={{ page.offset }}">{{ page.offset + 1 }}</a></li>
-{% endif %}
+{% when PageOrGap::Gap %}
+<li><span class="gap">&hellip;</span></li>
+{% endmatch %}
 {% endfor %}

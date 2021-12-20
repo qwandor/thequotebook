@@ -2,7 +2,7 @@ use crate::{
     errors::InternalError,
     filters,
     model::{CommentWithQuote, CommentWithQuotee, Context, QuoteWithUsers},
-    pagination::{PaginationState, QueryPage},
+    pagination::{PageOrGap, PaginationState, QueryPage},
     session::Session,
 };
 use askama::Template;
@@ -14,6 +14,7 @@ use paginate::Pages;
 use sqlx::{Pool, Postgres};
 
 const QUOTES_PER_PAGE: usize = 5;
+const PAGINATION_WINDOW: usize = 2;
 
 pub async fn index(
     Extension(pool): Extension<Pool<Postgres>>,
@@ -68,6 +69,7 @@ pub async fn index(
         pagination: PaginationState {
             pages,
             current_page,
+            window_size: PAGINATION_WINDOW,
         },
     };
     Ok(Html(template.render()?))
