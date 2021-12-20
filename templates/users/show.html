@@ -35,7 +35,7 @@
 {% endfor %}
 
 <ul class="pagination">
-  <%= my_paginate(@quotes) %>
+  {% include "shared/pages.html" %}
   <li><a href="/users/{{ user.id }}/quotes" class="button">All</a></li>
 </ul>
 {% endblock %}
