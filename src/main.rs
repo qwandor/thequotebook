@@ -2,6 +2,7 @@ mod controllers;
 mod errors;
 mod filters;
 mod model;
+mod pagination;
 mod session;
 
 use axum::{

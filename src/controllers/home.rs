@@ -2,6 +2,7 @@ use crate::{
     errors::InternalError,
     filters,
     model::{CommentWithQuote, CommentWithQuotee, Context, QuoteWithUsers},
+    pagination::{PaginationState, QueryPage},
     session::Session,
 };
 use askama::Template;
@@ -9,17 +10,10 @@ use axum::{
     extract::{Extension, Query},
     response::Html,
 };
-use paginate::{Page, Pages};
-use serde::Deserialize;
+use paginate::Pages;
 use sqlx::{Pool, Postgres};
 
 const QUOTES_PER_PAGE: usize = 5;
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
-pub struct QueryPage {
-    #[serde(default)]
-    pub page: usize,
-}
 
 pub async fn index(
     Extension(pool): Extension<Pool<Postgres>>,
@@ -88,11 +82,6 @@ struct IndexTemplate {
     current_user_contexts: Vec<Context>,
     comments: Vec<CommentWithQuote>,
     pagination: PaginationState,
-}
-
-struct PaginationState {
-    pages: Pages,
-    current_page: Page,
 }
 
 pub async fn comments(
