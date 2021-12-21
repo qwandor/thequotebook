@@ -1,11 +1,13 @@
-use eyre::{Report, WrapErr};
+use eyre::{bail, Report, WrapErr};
 use serde::Deserialize;
 use std::{
     fs::read_to_string,
     path::{Path, PathBuf},
 };
 
-const CONFIG_FILENAME: &str = "thequotebook.toml";
+/// Paths at which to look for the config file. They are searched in order, and the first one that
+/// exists is used.
+const CONFIG_FILENAMES: [&str; 2] = ["thequotebook.toml", "/etc/thequotebook.toml"];
 
 #[derive(Clone, Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -17,7 +19,15 @@ pub struct Config {
 
 impl Config {
     pub fn from_file() -> Result<Config, Report> {
-        Config::read(CONFIG_FILENAME)
+        for filename in &CONFIG_FILENAMES {
+            if Path::new(filename).is_file() {
+                return Config::read(filename);
+            }
+        }
+        bail!(
+            "Unable to find config file in any of {:?}",
+            &CONFIG_FILENAMES
+        );
     }
 
     fn read(filename: &str) -> Result<Config, Report> {
