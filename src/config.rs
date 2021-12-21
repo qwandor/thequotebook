@@ -2,6 +2,7 @@ use eyre::{bail, Report, WrapErr};
 use serde::Deserialize;
 use std::{
     fs::read_to_string,
+    net::SocketAddr,
     path::{Path, PathBuf},
 };
 
@@ -15,6 +16,8 @@ pub struct Config {
     pub postgres_uri: String,
     #[serde(default = "default_public_dir")]
     pub public_dir: PathBuf,
+    #[serde(default = "default_bind_address")]
+    pub bind_address: SocketAddr,
 }
 
 impl Config {
@@ -39,6 +42,10 @@ impl Config {
 
 fn default_public_dir() -> PathBuf {
     Path::new("public").to_path_buf()
+}
+
+fn default_bind_address() -> SocketAddr {
+    "0.0.0.0:3000".parse().unwrap()
 }
 
 #[cfg(test)]

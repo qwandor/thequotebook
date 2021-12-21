@@ -58,7 +58,7 @@ async fn main() -> Result<(), Report> {
         )
         .layer(AddExtensionLayer::new(pool));
 
-    axum::Server::bind(&"0.0.0.0:3000".parse()?)
+    axum::Server::bind(&config.bind_address)
         .serve(app.into_make_service())
         .await?;
 
