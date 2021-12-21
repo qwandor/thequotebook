@@ -6,17 +6,23 @@ use eyre::Report;
 use std::{error::Error, fmt::Debug};
 
 /// Newtype wrapper around `Report` which implements `IntoResponse`.
-pub struct InternalError(Report);
+pub enum InternalError {
+    Internal(Report),
+    NotFound,
+}
 
 impl<E: Error + Send + Sync + 'static> From<E> for InternalError {
     fn from(error: E) -> Self {
-        Self(error.into())
+        Self::Internal(error.into())
     }
 }
 
 impl IntoResponse for InternalError {
     fn into_response(self) -> Response {
-        internal_error_response(self.0)
+        match self {
+            Self::Internal(report) => internal_error_response(report),
+            Self::NotFound => StatusCode::NOT_FOUND.into_response(),
+        }
     }
 }
 

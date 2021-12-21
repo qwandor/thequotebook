@@ -15,10 +15,10 @@ impl User {
     }
 
     /// Fetches the user with the given ID, if they exist.
-    pub async fn fetch_one(pool: &Pool<Postgres>, user_id: i32) -> sqlx::Result<Self> {
+    pub async fn fetch_one(pool: &Pool<Postgres>, user_id: i32) -> sqlx::Result<Option<Self>> {
         sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
             .bind(user_id)
-            .fetch_one(pool)
+            .fetch_optional(pool)
             .await
     }
 }
