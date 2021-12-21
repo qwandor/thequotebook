@@ -2,6 +2,12 @@
 name = "thequotebook"
 version = "0.1.0"
 edition = "2021"
+authors = ["Andrew Walbran <qwandor@google.com>"]
+license = "MIT OR Apache-2.0"
+description = "A website for collecting funny quotes from groups of friends."
+repository = "https://gitlab.com/qwandor/thequotebook/"
+keywords = ["quotes", "website"]
+categories = ["web-programming"]
 
 [dependencies]
 askama = "0.10.5"
