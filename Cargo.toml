@@ -24,3 +24,17 @@ stable-eyre = "0.2.2"
 tokio = { version = "1.15.0", features = ["macros", "rt-multi-thread"] }
 toml = "0.5.8"
 tower-http = { version = "0.2.0", features = ["fs"] }
+
+[package.metadata.deb]
+section = "web"
+conf-files = ["/etc/thequotebook.toml"]
+assets = [
+	["target/release/thequotebook", "usr/bin/", "755"],
+	["public/images/*", "/usr/share/thequotebook/images/", "644"],
+	["public/stylesheets/*", "/usr/share/thequotebook/stylesheets/", "644"],
+	["thequotebook.example.toml", "etc/thequotebook.toml", "640"],
+	["README.md", "usr/share/doc/thequotebook/", "644"],
+]
+
+# This section needs to be here even if it's empty, for the systemd integration to work.
+[package.metadata.deb.systemd-units]
