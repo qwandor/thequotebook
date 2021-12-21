@@ -1,0 +1,14 @@
+[Unit]
+Description=A website for collecting funny quotes from groups of friends.
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/usr/share/thequotebook
+ExecStart=/usr/bin/thequotebook
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
