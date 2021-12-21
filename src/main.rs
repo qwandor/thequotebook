@@ -7,15 +7,16 @@ mod pagination;
 mod session;
 
 use axum::{
-    routing::{get, get_service},
+    routing::{get, get_service, post},
     AddExtensionLayer, Router,
 };
 use config::Config;
-use controllers::{comments, contexts, home, quotes, users};
+use controllers::{comments, contexts, home, quotes, sessions, users};
 use errors::internal_error;
 use eyre::Report;
 use log::info;
 use sqlx::postgres::PgPoolOptions;
+use std::sync::Arc;
 use tower_http::services::ServeDir;
 
 #[tokio::main]
@@ -24,7 +25,7 @@ async fn main() -> Result<(), Report> {
     pretty_env_logger::init();
     color_backtrace::install();
 
-    let config = Config::from_file()?;
+    let config = Arc::new(Config::from_file()?);
 
     let pool = PgPoolOptions::new()
         .max_connections(5)
@@ -33,6 +34,8 @@ async fn main() -> Result<(), Report> {
 
     let app = Router::new()
         .route("/", get(home::index))
+        .route("/login", get(sessions::new))
+        .route("/google_auth", post(sessions::google_auth))
         .route("/comments", get(home::comments))
         .route("/contexts", get(contexts::index))
         .route("/contexts/:context_id", get(contexts::show))
@@ -57,6 +60,7 @@ async fn main() -> Result<(), Report> {
             get_service(ServeDir::new(config.public_dir.join("stylesheets")))
                 .handle_error(internal_error),
         )
+        .layer(AddExtensionLayer::new(config.clone()))
         .layer(AddExtensionLayer::new(pool));
 
     info!("Listening on {}", config.bind_address);

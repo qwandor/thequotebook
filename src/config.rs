@@ -18,6 +18,9 @@ pub struct Config {
     pub public_dir: PathBuf,
     #[serde(default = "default_bind_address")]
     pub bind_address: SocketAddr,
+    pub google_client_id: String,
+    #[serde(default = "default_base_url")]
+    pub base_url: String,
 }
 
 impl Config {
@@ -46,6 +49,10 @@ fn default_public_dir() -> PathBuf {
 
 fn default_bind_address() -> SocketAddr {
     "0.0.0.0:3000".parse().unwrap()
+}
+
+fn default_base_url() -> String {
+    "http://localhost:3000/".to_string()
 }
 
 #[cfg(test)]

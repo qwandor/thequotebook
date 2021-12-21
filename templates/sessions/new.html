@@ -1,0 +1,27 @@
+{% extends "layouts/application.html" %}
+
+{% block title %}: Log in{% endblock %}
+
+{% block head %}
+<script src="https://accounts.google.com/gsi/client" async="true" defer="true"></script>
+{% endblock %}
+
+{% block header %}
+<h1>Log in</h1>
+{% endblock %}
+
+{% block body %}
+<div id="g_id_onload"
+    data-client_id="{{ google_client_id }}"
+    data-login_uri="{{ base_url }}google_auth"
+    data-auto_prompt="false">
+</div>
+<div class="g_id_signin"
+    data-type="standard"
+    data-size="large"
+    data-theme="outline"
+    data-text="sign_in_with"
+    data-shape="rectangular"
+    data-logo_alignment="left">
+</div>
+{% endblock %}
