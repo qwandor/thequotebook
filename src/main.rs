@@ -14,6 +14,7 @@ use config::Config;
 use controllers::{comments, contexts, home, quotes, users};
 use errors::internal_error;
 use eyre::Report;
+use log::info;
 use sqlx::postgres::PgPoolOptions;
 use tower_http::services::ServeDir;
 
@@ -58,6 +59,7 @@ async fn main() -> Result<(), Report> {
         )
         .layer(AddExtensionLayer::new(pool));
 
+    info!("Listening on {}", config.bind_address);
     axum::Server::bind(&config.bind_address)
         .serve(app.into_make_service())
         .await?;

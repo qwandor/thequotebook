@@ -1426,6 +1426,7 @@ dependencies = [
  "axum",
  "color-backtrace",
  "eyre",
+ "log",
  "md5",
  "paginate",
  "pretty_env_logger",
