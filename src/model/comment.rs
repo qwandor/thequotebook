@@ -1,5 +1,6 @@
 use super::context::Context;
 use super::user::User;
+use crate::errors::InternalError;
 use sqlx::{
     postgres::PgRow,
     types::chrono::{DateTime, Utc},
@@ -29,7 +30,7 @@ impl CommentWithQuote {
         pool: &Pool<Postgres>,
         quote_id: i32,
         comment_id: i32,
-    ) -> sqlx::Result<Self> {
+    ) -> Result<Self, InternalError> {
         sqlx::query_as::<_, CommentWithQuote>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
@@ -50,8 +51,9 @@ impl CommentWithQuote {
         )
         .bind(quote_id)
         .bind(comment_id)
-        .fetch_one(pool)
-        .await
+        .fetch_optional(pool)
+        .await?
+        .ok_or(InternalError::NotFound)
     }
 }
 

@@ -1,3 +1,4 @@
+use crate::errors::InternalError;
 use sqlx::{FromRow, Pool, Postgres};
 
 #[derive(Clone, Debug, FromRow)]
@@ -34,14 +35,15 @@ impl Context {
     }
 
     /// Fetches the context with the given ID, if it exists.
-    pub async fn fetch_one(pool: &Pool<Postgres>, context_id: i32) -> sqlx::Result<Self> {
+    pub async fn fetch_one(pool: &Pool<Postgres>, context_id: i32) -> Result<Self, InternalError> {
         sqlx::query_as::<_, Context>(
             "SELECT contexts.*,
                (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) as quotes_count
             FROM contexts WHERE id = $1",
         )
         .bind(context_id)
-        .fetch_one(pool)
-        .await
+        .fetch_optional(pool)
+        .await?
+        .ok_or(InternalError::NotFound)
     }
 }

@@ -1,5 +1,6 @@
 use super::context::Context;
 use super::user::User;
+use crate::errors::InternalError;
 use paginate::{Page, Pages};
 use sqlx::{
     postgres::PgRow,
@@ -20,7 +21,7 @@ pub struct Quote {
 
 impl Quote {
     /// Fetches the quote with the given ID, if it exists.
-    pub async fn fetch_one(pool: &Pool<Postgres>, quote_id: i32) -> sqlx::Result<Self> {
+    pub async fn fetch_one(pool: &Pool<Postgres>, quote_id: i32) -> Result<Self, InternalError> {
         sqlx::query_as::<_, Quote>(
             "SELECT quotes.*,
                quotes.created_at AT TIME ZONE 'UTC' AS created_at
@@ -28,8 +29,9 @@ impl Quote {
              WHERE id = $1",
         )
         .bind(quote_id)
-        .fetch_one(pool)
-        .await
+        .fetch_optional(pool)
+        .await?
+        .ok_or(InternalError::NotFound)
     }
 }
 
@@ -44,7 +46,7 @@ pub struct QuoteWithUsers {
 
 impl QuoteWithUsers {
     /// Fetches the quote with the given ID, if it exists.
-    pub async fn fetch_one(pool: &Pool<Postgres>, quote_id: i32) -> sqlx::Result<Self> {
+    pub async fn fetch_one(pool: &Pool<Postgres>, quote_id: i32) -> Result<Self, InternalError> {
         sqlx::query_as::<_, QuoteWithUsers>(
             "SELECT quotes.*,
                quotes.created_at AT TIME ZONE 'UTC' AS created_at,
@@ -66,8 +68,9 @@ impl QuoteWithUsers {
              WHERE quotes.id = $1",
         )
         .bind(quote_id)
-        .fetch_one(pool)
-        .await
+        .fetch_optional(pool)
+        .await?
+        .ok_or(InternalError::NotFound)
     }
 
     /// Returns the number of non-hidden quotes.
