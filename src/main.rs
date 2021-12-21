@@ -1,3 +1,4 @@
+mod config;
 mod controllers;
 mod errors;
 mod filters;
@@ -9,6 +10,7 @@ use axum::{
     routing::{get, get_service},
     AddExtensionLayer, Router,
 };
+use config::Config;
 use controllers::{comments, contexts, home, quotes, users};
 use errors::internal_error;
 use eyre::Report;
@@ -21,9 +23,11 @@ async fn main() -> Result<(), Report> {
     pretty_env_logger::init();
     color_backtrace::install();
 
+    let config = Config::from_file()?;
+
     let pool = PgPoolOptions::new()
         .max_connections(5)
-        .connect("postgres://qwandor:password@localhost/quoteyou")
+        .connect(&config.postgres_uri)
         .await?;
 
     let app = Router::new()

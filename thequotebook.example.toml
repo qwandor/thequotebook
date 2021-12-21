@@ -1,0 +1,2 @@
+# The PostgreSQL database connection string.
+postgres_uri = "postgres://username:password@localhost/quoteyou"

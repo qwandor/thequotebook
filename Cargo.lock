@@ -1434,6 +1434,7 @@ dependencies = [
  "sqlx",
  "stable-eyre",
  "tokio",
+ "toml",
  "tower-http",
 ]
 
