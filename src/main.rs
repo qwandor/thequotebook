@@ -48,11 +48,13 @@ async fn main() -> Result<(), Report> {
         )
         .nest(
             "/images",
-            get_service(ServeDir::new("public/images")).handle_error(internal_error),
+            get_service(ServeDir::new(config.public_dir.join("images")))
+                .handle_error(internal_error),
         )
         .nest(
             "/stylesheets",
-            get_service(ServeDir::new("public/stylesheets")).handle_error(internal_error),
+            get_service(ServeDir::new(config.public_dir.join("stylesheets")))
+                .handle_error(internal_error),
         )
         .layer(AddExtensionLayer::new(pool));
 

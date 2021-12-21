@@ -1,2 +1,5 @@
 # The PostgreSQL database connection string.
 postgres_uri = "postgres://username:password@localhost/quoteyou"
+
+# For running directly from the source directory, set this to "public" or omit it.
+public_dir = "public"

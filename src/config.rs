@@ -1,6 +1,9 @@
 use eyre::{Report, WrapErr};
 use serde::Deserialize;
-use std::fs::read_to_string;
+use std::{
+    fs::read_to_string,
+    path::{Path, PathBuf},
+};
 
 const CONFIG_FILENAME: &str = "thequotebook.toml";
 
@@ -8,6 +11,8 @@ const CONFIG_FILENAME: &str = "thequotebook.toml";
 #[serde(deny_unknown_fields)]
 pub struct Config {
     pub postgres_uri: String,
+    #[serde(default = "default_public_dir")]
+    pub public_dir: PathBuf,
 }
 
 impl Config {
@@ -20,6 +25,10 @@ impl Config {
             read_to_string(filename).wrap_err_with(|| format!("Reading {}", filename))?;
         Ok(toml::from_str(&config_file)?)
     }
+}
+
+fn default_public_dir() -> PathBuf {
+    Path::new("public").to_path_buf()
 }
 
 #[cfg(test)]
