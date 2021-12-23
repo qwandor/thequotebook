@@ -28,15 +28,17 @@
 </ul>
 
 <ul class="commands">
-{% if session.logged_in() %}
+{% match session.current_user %}
+{% when Some with (current_user) %}
   <li>
-<% if @context.users.exists?(current_user) %>
-    <%= button_to 'Leave this quotebook', leave_context_path(@context), :class => 'button' %>
-<% else %>
-    <%= button_to 'Join this quotebook', join_context_path(@context), :class => 'button' %>
-<% end %>
-  </li>
+{% if users.contains(current_user) %}
+    <form action="/contexts/{{ context.id }}/leave" method="post"><input type="submit" value="Leave this quotebook" class="button" /></form>
+{% else %}
+    <form action="/contexts/{{ context.id }}/join" method="post"><input type="submit" value="Join this quotebook" class="button" /></form>
 {% endif %}
+  </li>
+{% when None %}
+{% endmatch %}
 
   <li>
     <a href="/contexts/{{ context.id }}/edit" class="button">Edit {{ context.name }}</a>
