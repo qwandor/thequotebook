@@ -1754,6 +1754,7 @@ dependencies = [
  "color-backtrace",
  "eyre",
  "headers",
+ "jsonwebtoken",
  "jsonwebtoken-google",
  "log",
  "md5",

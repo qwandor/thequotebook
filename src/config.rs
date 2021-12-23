@@ -21,6 +21,8 @@ pub struct Config {
     pub google_client_id: String,
     #[serde(default = "default_base_url")]
     pub base_url: String,
+    // TODO: Should this be base64? Or generated on startup?
+    pub secret: String,
 }
 
 impl Config {

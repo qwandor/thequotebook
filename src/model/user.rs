@@ -23,4 +23,17 @@ impl User {
             .await?
             .ok_or(InternalError::NotFound)
     }
+
+    /// Fetches the user with the given email address, or `None`.
+    pub async fn fetch_by_email(
+        pool: &Pool<Postgres>,
+        email_address: &str,
+    ) -> Result<Option<Self>, InternalError> {
+        Ok(
+            sqlx::query_as::<_, User>("SELECT * FROM users WHERE email_address = $1")
+                .bind(email_address)
+                .fetch_optional(pool)
+                .await?,
+        )
+    }
 }

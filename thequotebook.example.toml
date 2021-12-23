@@ -12,3 +12,7 @@ base_url = "http://localhost:3000/"
 
 # The client ID used for Google login.
 google_client_id = "abc123"
+
+# The shared secret used for generating and validating JWTs for sessions. This must be a unique
+# random value, not used anywhere else.
+secret = "secret"
