@@ -47,23 +47,27 @@ impl FromRequest<Body> for Session {
             .map_err(|(_, e)| InternalError::Internal(eyre!("{}", e)))?;
         let Extension(config) = Extension::<Arc<Config>>::from_request(req).await?;
         let Extension(pool) = Extension::<Pool<Postgres>>::from_request(req).await?;
-        let current_user = if let Some(session_token) = cookies.get("session") {
-            let key = DecodingKey::from_secret(&config.secret.as_ref());
-            let validation = Validation {
-                validate_exp: false,
-                ..Validation::default()
-            };
-            // TODO: On error, just unset cookie and return None.
-            let data = decode::<SessionClaims>(session_token.value(), &key, &validation)?;
-            User::fetch_one(&pool, data.claims.sub).await.ok()
-        } else {
-            None
-        };
+        let current_user = user_from_cookies(&config, &pool, cookies).await;
         Ok(Session {
             flash: Flash::default(),
             current_user,
         })
     }
+}
+
+async fn user_from_cookies(
+    config: &Config,
+    pool: &Pool<Postgres>,
+    cookies: Cookies,
+) -> Option<User> {
+    let session_token = cookies.get("session")?;
+    let key = DecodingKey::from_secret(&config.secret.as_ref());
+    let validation = Validation {
+        validate_exp: false,
+        ..Validation::default()
+    };
+    let data = decode::<SessionClaims>(session_token.value(), &key, &validation).ok()?;
+    User::fetch_one(&pool, data.claims.sub).await.ok()
 }
 
 /// Claims for our session token.
