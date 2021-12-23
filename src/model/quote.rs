@@ -115,6 +115,59 @@ impl QuoteWithUsers {
         .fetch_all(pool)
         .await
     }
+
+    /// Returns the number of non-hidden quotes in contexts of which the given user is a member.
+    pub async fn count_for_user_contexts(
+        pool: &Pool<Postgres>,
+        user_id: i32,
+    ) -> sqlx::Result<usize> {
+        Ok(sqlx::query_scalar::<_, i64>(
+            "SELECT COUNT(*)
+             FROM quotes
+               INNER JOIN contexts_users ON contexts_users.context_id = quotes.context_id
+             WHERE NOT hidden AND contexts_users.user_id = $1",
+        )
+        .bind(user_id)
+        .fetch_one(pool)
+        .await? as usize)
+    }
+
+    /// Fetches non-hidden quotes in contexts of which the given user is a member, within the given page.
+    pub async fn fetch_page_for_user_contexts(
+        pool: &Pool<Postgres>,
+        user_id: i32,
+        pages: &Pages,
+        page: &Page,
+    ) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, Self>(
+            "SELECT quotes.*,
+               quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
+               quoter.username AS quoter_username,
+               quoter.fullname AS quoter_fullname,
+               quoter.email_address AS quoter_email_address,
+               quoter.openid AS quoter_openid,
+               quotee.username AS quotee_username,
+               quotee.fullname AS quotee_fullname,
+               quotee.email_address AS quotee_email_address,
+               quotee.openid AS quotee_openid,
+               contexts.name AS context_name,
+               contexts.description AS context_description
+             FROM quotes
+               INNER JOIN users AS quoter ON quoter.id = quoter_id
+               INNER JOIN users AS quotee ON quotee.id = quotee_id
+               INNER JOIN contexts ON contexts.id = context_id
+               INNER JOIN contexts_users ON contexts_users.context_id = quotes.context_id
+             WHERE NOT hidden AND contexts_users.user_id = $1
+             ORDER BY quotes.created_at DESC
+             LIMIT $2 OFFSET $3",
+        )
+        .bind(user_id)
+        .bind(pages.limit() as i64)
+        .bind(page.start as i64)
+        .fetch_all(pool)
+        .await
+    }
 }
 
 impl<'r> FromRow<'r, PgRow> for QuoteWithUsers {

@@ -21,22 +21,52 @@ pub async fn index(
     session: Session,
     Query(query): Query<QueryPage>,
 ) -> Result<Html<String>, InternalError> {
-    let quote_count = QuoteWithUsers::count(&pool).await?;
-    let pages = Pages::new(quote_count, QUOTES_PER_PAGE);
-    let current_page = pages.with_offset(query.page);
-    let quotes = QuoteWithUsers::fetch_page(&pool, &pages, &current_page).await?;
     let top_contexts = Context::fetch_top_5(&pool).await?;
-    let template = IndexTemplate {
-        session,
-        quotes,
-        top_contexts,
-        current_user_contexts: vec![],
-        comments: vec![],
-        pagination: PaginationState {
-            pages,
-            current_page,
-            window_size: PAGINATION_WINDOW,
-        },
+
+    let template = if let Some(current_user) = &session.current_user {
+        let quote_count = QuoteWithUsers::count_for_user_contexts(&pool, current_user.id).await?;
+        let pages = Pages::new(quote_count, QUOTES_PER_PAGE);
+        let current_page = pages.with_offset(query.page);
+        let quotes = QuoteWithUsers::fetch_page_for_user_contexts(
+            &pool,
+            current_user.id,
+            &pages,
+            &current_page,
+        )
+        .await?;
+        let current_user_contexts = Context::fetch_for_user(&pool, current_user.id).await?;
+        let comments = CommentWithQuote::fetch_5_for_user_contexts(&pool, current_user.id).await?;
+
+        IndexTemplate {
+            session,
+            quotes,
+            top_contexts,
+            current_user_contexts,
+            comments,
+            pagination: PaginationState {
+                pages,
+                current_page,
+                window_size: PAGINATION_WINDOW,
+            },
+        }
+    } else {
+        let quote_count = QuoteWithUsers::count(&pool).await?;
+        let pages = Pages::new(quote_count, QUOTES_PER_PAGE);
+        let current_page = pages.with_offset(query.page);
+        let quotes = QuoteWithUsers::fetch_page(&pool, &pages, &current_page).await?;
+
+        IndexTemplate {
+            session,
+            quotes,
+            top_contexts,
+            current_user_contexts: vec![],
+            comments: vec![],
+            pagination: PaginationState {
+                pages,
+                current_page,
+                window_size: PAGINATION_WINDOW,
+            },
+        }
     };
     Ok(Html(template.render()?))
 }

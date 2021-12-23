@@ -10,6 +10,19 @@ pub struct Context {
 }
 
 impl Context {
+    /// Fetches the context with the given ID, if it exists.
+    pub async fn fetch_one(pool: &Pool<Postgres>, context_id: i32) -> Result<Self, InternalError> {
+        sqlx::query_as::<_, Context>(
+            "SELECT contexts.*,
+               (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) as quotes_count
+            FROM contexts WHERE id = $1",
+        )
+        .bind(context_id)
+        .fetch_optional(pool)
+        .await?
+        .ok_or(InternalError::NotFound)
+    }
+
     /// Fetches the top 5 contexts with the most quotes.
     pub async fn fetch_top_5(pool: &Pool<Postgres>) -> sqlx::Result<Vec<Self>> {
         sqlx::query_as::<_, Self>(
@@ -34,16 +47,18 @@ impl Context {
         .await
     }
 
-    /// Fetches the context with the given ID, if it exists.
-    pub async fn fetch_one(pool: &Pool<Postgres>, context_id: i32) -> Result<Self, InternalError> {
-        sqlx::query_as::<_, Context>(
+    /// Fetches all contexts of which the given user is a member.
+    pub async fn fetch_for_user(pool: &Pool<Postgres>, user_id: i32) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, Self>(
             "SELECT contexts.*,
                (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) as quotes_count
-            FROM contexts WHERE id = $1",
+             FROM contexts
+               INNER JOIN contexts_users ON context_id = contexts.id
+             WHERE user_id = $1
+             ORDER BY contexts.created_at DESC",
         )
-        .bind(context_id)
-        .fetch_optional(pool)
-        .await?
-        .ok_or(InternalError::NotFound)
+        .bind(user_id)
+        .fetch_all(pool)
+        .await
     }
 }
