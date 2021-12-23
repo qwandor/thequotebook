@@ -9,18 +9,20 @@ use std::convert::Infallible;
 #[derive(Debug, Eq, PartialEq)]
 pub struct Session {
     pub flash: Flash,
-    pub logged_in: bool,
-    pub current_user_id: i32,
-    pub current_user_fullname: String,
+    pub current_user: Option<User>,
 }
 
 impl Session {
     pub fn logged_in(&self) -> bool {
-        self.logged_in
+        self.current_user.is_some()
     }
 
     pub fn is_current_user(&self, &user_id: &i32) -> bool {
-        self.current_user_id == user_id
+        if let Some(current_user) = &self.current_user {
+            current_user.id == user_id
+        } else {
+            false
+        }
     }
 }
 
@@ -37,9 +39,7 @@ impl FromRequest<Body> for Session {
     async fn from_request(_req: &mut RequestParts<Body>) -> Result<Self, Self::Rejection> {
         Ok(Session {
             flash: Flash::default(),
-            logged_in: false,
-            current_user_id: 1,
-            current_user_fullname: "".to_string(),
+            current_user: None,
         })
     }
 }

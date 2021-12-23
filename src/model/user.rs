@@ -1,7 +1,7 @@
 use crate::errors::InternalError;
 use sqlx::{FromRow, Pool, Postgres};
 
-#[derive(Clone, Debug, FromRow)]
+#[derive(Clone, Debug, Eq, FromRow, PartialEq)]
 pub struct User {
     pub id: i32,
     pub email_address: Option<String>,

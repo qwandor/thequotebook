@@ -1,9 +1,10 @@
 <div id="nav">
-{% if session.logged_in %}
-  <%= link_to "Logged in as <strong>#{current_user.username}</strong>", current_user %>
-  <%= link_to 'Edit profile', edit_user_path(current_user), {:class => 'button'} %>
+{% match session.current_user %}
+{% when Some with (current_user) %}
+  <a href="/users/{{ current_user.id }}">Logged in as <strong>{{ current_user.username_or_fullname() }}</strong></a>
+  <a href="/users/{{ current_user.id }}/edit" class="button">Edit profile</a>
   <a href="/logout" title="Log out" class="button">Log out</a>
-{% else %}
+{% when None %}
   <a href="/login" title="Log in" class="button">Log in</a>
-{% endif %}
+{% endmatch %}
 </div>

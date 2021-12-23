@@ -1,10 +1,12 @@
 {% extends "layouts/home.html" %}
 
 {% block head %}
-{%   if session.logged_in %}
-<link rel="alternate" type="application/atom+xml" title="Quotes of interest to {{ session.current_user_fullname }}" href="/users/{{ session.current_user_id }}/relevant_quotes.atom" />
-<link rel="alternate" type="application/atom+xml" title="Comments of interest to {{ session.current_user_fullname }}" href="/users/{{ session.current_user_id }}/relevant_comments.atom" />
-{%   endif %}
+{%   match session.current_user %}
+{%   when Some with (current_user) %}
+<link rel="alternate" type="application/atom+xml" title="Quotes of interest to {{ current_user.fullname }}" href="/users/{{ current_user.id }}/relevant_quotes.atom" />
+<link rel="alternate" type="application/atom+xml" title="Comments of interest to {{ current_user.fullname }}" href="/users/{{ current_user.id }}/relevant_comments.atom" />
+{%   when None %}
+{%   endmatch %}
 {% endblock %}
 
 {% block body %}
@@ -16,7 +18,7 @@
 {%   endfor %}
   <ul class="pagination">
     {% include "shared/pages.html" %}
-    <li><a href="{% if session.logged_in %}/users/{{ session.current_user_id }}/relevant_quotes{% else %}/quotes{% endif %}" class="button">All</a>
+    <li><a href="{% match session.current_user %}{% when Some with (current_user) %}/users/{{ current_user.id }}/relevant_quotes{% when None %}/quotes{% endmatch %}" class="button">All</a>
   </ul>
 {% endif %}
 {% endblock %}
@@ -61,10 +63,14 @@
   {% let show_context = true %}
   {% include "comments/list_sidebar.html" %}
 
+  {% match session.current_user %}
+  {% when Some with (current_user) %}
   <hr />
   <ul>
-    <li><a href="/users/{{ session.current_user_id }}/relevant_comments">All comments on your quotebooks</a></li>
+    <li><a href="/users/{{ current_user.id }}/relevant_comments">All comments on your quotebooks</a></li>
   </ul>
+  {% when None %}
+  {% endmatch %}
 </div>
 {% endif %}
 
