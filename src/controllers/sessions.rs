@@ -7,7 +7,7 @@ use crate::{
 use askama::Template;
 use axum::{
     extract::{Extension, Form},
-    response::Html,
+    response::{Html, IntoResponse, Redirect, Response},
 };
 use eyre::eyre;
 use jsonwebtoken::{encode, EncodingKey, Header};
@@ -42,7 +42,7 @@ pub async fn google_auth(
     Extension(pool): Extension<Pool<Postgres>>,
     Form(request): Form<GoogleAuthRequest>,
     cookies: Cookies,
-) -> Result<String, InternalError> {
+) -> Result<Response, InternalError> {
     if request.g_csrf_token
         != cookies
             .get("g_csrf_token")
@@ -73,16 +73,15 @@ pub async fn google_auth(
                 .as_secs(),
         };
         let token = encode(&header, &claims, &key)?;
-        let response = format!("Successfully logged in: {:?}, {}", google_claims, token);
 
         // TODO: Set Expires or Max-Age so that cookie lasts longer than session.
         // TODO: Set Secure, once we enforce https.
         cookies.add(Cookie::build("session", token).http_only(true).finish());
 
-        Ok(response)
+        Ok(Redirect::to("/".parse().unwrap()).into_response())
     } else {
         // TODO: Redirect to the account creation form.
-        Ok(format!("No such user: {:?}", google_claims))
+        Ok(format!("No such user: {:?}", google_claims).into_response())
     }
 }
 
