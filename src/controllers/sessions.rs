@@ -57,7 +57,9 @@ pub async fn google_auth(
     let parser = Parser::new(&config.google_client_id);
     let google_claims = parser.parse::<TokenClaims>(&request.credential).await?;
 
-    // TODO: Check email_verified?
+    if !google_claims.email_verified {
+        return Err(InternalError::Internal(eyre!("Email not verified")));
+    }
 
     // User has successfully authenticated with Google, see if they exist in our database.
     if let Some(user) = User::fetch_by_email(&pool, &google_claims.email).await? {
