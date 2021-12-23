@@ -17,6 +17,7 @@ use eyre::Report;
 use log::info;
 use sqlx::postgres::PgPoolOptions;
 use std::sync::Arc;
+use tower_cookies::CookieManagerLayer;
 use tower_http::services::ServeDir;
 
 #[tokio::main]
@@ -60,6 +61,7 @@ async fn main() -> Result<(), Report> {
             get_service(ServeDir::new(config.public_dir.join("stylesheets")))
                 .handle_error(internal_error),
         )
+        .layer(CookieManagerLayer::new())
         .layer(AddExtensionLayer::new(config.clone()))
         .layer(AddExtensionLayer::new(pool));
 

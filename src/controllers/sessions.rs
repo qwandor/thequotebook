@@ -6,17 +6,16 @@ use crate::{
 };
 use askama::Template;
 use axum::{
-    extract::{Extension, Form, TypedHeader},
-    http::{header::SET_COOKIE, HeaderMap},
+    extract::{Extension, Form},
     response::Html,
 };
 use eyre::eyre;
-use headers::Cookie;
 use jsonwebtoken::{encode, EncodingKey, Header};
 use jsonwebtoken_google::Parser;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use sqlx::{Pool, Postgres};
 use std::{sync::Arc, time::SystemTime};
+use tower_cookies::{Cookie, Cookies};
 
 pub async fn new(
     Extension(config): Extension<Arc<Config>>,
@@ -42,9 +41,14 @@ pub async fn google_auth(
     Extension(config): Extension<Arc<Config>>,
     Extension(pool): Extension<Pool<Postgres>>,
     Form(request): Form<GoogleAuthRequest>,
-    TypedHeader(cookies): TypedHeader<Cookie>,
-) -> Result<(HeaderMap, String), InternalError> {
-    if request.g_csrf_token != cookies.get("g_csrf_token").unwrap_or("") {
+    cookies: Cookies,
+) -> Result<String, InternalError> {
+    if request.g_csrf_token
+        != cookies
+            .get("g_csrf_token")
+            .ok_or(InternalError::Internal(eyre!("Missing CSRF token")))?
+            .value()
+    {
         return Err(InternalError::Internal(eyre!("Invalid CSRF token")));
     }
 
@@ -67,21 +71,16 @@ pub async fn google_auth(
                 .as_secs(),
         };
         let token = encode(&header, &claims, &key)?;
-        let mut response_headers = HeaderMap::new();
+        let response = format!("Successfully logged in: {:?}, {}", google_claims, token);
+
         // TODO: Set Expires or Max-Age so that cookie lasts longer than session.
         // TODO: Set Secure, once we enforce https.
-        response_headers.insert(
-            SET_COOKIE,
-            format!("session={}; HttpOnly", token).try_into().unwrap(),
-        );
-        Ok((
-            response_headers,
-            format!("Successfully logged in: {:?}, {}", google_claims, token),
-        ))
+        cookies.add(Cookie::build("session", token).http_only(true).finish());
+
+        Ok(response)
     } else {
-        // Redirect to the account creation form.
-        let headers = HeaderMap::new();
-        Ok((headers, format!("No such user: {:?}", google_claims)))
+        // TODO: Redirect to the account creation form.
+        Ok(format!("No such user: {:?}", google_claims))
     }
 }
 

@@ -2,13 +2,14 @@ use crate::{config::Config, errors::InternalError, model::User};
 use axum::{
     async_trait,
     body::Body,
-    extract::{Extension, FromRequest, RequestParts, TypedHeader},
+    extract::{Extension, FromRequest, RequestParts},
 };
-use headers::Cookie;
+use eyre::eyre;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
 use sqlx::{Pool, Postgres};
 use std::sync::Arc;
+use tower_cookies::Cookies;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Session {
@@ -41,8 +42,9 @@ impl FromRequest<Body> for Session {
     type Rejection = InternalError;
 
     async fn from_request(req: &mut RequestParts<Body>) -> Result<Self, Self::Rejection> {
-        // TODO: Don't return an error if there are no cookies.
-        let TypedHeader(cookies) = TypedHeader::<Cookie>::from_request(req).await?;
+        let cookies = Cookies::from_request(req)
+            .await
+            .map_err(|(_, e)| InternalError::Internal(eyre!("{}", e)))?;
         let Extension(config) = Extension::<Arc<Config>>::from_request(req).await?;
         let Extension(pool) = Extension::<Pool<Postgres>>::from_request(req).await?;
         let current_user = if let Some(session_token) = cookies.get("session") {
@@ -52,7 +54,7 @@ impl FromRequest<Body> for Session {
                 ..Validation::default()
             };
             // TODO: On error, just unset cookie and return None.
-            let data = decode::<SessionClaims>(session_token, &key, &validation)?;
+            let data = decode::<SessionClaims>(session_token.value(), &key, &validation)?;
             User::fetch_one(&pool, data.claims.sub).await.ok()
         } else {
             None
