@@ -36,6 +36,7 @@ async fn main() -> Result<(), Report> {
     let app = Router::new()
         .route("/", get(home::index))
         .route("/login", get(sessions::new))
+        .route("/logout", get(sessions::destroy))
         .route("/google_auth", post(sessions::google_auth))
         .route("/comments", get(home::comments))
         .route("/contexts", get(contexts::index))

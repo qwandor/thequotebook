@@ -101,3 +101,10 @@ struct TokenClaims {
     pub iss: String,
     pub exp: u64,
 }
+
+pub async fn destroy(cookies: Cookies) -> Result<Redirect, InternalError> {
+    cookies.remove(Cookie::new("session", ""));
+
+    // TODO: Have some parameter to control where to redirect back to.
+    Ok(Redirect::to("/".parse().unwrap()))
+}
