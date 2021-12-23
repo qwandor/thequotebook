@@ -12,7 +12,7 @@
 
 {% block body %}
 <ul class="commands">
-  {% if quote.quoter.id == session.current_user_id %}
+  {% if session.is_current_user(quote.quoter.id) %}
   <li><a href="/quotes/{{ quote.quote.id }}/edit" class="button">Edit</a></li>
   <li><%= link_to 'Destroy', @quote, :confirm => 'Are you sure?', :method => :delete, :class => 'button' %></li>
   {% endif %}
@@ -21,7 +21,7 @@
 
 {% include "comments/list.html" %}
 
-{% if session.logged_in %}
+{% if session.logged_in() %}
 <%
 @comment = @quote.comments.build #For new comment form; must be after above list of comments or it will show up there
 %>

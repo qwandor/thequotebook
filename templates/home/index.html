@@ -23,7 +23,7 @@
 
 {% block sidebars %}
 <div class="sidebar left">
-{% if session.logged_in %}
+{% if session.logged_in() %}
   <h2>Your quotebooks</h2>
 {%   if current_user_contexts.is_empty() %}
   <p>
