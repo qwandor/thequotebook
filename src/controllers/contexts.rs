@@ -119,6 +119,11 @@ pub async fn show(
             current_page,
             window_size: PAGINATION_WINDOW,
         },
+        form: AddQuoteForm {
+            possible_quotee_matches: None,
+            quotee: "".to_string(),
+            error_messages: "".to_string(),
+        },
     };
     Ok(Html(template.render()?))
 }
@@ -132,6 +137,13 @@ struct ShowTemplate {
     users: Vec<User>,
     comments: Vec<CommentWithQuote>,
     pagination: PaginationState,
+    form: AddQuoteForm,
+}
+
+struct AddQuoteForm {
+    possible_quotee_matches: Option<Vec<String>>,
+    quotee: String,
+    error_messages: String,
 }
 
 pub async fn quotes(
