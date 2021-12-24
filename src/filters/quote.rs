@@ -11,8 +11,11 @@ pub fn quote_marks_if_needed(text: &str) -> askama::Result<String> {
 }
 
 fn trim_if_needed(text: &str, max_length: usize) -> String {
-    if text.len() > max_length {
-        format!("{}...", &text[0..max_length - 3])
+    if text.chars().count() > max_length {
+        format!(
+            "{}...",
+            text.chars().take(max_length - 3).collect::<String>()
+        )
     } else {
         text.to_string()
     }
