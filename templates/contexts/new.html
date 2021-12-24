@@ -1,0 +1,21 @@
+{% extends "layouts/application.html" %}
+
+{% block title %}: New quotebook{% endblock %}
+
+{% block header %}
+<h1>New quotebook</h1>
+{% endblock %}
+
+{% block body %}
+<p class="note">
+  Each quotebook is for a particular place or group in which quotes are said &mdash; you could create a quotebook for your flat, your office, lab, club, or just a group of friends who hang out together and say funny things. Once you have created a context anyone can join it and add quotes to it.
+</p>
+
+<p class="note">
+  Before you create a new quotebook, take a look at the <a href="/contexts">list of quotebook</a> to make sure that nobody else has already created the one you want.
+</p>
+
+{% let cancel_link = "/contexts" %}
+{% let cancel_label = "Back" %}
+{% include "contexts/form.html" %}
+{% endblock %}

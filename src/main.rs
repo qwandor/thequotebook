@@ -40,6 +40,7 @@ async fn main() -> Result<(), Report> {
         .route("/google_auth", post(sessions::google_auth))
         .route("/comments", get(home::comments))
         .route("/contexts", get(contexts::index))
+        .route("/contexts/new", get(contexts::new))
         .route("/contexts/:context_id", get(contexts::show))
         .route("/contexts/:context_id/quotes", get(contexts::quotes))
         .route("/users", get(users::index))

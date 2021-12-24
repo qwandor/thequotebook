@@ -24,15 +24,15 @@
 
   {{ form.error_messages }}
 
-  <textarea name="quote_text" rows="4" cols="80"></textarea>
+  <textarea name="quote_text" id="quote_text" rows="4" cols="80"></textarea>
   <div class="input"><div>
     <label for="quotee_name">by</label>
-    <input name="quotee_name" value="{{ form.quotee }}"/>
+    <input type="text" name="quotee_name" id="quotee_name" value="{{ form.quotee }}"/>
   </div></div>
   <div class="input"><div>
     <label for="context_name">in</label>
 {% if true %}
-    <input type="text" name="context_dummy" value="{{ context.name }}" disabled="disabled" />
+    <input type="text" name="context_dummy" id="context_name" value="{{ context.name }}" disabled="disabled" />
     <input type="hidden" name="context_name" value="{{ context.name }}" />
 {% else %}
     <%= text_field_with_auto_complete(:context, :name, {:value => @quote.context && @quote.context.name}, {:skip_style => true}) %>

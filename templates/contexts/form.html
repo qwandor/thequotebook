@@ -1,0 +1,18 @@
+<form action="/contexts" method="post">
+  {{ form.error_messages }}
+
+  <div>
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name"/>
+    <label for="name" class="note">Just something short and sweet, but it should be a unique name ('Down Street flat' or 'Imperial Tectonics Limited', not just 'my flat' or 'friends').</label>
+  </div>
+  <div>
+    <label for="description">Description</label>
+    <textarea name="description" id="description"></textarea>
+    <label for="description" class="note">Give everyone a bit more information about what this quotebook is for.</label>
+  </div>
+  <div>
+    <input type="submit" value="Save" class="button" />
+    <a href="{{ cancel_link }}" class="button">{{ cancel_label }}</a>
+  </div>
+</form>

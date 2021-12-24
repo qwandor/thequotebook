@@ -146,6 +146,27 @@ struct AddQuoteForm {
     error_messages: String,
 }
 
+pub async fn new(session: Session) -> Result<Html<String>, InternalError> {
+    let template = NewTemplate {
+        session,
+        form: NewContextForm {
+            error_messages: "".to_string(),
+        },
+    };
+    Ok(Html(template.render()?))
+}
+
+#[derive(Template)]
+#[template(path = "contexts/new.html")]
+struct NewTemplate {
+    session: Session,
+    form: NewContextForm,
+}
+
+struct NewContextForm {
+    error_messages: String,
+}
+
 pub async fn quotes(
     Extension(pool): Extension<Pool<Postgres>>,
     session: Session,
