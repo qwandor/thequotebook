@@ -1,7 +1,7 @@
 use crate::{
     errors::InternalError,
     filters,
-    model::{CommentWithQuote, QuoteWithUsers},
+    model::{CommentWithQuote, Context, QuoteWithUsers},
     session::Session,
 };
 use askama::Template;
@@ -92,4 +92,33 @@ struct ShowTemplate {
     session: Session,
     quote: QuoteWithUsers,
     comments: Vec<CommentWithQuote>,
+}
+
+pub async fn new(session: Session) -> Result<Html<String>, InternalError> {
+    let template = NewTemplate {
+        session,
+        form: AddQuoteForm {
+            error_messages: "".to_string(),
+            possible_quotee_matches: None,
+            quotee: "".to_string(),
+            context_name: "".to_string(),
+            context: None,
+        },
+    };
+    Ok(Html(template.render()?))
+}
+
+#[derive(Template)]
+#[template(path = "quotes/new.html")]
+struct NewTemplate {
+    session: Session,
+    form: AddQuoteForm,
+}
+
+pub struct AddQuoteForm {
+    pub error_messages: String,
+    pub possible_quotee_matches: Option<Vec<String>>,
+    pub quotee: String,
+    pub context_name: String,
+    pub context: Option<Context>,
 }

@@ -31,12 +31,13 @@
   </div></div>
   <div class="input"><div>
     <label for="context_name">in</label>
-{% if true %}
+{% match form.context %}
+{% when Some with (context) %}
     <input type="text" name="context_dummy" id="context_name" value="{{ context.name }}" disabled="disabled" />
     <input type="hidden" name="context_name" value="{{ context.name }}" />
-{% else %}
-    <%= text_field_with_auto_complete(:context, :name, {:value => @quote.context && @quote.context.name}, {:skip_style => true}) %>
-{% endif %}
+{% when None %}
+    <input type="text" name="context_name" id="context_name" value="{{ form.context_name }}"/>
+{% endmatch %}
   </div></div>
 
   <input type="submit" class="button" value="{{ button_label }}" />

@@ -1,3 +1,4 @@
+use super::quotes::AddQuoteForm;
 use crate::{
     errors::InternalError,
     filters,
@@ -110,7 +111,7 @@ pub async fn show(
 
     let template = ShowTemplate {
         session,
-        context,
+        context: context.clone(),
         quotes,
         users,
         comments,
@@ -120,9 +121,11 @@ pub async fn show(
             window_size: PAGINATION_WINDOW,
         },
         form: AddQuoteForm {
+            error_messages: "".to_string(),
             possible_quotee_matches: None,
             quotee: "".to_string(),
-            error_messages: "".to_string(),
+            context_name: "".to_string(),
+            context: Some(context),
         },
     };
     Ok(Html(template.render()?))
@@ -138,12 +141,6 @@ struct ShowTemplate {
     comments: Vec<CommentWithQuote>,
     pagination: PaginationState,
     form: AddQuoteForm,
-}
-
-struct AddQuoteForm {
-    possible_quotee_matches: Option<Vec<String>>,
-    quotee: String,
-    error_messages: String,
 }
 
 pub async fn new(session: Session) -> Result<Html<String>, InternalError> {

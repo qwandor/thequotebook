@@ -1,0 +1,12 @@
+{% extends "layouts/application.html" %}
+
+{% block title %}: New quote{% endblock %}
+
+{% block header %}
+<h1>New quote</h1>
+{% endblock %}
+
+{% block body %}
+{% let button_label = "Add quote" %}
+{% include "quotes/form.html" %}
+{% endblock %}

@@ -47,6 +47,7 @@ async fn main() -> Result<(), Report> {
         .route("/users/:user_id", get(users::show))
         .route("/users/:user_id/quotes", get(users::quotes))
         .route("/quotes", get(quotes::index))
+        .route("/quotes/new", get(quotes::new))
         .route("/quotes/:quote_id", get(quotes::show))
         .route("/quotes/:quote_id/comments", get(comments::index))
         .route(
