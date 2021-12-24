@@ -9,7 +9,7 @@ use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
 use sqlx::{Pool, Postgres};
 use std::sync::Arc;
-use tower_cookies::Cookies;
+use tower_cookies::{Cookie, Cookies};
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Session {
@@ -31,12 +31,6 @@ impl Session {
     }
 }
 
-#[derive(Default, Debug, Eq, PartialEq)]
-pub struct Flash {
-    pub notice: Option<String>,
-    pub error: Option<String>,
-}
-
 #[async_trait]
 impl FromRequest<Body> for Session {
     type Rejection = InternalError;
@@ -49,9 +43,38 @@ impl FromRequest<Body> for Session {
         let Extension(pool) = Extension::<Pool<Postgres>>::from_request(req).await?;
         let current_user = user_from_cookies(&config, &pool, cookies).await;
         Ok(Session {
-            flash: Flash::default(),
+            flash: Flash::from_request(req).await?,
             current_user,
         })
+    }
+}
+
+#[derive(Default, Debug, Eq, PartialEq)]
+pub struct Flash {
+    pub notice: Option<String>,
+    pub error: Option<String>,
+}
+
+#[async_trait]
+impl FromRequest<Body> for Flash {
+    type Rejection = InternalError;
+
+    async fn from_request(req: &mut RequestParts<Body>) -> Result<Self, Self::Rejection> {
+        let cookies = Cookies::from_request(req)
+            .await
+            .map_err(|(_, e)| InternalError::Internal(eyre!("{}", e)))?;
+
+        // If notice or error cookies exist, show them once then remove them.
+        let notice = cookies.get("notice").map(|c| {
+            cookies.remove(Cookie::new("notice", ""));
+            c.value().to_owned()
+        });
+        let error = cookies.get("error").map(|c| {
+            cookies.remove(Cookie::new("error", ""));
+            c.value().to_owned()
+        });
+
+        Ok(Flash { notice, error })
     }
 }
 

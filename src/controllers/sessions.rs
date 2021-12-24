@@ -78,6 +78,8 @@ pub async fn google_auth(
         // TODO: Set Secure, once we enforce https.
         cookies.add(Cookie::build("session", token).http_only(true).finish());
 
+        cookies.add(Cookie::new("notice", "Logged in successfully."));
+
         Ok(Redirect::to("/".parse().unwrap()).into_response())
     } else {
         // TODO: Redirect to the account creation form.
@@ -104,6 +106,8 @@ struct TokenClaims {
 
 pub async fn destroy(cookies: Cookies) -> Result<Redirect, InternalError> {
     cookies.remove(Cookie::new("session", ""));
+
+    cookies.add(Cookie::new("notice", "You have been logged out."));
 
     // TODO: Have some parameter to control where to redirect back to.
     Ok(Redirect::to("/".parse().unwrap()))
