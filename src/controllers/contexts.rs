@@ -9,10 +9,11 @@ use crate::{
 use askama::Template;
 use axum::{
     extract::{Extension, Path, Query},
-    response::Html,
+    response::{Html, Redirect},
 };
 use paginate::Pages;
 use sqlx::{Pool, Postgres};
+use tower_cookies::{Cookie, Cookies};
 
 const QUOTES_PER_PAGE: usize = 10;
 const PAGINATION_WINDOW: usize = 2;
@@ -162,6 +163,46 @@ struct NewTemplate {
 
 struct NewContextForm {
     error_messages: String,
+}
+
+pub async fn join(
+    Extension(pool): Extension<Pool<Postgres>>,
+    session: Session,
+    Path(context_id): Path<i32>,
+    cookies: Cookies,
+) -> Result<Redirect, InternalError> {
+    let current_user = session.current_user.ok_or(InternalError::Unauthorised)?;
+    let context = Context::fetch_one(&pool, context_id).await?;
+
+    User::join_context(&pool, current_user.id, context_id).await?;
+    cookies.add(Cookie::new(
+        "notice",
+        format!("You are now a member of {}.", context.name),
+    ));
+
+    Ok(Redirect::to(
+        format!("/contexts/{}", context_id).parse().unwrap(),
+    ))
+}
+
+pub async fn leave(
+    Extension(pool): Extension<Pool<Postgres>>,
+    session: Session,
+    Path(context_id): Path<i32>,
+    cookies: Cookies,
+) -> Result<Redirect, InternalError> {
+    let current_user = session.current_user.ok_or(InternalError::Unauthorised)?;
+    let context = Context::fetch_one(&pool, context_id).await?;
+
+    User::leave_context(&pool, current_user.id, context_id).await?;
+    cookies.add(Cookie::new(
+        "notice",
+        format!("You are no longer a member of {}.", context.name),
+    ));
+
+    Ok(Redirect::to(
+        format!("/contexts/{}", context_id).parse().unwrap(),
+    ))
 }
 
 pub async fn quotes(
