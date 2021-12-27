@@ -78,16 +78,7 @@ pub async fn show(
     .bind(current_page.start as i64)
     .fetch_all(&pool)
     .await?;
-    let users = sqlx::query_as::<_, User>(
-        "SELECT users.*
-         FROM users
-           INNER JOIN contexts_users ON user_id = users.id
-           WHERE context_id = $1
-           ORDER BY users.created_at DESC",
-    )
-    .bind(context_id)
-    .fetch_all(&pool)
-    .await?;
+    let users = User::fetch_all_for_context(&pool, context_id).await?;
     let comments = sqlx::query_as::<_, CommentWithQuote>(
         "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,

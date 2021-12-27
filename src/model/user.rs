@@ -37,6 +37,30 @@ impl User {
         )
     }
 
+    /// Fetches all users.
+    pub async fn fetch_all(pool: &Pool<Postgres>) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, User>("SELECT * FROM users ORDER BY created_at DESC")
+            .fetch_all(pool)
+            .await
+    }
+
+    /// Fetches all users who are a member of the given context.
+    pub async fn fetch_all_for_context(
+        pool: &Pool<Postgres>,
+        context_id: i32,
+    ) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, User>(
+            "SELECT users.*
+             FROM users
+               INNER JOIN contexts_users ON user_id = users.id
+               WHERE context_id = $1
+               ORDER BY users.created_at DESC",
+        )
+        .bind(context_id)
+        .fetch_all(pool)
+        .await
+    }
+
     /// Adds the given user to the given context, if they are not already a member.
     pub async fn join_context(
         pool: &Pool<Postgres>,

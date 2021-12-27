@@ -20,9 +20,7 @@ pub async fn index(
     Extension(pool): Extension<Pool<Postgres>>,
     session: Session,
 ) -> Result<Html<String>, InternalError> {
-    let users = sqlx::query_as::<_, User>("SELECT * FROM users ORDER BY created_at DESC")
-        .fetch_all(&pool)
-        .await?;
+    let users = User::fetch_all(&pool).await?;
     let template = IndexTemplate { session, users };
     Ok(Html(template.render()?))
 }
