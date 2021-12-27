@@ -61,41 +61,11 @@ pub async fn show(
     .fetch_all(&pool)
     .await?;
 
-    let quote_count = sqlx::query_scalar::<_, i64>(
-        "SELECT COUNT(*) FROM quotes WHERE quotes.quotee_id = $1 AND NOT hidden",
-    )
-    .bind(user_id)
-    .fetch_one(&pool)
-    .await? as usize;
+    let quote_count = QuoteWithUsers::count_for_quotee(&pool, user_id).await?;
     let pages = Pages::new(quote_count, QUOTES_PER_PAGE);
     let current_page = pages.with_offset(query.page);
-    let quotes = sqlx::query_as::<_, QuoteWithUsers>(
-            "SELECT quotes.*,
-               quotes.created_at AT TIME ZONE 'UTC' AS created_at,
-               (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
-               quoter.username AS quoter_username,
-               quoter.fullname AS quoter_fullname,
-               quoter.email_address AS quoter_email_address,
-               quoter.openid AS quoter_openid,
-               quotee.username AS quotee_username,
-               quotee.fullname AS quotee_fullname,
-               quotee.email_address AS quotee_email_address,
-               quotee.openid AS quotee_openid,
-               contexts.name AS context_name,
-               contexts.description AS context_description
-             FROM quotes
-               INNER JOIN users AS quoter ON quoter.id = quoter_id
-               INNER JOIN users AS quotee ON quotee.id = quotee_id
-               INNER JOIN contexts ON contexts.id = context_id
-             WHERE quotes.quotee_id = $1 AND NOT hidden
-             ORDER BY quotes.created_at DESC
-             LIMIT $2 OFFSET $3",
-        )
-        .bind(user_id)
-        .bind(pages.limit() as i64)
-        .bind(current_page.start as i64)
-        .fetch_all(&pool)
-        .await?;
+    let quotes =
+        QuoteWithUsers::fetch_page_for_quotee(&pool, user_id, &pages, &current_page).await?;
     let contexts = sqlx::query_as::<_, Context>(
         "SELECT contexts.*,
           (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) as quotes_count
@@ -140,30 +110,7 @@ pub async fn quotes(
     Path(user_id): Path<i32>,
 ) -> Result<Html<String>, InternalError> {
     let user = User::fetch_one(&pool, user_id).await?;
-    let quotes = sqlx::query_as::<_, QuoteWithUsers>(
-            "SELECT quotes.*,
-               quotes.created_at AT TIME ZONE 'UTC' AS created_at,
-               (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
-               quoter.username AS quoter_username,
-               quoter.fullname AS quoter_fullname,
-               quoter.email_address AS quoter_email_address,
-               quoter.openid AS quoter_openid,
-               quotee.username AS quotee_username,
-               quotee.fullname AS quotee_fullname,
-               quotee.email_address AS quotee_email_address,
-               quotee.openid AS quotee_openid,
-               contexts.name AS context_name,
-               contexts.description AS context_description
-             FROM quotes
-               INNER JOIN users AS quoter ON quoter.id = quoter_id
-               INNER JOIN users AS quotee ON quotee.id = quotee_id
-               INNER JOIN contexts ON contexts.id = context_id
-             WHERE quotes.quotee_id = $1 AND NOT hidden
-             ORDER BY quotes.created_at DESC",
-        )
-        .bind(user_id)
-        .fetch_all(&pool)
-        .await?;
+    let quotes = QuoteWithUsers::fetch_all_for_quotee(&pool, user_id).await?;
 
     let template = QuotesTemplate {
         session,

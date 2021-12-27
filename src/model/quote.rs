@@ -148,6 +148,168 @@ impl QuoteWithUsers {
         .await
     }
 
+    /// Fetches all non-hidden quotes of the given quotee.
+    pub async fn fetch_all_for_quotee(
+        pool: &Pool<Postgres>,
+        quotee_id: i32,
+    ) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, Self>(
+            "SELECT quotes.*,
+               quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.updated_at AT TIME ZONE 'UTC' AS updated_at,
+               (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
+               quoter.username AS quoter_username,
+               quoter.fullname AS quoter_fullname,
+               quoter.email_address AS quoter_email_address,
+               quoter.openid AS quoter_openid,
+               quotee.username AS quotee_username,
+               quotee.fullname AS quotee_fullname,
+               quotee.email_address AS quotee_email_address,
+               quotee.openid AS quotee_openid,
+               contexts.name AS context_name,
+               contexts.description AS context_description
+             FROM quotes
+               INNER JOIN users AS quoter ON quoter.id = quoter_id
+               INNER JOIN users AS quotee ON quotee.id = quotee_id
+               INNER JOIN contexts ON contexts.id = context_id
+             WHERE NOT hidden AND quotes.quotee_id = $1
+             ORDER BY quotes.created_at DESC",
+            )
+            .bind(quotee_id)
+            .fetch_all(pool)
+            .await
+    }
+
+    /// Returns the number of non-hidden quotes of the given quotee.
+    pub async fn count_for_quotee(pool: &Pool<Postgres>, quotee_id: i32) -> sqlx::Result<usize> {
+        Ok(sqlx::query_scalar::<_, i64>(
+            "SELECT COUNT(*)
+             FROM quotes
+             WHERE NOT hidden AND quotes.quotee_id = $1",
+        )
+        .bind(quotee_id)
+        .fetch_one(pool)
+        .await? as usize)
+    }
+
+    /// Fetches non-hidden quotes of the given quotee, within the given page.
+    pub async fn fetch_page_for_quotee(
+        pool: &Pool<Postgres>,
+        quotee_id: i32,
+        pages: &Pages,
+        page: &Page,
+    ) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, Self>(
+            "SELECT quotes.*,
+               quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.updated_at AT TIME ZONE 'UTC' AS updated_at,
+               (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
+               quoter.username AS quoter_username,
+               quoter.fullname AS quoter_fullname,
+               quoter.email_address AS quoter_email_address,
+               quoter.openid AS quoter_openid,
+               quotee.username AS quotee_username,
+               quotee.fullname AS quotee_fullname,
+               quotee.email_address AS quotee_email_address,
+               quotee.openid AS quotee_openid,
+               contexts.name AS context_name,
+               contexts.description AS context_description
+             FROM quotes
+               INNER JOIN users AS quoter ON quoter.id = quoter_id
+               INNER JOIN users AS quotee ON quotee.id = quotee_id
+               INNER JOIN contexts ON contexts.id = context_id
+             WHERE NOT hidden AND quotes.quotee_id = $1
+             ORDER BY quotes.created_at DESC
+             LIMIT $2 OFFSET $3",
+            )
+            .bind(quotee_id)
+            .bind(pages.limit() as i64)
+            .bind(page.start as i64)
+            .fetch_all(pool)
+            .await
+    }
+
+    /// Fetches all non-hidden quotes in the given context.
+    pub async fn fetch_all_for_context(
+        pool: &Pool<Postgres>,
+        context_id: i32,
+    ) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, Self>(
+            "SELECT quotes.*,
+               quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.updated_at AT TIME ZONE 'UTC' AS updated_at,
+               (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
+               quoter.username AS quoter_username,
+               quoter.fullname AS quoter_fullname,
+               quoter.email_address AS quoter_email_address,
+               quoter.openid AS quoter_openid,
+               quotee.username AS quotee_username,
+               quotee.fullname AS quotee_fullname,
+               quotee.email_address AS quotee_email_address,
+               quotee.openid AS quotee_openid,
+               contexts.name AS context_name,
+               contexts.description AS context_description
+             FROM quotes
+               INNER JOIN users AS quoter ON quoter.id = quoter_id
+               INNER JOIN users AS quotee ON quotee.id = quotee_id
+               INNER JOIN contexts ON contexts.id = context_id
+             WHERE NOT hidden AND quotes.context_id = $1
+             ORDER BY quotes.created_at DESC",
+            )
+            .bind(context_id)
+            .fetch_all(pool)
+            .await
+    }
+
+    /// Returns the number of non-hidden quotes in the given context.
+    pub async fn count_for_context(pool: &Pool<Postgres>, context_id: i32) -> sqlx::Result<usize> {
+        Ok(sqlx::query_scalar::<_, i64>(
+            "SELECT COUNT(*)
+             FROM quotes
+             WHERE NOT hidden AND quotes.context_id = $1",
+        )
+        .bind(context_id)
+        .fetch_one(pool)
+        .await? as usize)
+    }
+
+    /// Fetches non-hidden quotes in the given context, within the given page.
+    pub async fn fetch_page_for_context(
+        pool: &Pool<Postgres>,
+        context_id: i32,
+        pages: &Pages,
+        page: &Page,
+    ) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, Self>(
+            "SELECT quotes.*,
+               quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.updated_at AT TIME ZONE 'UTC' AS updated_at,
+               (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
+               quoter.username AS quoter_username,
+               quoter.fullname AS quoter_fullname,
+               quoter.email_address AS quoter_email_address,
+               quoter.openid AS quoter_openid,
+               quotee.username AS quotee_username,
+               quotee.fullname AS quotee_fullname,
+               quotee.email_address AS quotee_email_address,
+               quotee.openid AS quotee_openid,
+               contexts.name AS context_name,
+               contexts.description AS context_description
+             FROM quotes
+               INNER JOIN users AS quoter ON quoter.id = quoter_id
+               INNER JOIN users AS quotee ON quotee.id = quotee_id
+               INNER JOIN contexts ON contexts.id = context_id
+             WHERE NOT hidden AND quotes.context_id = $1
+             ORDER BY quotes.created_at DESC
+             LIMIT $2 OFFSET $3",
+            )
+            .bind(context_id)
+            .bind(pages.limit() as i64)
+            .bind(page.start as i64)
+            .fetch_all(pool)
+            .await
+    }
+
     /// Returns the number of non-hidden quotes in contexts of which the given user is a member.
     pub async fn count_for_user_contexts(
         pool: &Pool<Postgres>,
