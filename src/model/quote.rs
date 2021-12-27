@@ -16,6 +16,7 @@ pub struct Quote {
     pub quoter_id: i32,
     pub quotee_id: i32,
     pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
     pub hidden: bool,
 }
 
@@ -24,7 +25,8 @@ impl Quote {
     pub async fn fetch_one(pool: &Pool<Postgres>, quote_id: i32) -> Result<Self, InternalError> {
         sqlx::query_as::<_, Quote>(
             "SELECT quotes.*,
-               quotes.created_at AT TIME ZONE 'UTC' AS created_at
+               quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.updated_at AT TIME ZONE 'UTC' AS updated_at
              FROM quotes
              WHERE id = $1",
         )
@@ -50,6 +52,7 @@ impl QuoteWithUsers {
         sqlx::query_as::<_, QuoteWithUsers>(
             "SELECT quotes.*,
                quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.updated_at AT TIME ZONE 'UTC' AS updated_at,
                (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
                quoter.username AS quoter_username,
                quoter.fullname AS quoter_fullname,
@@ -78,6 +81,7 @@ impl QuoteWithUsers {
         sqlx::query_as::<_, QuoteWithUsers>(
             "SELECT quotes.*,
                quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.updated_at AT TIME ZONE 'UTC' AS updated_at,
                (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
                quoter.username AS quoter_username,
                quoter.fullname AS quoter_fullname,
@@ -118,6 +122,7 @@ impl QuoteWithUsers {
         sqlx::query_as::<_, Self>(
             "SELECT quotes.*,
                quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.updated_at AT TIME ZONE 'UTC' AS updated_at,
                (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
                quoter.username AS quoter_username,
                quoter.fullname AS quoter_fullname,
@@ -169,6 +174,7 @@ impl QuoteWithUsers {
         sqlx::query_as::<_, Self>(
             "SELECT quotes.*,
                quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.updated_at AT TIME ZONE 'UTC' AS updated_at,
                (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
                quoter.username AS quoter_username,
                quoter.fullname AS quoter_fullname,

@@ -6,8 +6,8 @@ mod user;
 use askama::Html;
 pub use comment::comment_format;
 pub use quote::{
-    comment_title_quote, formatted_quote, formatted_single_quote, quote_marks_if_needed,
-    short_quote, tweet_quote_text,
+    chatty_quote, comment_title_quote, formatted_quote, formatted_single_quote,
+    quote_marks_if_needed, short_quote, tweet_quote_text,
 };
 use regex::Regex;
 pub use time::long_datetime;

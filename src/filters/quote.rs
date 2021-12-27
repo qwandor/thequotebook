@@ -96,6 +96,29 @@ struct QuoteTemplate {
     comments_text: String,
 }
 
+pub fn chatty_quote(quote: QuoteWithUsers) -> askama::Result<String> {
+    let text = bbcode_to_html(&quote_marks_if_needed(&quote.quote.quote_text)?, true);
+
+    let template = ChattyQuoteTemplate {
+        quote: quote.quote.to_owned(),
+        quoter: quote.quoter.to_owned(),
+        quotee: quote.quotee.to_owned(),
+        context: quote.context.to_owned(),
+        text,
+    };
+    template.render()
+}
+
+#[derive(Template)]
+#[template(path = "shared/chatty_quote.html")]
+struct ChattyQuoteTemplate {
+    quote: Quote,
+    quoter: User,
+    quotee: User,
+    context: Context,
+    text: String,
+}
+
 // Some filters need to be in scope for the Template derive macro above.
 mod filters {
     pub use super::super::link_to_user;

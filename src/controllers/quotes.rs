@@ -1,15 +1,21 @@
 use crate::{
+    config::Config,
     errors::InternalError,
-    filters,
+    filters::{self, chatty_quote},
     model::{CommentWithQuote, Context, QuoteWithUsers},
+    responses::Atom,
     session::Session,
 };
 use askama::Template;
+use atom_syndication::{
+    ContentBuilder, Entry, EntryBuilder, FeedBuilder, GeneratorBuilder, LinkBuilder, PersonBuilder,
+};
 use axum::{
     extract::{Extension, Path},
     response::Html,
 };
 use sqlx::{Pool, Postgres};
+use std::sync::Arc;
 
 pub async fn index(
     Extension(pool): Extension<Pool<Postgres>>,
@@ -26,6 +32,81 @@ pub async fn index(
 struct IndexTemplate {
     session: Session,
     quotes: Vec<QuoteWithUsers>,
+}
+
+pub async fn index_atom(
+    Extension(config): Extension<Arc<Config>>,
+    Extension(pool): Extension<Pool<Postgres>>,
+) -> Result<Atom, InternalError> {
+    // TODO: Should we sort by updated_at rather than created_at?
+    let quotes = QuoteWithUsers::fetch_all(&pool).await?;
+
+    let feed_url = format!("{}quotes.atom", config.base_url);
+    let feed = FeedBuilder::default()
+        .title("theQuotebook: All quotes")
+        .link(
+            LinkBuilder::default()
+                .rel("self")
+                .mime_type("application/atom+xml".to_string())
+                .href(&feed_url)
+                .build(),
+        )
+        .link(
+            LinkBuilder::default()
+                .rel("alternate")
+                .mime_type("text/html".to_string())
+                .href(format!("{}quotes", config.base_url))
+                .build(),
+        )
+        .id(feed_url)
+        .generator(
+            GeneratorBuilder::default()
+                .value("theQuotebook")
+                .uri(config.base_url.clone())
+                .build(),
+        )
+        .entries(
+            quotes
+                .into_iter()
+                .map(|quote| quote_to_atom(&config.base_url, quote))
+                .collect::<Result<Vec<_>, InternalError>>()?,
+        )
+        .build();
+    // TODO: Set updated timestamp.
+
+    Ok(Atom(feed))
+}
+
+fn quote_to_atom(base_url: &str, quote: QuoteWithUsers) -> Result<Entry, InternalError> {
+    let url = format!("{}quotes/{}", base_url, quote.quote.id);
+    Ok(EntryBuilder::default()
+        .title(format!(
+            "{}: {}",
+            quote.quotee.fullname, quote.quote.quote_text
+        ))
+        .link(
+            LinkBuilder::default()
+                .rel("alternate")
+                .mime_type("text/html".to_string())
+                .href(&url)
+                .build(),
+        )
+        .id(url)
+        .updated(quote.quote.updated_at)
+        .published(Some(quote.quote.created_at.into()))
+        .author(
+            PersonBuilder::default()
+                .name(quote.quoter.username_or_fullname())
+                .uri(format!("{}users/{}", base_url, quote.quoter.id))
+                .build(),
+        )
+        .content(
+            ContentBuilder::default()
+                .content_type("html".to_string())
+                .value(chatty_quote(quote)?)
+                .build(),
+        )
+        .build())
 }
 
 pub async fn show(
