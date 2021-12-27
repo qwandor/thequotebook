@@ -73,6 +73,33 @@ impl QuoteWithUsers {
         .ok_or(InternalError::NotFound)
     }
 
+    /// Fetches all quotes.
+    pub async fn fetch_all(pool: &Pool<Postgres>) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, QuoteWithUsers>(
+            "SELECT quotes.*,
+               quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
+               quoter.username AS quoter_username,
+               quoter.fullname AS quoter_fullname,
+               quoter.email_address AS quoter_email_address,
+               quoter.openid AS quoter_openid,
+               quotee.username AS quotee_username,
+               quotee.fullname AS quotee_fullname,
+               quotee.email_address AS quotee_email_address,
+               quotee.openid AS quotee_openid,
+               contexts.name AS context_name,
+               contexts.description AS context_description
+             FROM quotes
+               INNER JOIN users AS quoter ON quoter.id = quoter_id
+               INNER JOIN users AS quotee ON quotee.id = quotee_id
+               INNER JOIN contexts ON contexts.id = context_id
+             WHERE NOT hidden
+             ORDER BY contexts.created_at DESC",
+        )
+        .fetch_all(pool)
+        .await
+    }
+
     /// Returns the number of non-hidden quotes.
     pub async fn count(pool: &Pool<Postgres>) -> sqlx::Result<usize> {
         Ok(
