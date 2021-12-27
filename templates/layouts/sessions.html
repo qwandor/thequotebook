@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title>theQuotebook{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
+  <!--[if lte IE7]><link href="/stylesheets/ie.css" type="text/css" rel="stylesheet" /><![endif]-->
+  <link rel="alternate stylesheet" type="text/css" href="/stylesheets/narrow.css" title="narrow" />
+  <!-- iphone specific -->
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <!--[if !IE]>-->
+    <link media="only screen and (max-width: 480px)" rel="stylesheet" type="text/css" href="/stylesheets/narrow.css" />
+    <link media="only screen and (max-width: 480px)" rel="stylesheet" type="text/css" href="/stylesheets/iphone.css" />
+  <!--<![endif]-->
+
+  {% block head %}{% endblock %}
+</head>
+<body class="no-sidebars">
+
+<div id="header">
+  <h1 id="logo"><a href="/">theQuotebook.net</a></h1>
+  {% block header %}{% endblock %}
+</div>
+
+<div id="content">
+  {% if session.flash.notice.is_some() || session.flash.error.is_some() %}
+  <div id="notices">
+{%   match session.flash.notice %}
+{%   when Some with (notice) %}
+    <div class="notice">{{ notice }}</div><!--TODO: Use p rather than div -->
+{%   when None %}
+{%   endmatch %}
+{%   match session.flash.error %}
+{%   when Some with (error) %}
+    <div class="error">{{ error }}</div>
+{%   when None %}
+{%   endmatch %}
+  </div>
+{% endif %}
+
+  {% block body %}{% endblock %}
+</div>
+
+</body>
+</html>
