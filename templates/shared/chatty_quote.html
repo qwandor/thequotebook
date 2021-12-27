@@ -1,7 +1,7 @@
 On {{ quote.created_at|long_datetime }},
 {{ quoter|link_to_user(true, true, false, false, 16, "", "nickname")|safe }}
 quoted
-{{ quotee|link_to_user(true, true, false, true, 16, "", "author")|safe }}
+{{ quotee|link_to_user(true, true, false, false, 16, "", "author")|safe }}
 as saying
 <a href="/quotes/{{ quote.id }}" class="quote">{{ text }}</a>
 in
