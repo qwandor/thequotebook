@@ -261,6 +261,40 @@ impl QuoteWithUsers {
             .await
     }
 
+    /// Fetches the latest non-hidden quote in the given context.
+    pub async fn fetch_latest_for_context(
+        pool: &Pool<Postgres>,
+        context_id: i32,
+    ) -> Result<Self, InternalError> {
+        sqlx::query_as::<_, Self>(
+            "SELECT quotes.*,
+               quotes.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.updated_at AT TIME ZONE 'UTC' AS updated_at,
+               (SELECT COUNT(*) FROM comments WHERE comments.quote_id = quotes.id) AS comments_count,
+               quoter.username AS quoter_username,
+               quoter.fullname AS quoter_fullname,
+               quoter.email_address AS quoter_email_address,
+               quoter.openid AS quoter_openid,
+               quotee.username AS quotee_username,
+               quotee.fullname AS quotee_fullname,
+               quotee.email_address AS quotee_email_address,
+               quotee.openid AS quotee_openid,
+               contexts.name AS context_name,
+               contexts.description AS context_description
+             FROM quotes
+               INNER JOIN users AS quoter ON quoter.id = quoter_id
+               INNER JOIN users AS quotee ON quotee.id = quotee_id
+               INNER JOIN contexts ON contexts.id = context_id
+             WHERE NOT hidden AND quotes.context_id = $1
+             ORDER BY quotes.created_at DESC
+             LIMIT 1",
+            )
+            .bind(context_id)
+            .fetch_optional(pool)
+            .await?
+            .ok_or(InternalError::NotFound)
+    }
+
     /// Returns the number of non-hidden quotes in the given context.
     pub async fn count_for_context(pool: &Pool<Postgres>, context_id: i32) -> sqlx::Result<usize> {
         Ok(sqlx::query_scalar::<_, i64>(

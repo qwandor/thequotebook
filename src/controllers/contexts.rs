@@ -1,4 +1,4 @@
-use super::quotes::AddQuoteForm;
+use super::quotes::{self, AddQuoteForm};
 use crate::{
     errors::InternalError,
     filters,
@@ -104,6 +104,22 @@ struct NewTemplate {
 
 struct NewContextForm {
     error_messages: String,
+}
+
+pub async fn latest(
+    Extension(pool): Extension<Pool<Postgres>>,
+    session: Session,
+    Path(context_id): Path<i32>,
+) -> Result<Html<String>, InternalError> {
+    let quote = QuoteWithUsers::fetch_latest_for_context(&pool, context_id).await?;
+    let comments = CommentWithQuote::fetch_all_for_quote(&pool, quote.quote.id).await?;
+
+    let template = quotes::ShowTemplate {
+        session,
+        quote,
+        comments,
+    };
+    Ok(Html(template.render()?))
 }
 
 pub async fn join(

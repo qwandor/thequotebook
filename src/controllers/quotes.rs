@@ -132,10 +132,10 @@ pub async fn show(
 
 #[derive(Template)]
 #[template(path = "quotes/show.html")]
-struct ShowTemplate {
-    session: Session,
-    quote: QuoteWithUsers,
-    comments: Vec<CommentWithQuote>,
+pub struct ShowTemplate {
+    pub session: Session,
+    pub quote: QuoteWithUsers,
+    pub comments: Vec<CommentWithQuote>,
 }
 
 pub async fn new(session: Session) -> Result<Html<String>, InternalError> {

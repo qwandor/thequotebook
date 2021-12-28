@@ -43,6 +43,7 @@ async fn main() -> Result<(), Report> {
         .route("/contexts", get(contexts::index))
         .route("/contexts/new", get(contexts::new))
         .route("/contexts/:context_id", get(contexts::show))
+        .route("/contexts/:context_id/latest", get(contexts::latest))
         .route("/contexts/:context_id/join", post(contexts::join))
         .route("/contexts/:context_id/leave", post(contexts::leave))
         .route("/contexts/:context_id/quotes", get(contexts::quotes))
