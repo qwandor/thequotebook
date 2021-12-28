@@ -1,7 +1,12 @@
+use std::sync::Arc;
+
 use crate::{
+    atom::comments::comments_to_atom,
+    config::Config,
     errors::InternalError,
     filters,
-    model::{CommentWithQuote, Quote},
+    model::{CommentWithQuote, CommentWithQuotee, Quote},
+    responses::Atom,
     session::Session,
 };
 use askama::Template;
@@ -33,6 +38,19 @@ struct IndexTemplate {
     session: Session,
     quote: Quote,
     comments: Vec<CommentWithQuote>,
+}
+
+pub async fn index_atom(
+    Extension(config): Extension<Arc<Config>>,
+    Extension(pool): Extension<Pool<Postgres>>,
+    Path(quote_id): Path<i32>,
+) -> Result<Atom, InternalError> {
+    let quote = Quote::fetch_one(&pool, quote_id).await?;
+    let comments = CommentWithQuotee::fetch_all_for_quote(&pool, quote_id).await?;
+    let title = format!("theQuotebook: Comments on {}", quote.quote_text);
+    let path = format!("/quotes/{}/comments", quote_id);
+
+    Ok(Atom(comments_to_atom(comments, title, &path, &config)?))
 }
 
 pub async fn show(

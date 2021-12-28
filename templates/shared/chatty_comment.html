@@ -1,0 +1,9 @@
+<p>
+  On <a href="{{ base_url }}/quotes/{{ comment.quote_id }}/comments/{{ comment.id }}">{{ comment.created_at|long_datetime }}</a>,
+  {{ user|link_to_user(true, true, false, false, 16, "", "nickname", base_url)|safe }}
+  commented on
+  {{ quotee|link_to_user(true, true, false, false, 16, "", "nickname", base_url)|safe }}'s
+  quote
+  <a href="{{ base_url }}/quotes/{{ comment.quote_id }}">{{ quote_text|short_quote }}</a>:
+</p>
+{{ comment.body|comment_format(true) }}

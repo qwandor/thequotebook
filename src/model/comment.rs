@@ -14,6 +14,7 @@ pub struct Comment {
     pub user_id: i32,
     pub body: String,
     pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
 }
 
 #[derive(Clone, Debug)]
@@ -34,6 +35,7 @@ impl CommentWithQuote {
         sqlx::query_as::<_, CommentWithQuote>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
                quotes.quote_text,
                quotes.context_id,
                users.email_address AS user_email_address,
@@ -64,6 +66,7 @@ impl CommentWithQuote {
         sqlx::query_as::<_, CommentWithQuote>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
                quotes.quote_text,
                quotes.context_id,
                users.email_address AS user_email_address,
@@ -89,6 +92,7 @@ impl CommentWithQuote {
         sqlx::query_as::<_, CommentWithQuote>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
                quotes.quote_text,
                quotes.context_id,
                users.email_address AS user_email_address,
@@ -118,6 +122,7 @@ impl CommentWithQuote {
         sqlx::query_as::<_, CommentWithQuote>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
                quotes.quote_text,
                quotes.context_id,
                users.email_address AS user_email_address,
@@ -148,6 +153,7 @@ impl CommentWithQuote {
         sqlx::query_as::<_, CommentWithQuote>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
                quotes.quote_text,
                quotes.context_id,
                users.email_address AS user_email_address,
@@ -207,6 +213,7 @@ impl CommentWithQuotee {
         sqlx::query_as::<_, Self>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
                quotes.quote_text,
                quotes.quotee_id,
                users.email_address AS user_email_address,
@@ -227,6 +234,37 @@ impl CommentWithQuotee {
         .await
     }
 
+    /// Fetches all comments for the given quote.
+    pub async fn fetch_all_for_quote(
+        pool: &Pool<Postgres>,
+        quote_id: i32,
+    ) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, Self>(
+            "SELECT comments.*,
+               comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
+               quotes.quote_text,
+               quotes.quotee_id,
+               users.email_address AS user_email_address,
+               users.username AS user_username,
+               users.fullname AS user_fullname,
+               users.openid AS user_openid,
+               quotee.username AS quotee_username,
+               quotee.fullname AS quotee_fullname,
+               quotee.email_address AS quotee_email_address,
+               quotee.openid AS quotee_openid
+             FROM comments
+               INNER JOIN quotes ON quotes.id = comments.quote_id
+               INNER JOIN users ON users.id = comments.user_id
+               INNER JOIN users AS quotee ON quotee.id = quotes.quotee_id
+             WHERE comments.quote_id = $1
+             ORDER BY comments.created_at ASC",
+        )
+        .bind(quote_id)
+        .fetch_all(pool)
+        .await
+    }
+
     /// Fetches all comments on quotes in contexts of which the given user is a member.
     pub async fn fetch_all_for_user_contexts(
         pool: &Pool<Postgres>,
@@ -235,6 +273,7 @@ impl CommentWithQuotee {
         sqlx::query_as::<_, Self>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
                quotes.quote_text,
                quotes.quotee_id,
                users.email_address AS user_email_address,
