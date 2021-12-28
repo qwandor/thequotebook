@@ -5,6 +5,6 @@
   <a href="/users/{{ current_user.id }}/edit" class="button">Edit profile</a>
   <a href="/logout" title="Log out" class="button">Log out</a>
 {% when None %}
-  <a href="/login" title="Log in" class="button">Log in</a>
+  <a href="/login?redirect={{ session.path|urlencode }}" title="Log in" class="button">Log in</a>
 {% endmatch %}
 </div>

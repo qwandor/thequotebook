@@ -4,9 +4,10 @@ use crate::{
     model::User,
     session::{Session, SessionClaims},
 };
-use askama::Template;
+use askama::{filters::urlencode, Template};
 use axum::{
-    extract::{Extension, Form},
+    extract::{Extension, Form, Query},
+    http::Uri,
     response::{Html, IntoResponse, Redirect, Response},
 };
 use eyre::eyre;
@@ -20,13 +21,28 @@ use tower_cookies::{Cookie, Cookies};
 pub async fn new(
     Extension(config): Extension<Arc<Config>>,
     session: Session,
+    Query(query): Query<RedirectQuery>,
 ) -> Result<Html<String>, InternalError> {
+    let auth_url = if let Some(redirect) = query.redirect {
+        format!(
+            "{}/google_auth?redirect={}",
+            config.base_url,
+            urlencode(redirect)?
+        )
+    } else {
+        format!("{}/google_auth", config.base_url)
+    };
     let template = NewTemplate {
         session,
         google_client_id: config.google_client_id.to_owned(),
-        base_url: config.base_url.to_owned(),
+        auth_url,
     };
     Ok(Html(template.render()?))
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct RedirectQuery {
+    redirect: Option<String>,
 }
 
 #[derive(Template)]
@@ -34,12 +50,13 @@ pub async fn new(
 struct NewTemplate {
     session: Session,
     google_client_id: String,
-    base_url: String,
+    auth_url: String,
 }
 
 pub async fn google_auth(
     Extension(config): Extension<Arc<Config>>,
     Extension(pool): Extension<Pool<Postgres>>,
+    Query(query): Query<RedirectQuery>,
     Form(request): Form<GoogleAuthRequest>,
     cookies: Cookies,
 ) -> Result<Response, InternalError> {
@@ -81,7 +98,11 @@ pub async fn google_auth(
 
         cookies.add(Cookie::new("notice", "Logged in successfully."));
 
-        Ok(Redirect::to("/".parse().unwrap()).into_response())
+        let redirect: Uri = query.redirect.as_deref().unwrap_or("/").parse()?;
+        if redirect.host().is_some() || redirect.scheme().is_some() {
+            return Err(InternalError::Internal(eyre!("Invalid redirect path")));
+        }
+        Ok(Redirect::to(redirect).into_response())
     } else {
         // TODO: Redirect to the account creation form.
         Ok(format!("No such user: {:?}", google_claims).into_response())

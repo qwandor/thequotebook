@@ -2,7 +2,7 @@ use crate::{config::Config, errors::InternalError, model::User};
 use axum::{
     async_trait,
     body::Body,
-    extract::{Extension, FromRequest, RequestParts},
+    extract::{Extension, FromRequest, OriginalUri, RequestParts},
 };
 use eyre::eyre;
 use jsonwebtoken::{decode, DecodingKey, Validation};
@@ -18,6 +18,8 @@ use tower_cookies::{Cookie, Cookies};
 pub struct Session {
     pub flash: Flash,
     pub current_user: Option<User>,
+    // The path of the current page.
+    pub path: String,
 }
 
 impl Session {
@@ -44,10 +46,15 @@ impl FromRequest<Body> for Session {
             .map_err(|(_, e)| InternalError::Internal(eyre!("{}", e)))?;
         let Extension(config) = Extension::<Arc<Config>>::from_request(req).await?;
         let Extension(pool) = Extension::<Pool<Postgres>>::from_request(req).await?;
+        let OriginalUri(uri) = OriginalUri::from_request(req).await?;
         let current_user = user_from_cookies(&config, &pool, cookies).await;
         Ok(Session {
             flash: Flash::from_request(req).await?,
             current_user,
+            path: uri
+                .path_and_query()
+                .ok_or_else(|| InternalError::Internal(eyre!("Request URI missing path")))?
+                .to_string(),
         })
     }
 }
