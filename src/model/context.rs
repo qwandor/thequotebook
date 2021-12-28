@@ -39,7 +39,7 @@ impl Context {
     pub async fn fetch_all(pool: &Pool<Postgres>) -> sqlx::Result<Vec<Self>> {
         sqlx::query_as::<_, Self>(
             "SELECT contexts.*,
-               (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) as quotes_count
+               (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) AS quotes_count
              FROM contexts
              ORDER BY contexts.created_at DESC",
         )
@@ -51,7 +51,7 @@ impl Context {
     pub async fn fetch_for_user(pool: &Pool<Postgres>, user_id: i32) -> sqlx::Result<Vec<Self>> {
         sqlx::query_as::<_, Self>(
             "SELECT contexts.*,
-               (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) as quotes_count
+               (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) AS quotes_count
              FROM contexts
                INNER JOIN contexts_users ON context_id = contexts.id
              WHERE user_id = $1

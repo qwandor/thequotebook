@@ -66,17 +66,7 @@ pub async fn show(
     let current_page = pages.with_offset(query.page);
     let quotes =
         QuoteWithUsers::fetch_page_for_quotee(&pool, user_id, &pages, &current_page).await?;
-    let contexts = sqlx::query_as::<_, Context>(
-        "SELECT contexts.*,
-          (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) as quotes_count
-         FROM contexts
-           INNER JOIN contexts_users ON context_id = contexts.id
-         WHERE user_id = $1
-         ORDER BY contexts.created_at DESC",
-    )
-    .bind(user_id)
-    .fetch_all(&pool)
-    .await?;
+    let contexts = Context::fetch_for_user(&pool, user_id).await?;
 
     let template = ShowTemplate {
         session,
