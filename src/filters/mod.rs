@@ -11,8 +11,7 @@ pub use quote::{
 };
 use regex::Regex;
 pub use time::long_datetime;
-pub use user::gravatar_for;
-pub use user::link_to_user;
+pub use user::{gravatar_for, link_to_user};
 
 fn escape(text: &str) -> String {
     askama::filters::escape(Html, text).unwrap().to_string()
