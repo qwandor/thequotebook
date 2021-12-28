@@ -8,7 +8,10 @@ use eyre::eyre;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
 use sqlx::{Pool, Postgres};
-use std::sync::Arc;
+use std::{
+    sync::Arc,
+    time::{SystemTime, SystemTimeError},
+};
 use tower_cookies::{Cookie, Cookies};
 
 #[derive(Debug, Eq, PartialEq)]
@@ -93,8 +96,22 @@ async fn user_from_cookies(
 /// Claims for our session token.
 #[derive(Debug, Deserialize, Serialize)]
 pub struct SessionClaims {
-    pub iat: u64,
-    pub exp: u64,
+    iat: u64,
+    exp: u64,
     /// user_id
-    pub sub: i32,
+    sub: i32,
+}
+
+impl SessionClaims {
+    pub fn new(
+        user_id: i32,
+        issued: SystemTime,
+        expiry: SystemTime,
+    ) -> Result<Self, SystemTimeError> {
+        Ok(Self {
+            sub: user_id,
+            iat: issued.duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+            exp: expiry.duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+        })
+    }
 }

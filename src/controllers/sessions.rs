@@ -68,11 +68,7 @@ pub async fn google_auth(
         let header = Header::default();
         let now = SystemTime::now();
         let expiry = now + config.session_duration;
-        let claims = SessionClaims {
-            sub: user.id,
-            iat: now.duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-            exp: expiry.duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-        };
+        let claims = SessionClaims::new(user.id, now, expiry)?;
         let token = encode(&header, &claims, &key)?;
 
         // TODO: Set Secure, once we enforce https.
