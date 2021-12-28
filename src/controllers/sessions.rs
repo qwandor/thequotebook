@@ -66,17 +66,22 @@ pub async fn google_auth(
         // Issue a JWT for the user.
         let key = EncodingKey::from_secret(&config.secret.as_ref());
         let header = Header::default();
+        let now = SystemTime::now();
+        let expiry = now + config.session_duration;
         let claims = SessionClaims {
             sub: user.id,
-            iat: SystemTime::now()
-                .duration_since(SystemTime::UNIX_EPOCH)?
-                .as_secs(),
+            iat: now.duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+            exp: expiry.duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
         };
         let token = encode(&header, &claims, &key)?;
 
-        // TODO: Set Expires or Max-Age so that cookie lasts longer than session.
         // TODO: Set Secure, once we enforce https.
-        cookies.add(Cookie::build("session", token).http_only(true).finish());
+        cookies.add(
+            Cookie::build("session", token)
+                .http_only(true)
+                .max_age(config.session_duration.try_into()?)
+                .finish(),
+        );
 
         cookies.add(Cookie::new("notice", "Logged in successfully."));
 

@@ -16,3 +16,6 @@ google_client_id = "abc123"
 # The shared secret used for generating and validating JWTs for sessions. This must be a unique
 # random value, not used anywhere else.
 secret = "secret"
+
+# The number of seconds until a login session expires.
+session_duration_seconds = 2592000

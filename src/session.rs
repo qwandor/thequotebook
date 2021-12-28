@@ -85,10 +85,7 @@ async fn user_from_cookies(
 ) -> Option<User> {
     let session_token = cookies.get("session")?;
     let key = DecodingKey::from_secret(&config.secret.as_ref());
-    let validation = Validation {
-        validate_exp: false,
-        ..Validation::default()
-    };
+    let validation = Validation::default();
     let data = decode::<SessionClaims>(session_token.value(), &key, &validation).ok()?;
     User::fetch_one(&pool, data.claims.sub).await.ok()
 }
@@ -97,7 +94,7 @@ async fn user_from_cookies(
 #[derive(Debug, Deserialize, Serialize)]
 pub struct SessionClaims {
     pub iat: u64,
+    pub exp: u64,
     /// user_id
     pub sub: i32,
-    // TODO: Add exp?
 }

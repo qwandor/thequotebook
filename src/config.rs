@@ -1,9 +1,10 @@
 use eyre::{bail, Report, WrapErr};
-use serde::Deserialize;
+use serde::{Deserialize, Deserializer};
 use std::{
     fs::read_to_string,
     net::SocketAddr,
     path::{Path, PathBuf},
+    time::Duration,
 };
 
 /// Paths at which to look for the config file. They are searched in order, and the first one that
@@ -23,6 +24,12 @@ pub struct Config {
     pub base_url: String,
     // TODO: Should this be base64? Or generated on startup?
     pub secret: String,
+    #[serde(
+        default = "default_session_duration",
+        deserialize_with = "de_duration_seconds",
+        rename = "session_duration_seconds"
+    )]
+    pub session_duration: Duration,
 }
 
 impl Config {
@@ -59,6 +66,16 @@ fn default_bind_address() -> SocketAddr {
 
 fn default_base_url() -> String {
     "http://localhost:3000".to_string()
+}
+
+fn default_session_duration() -> Duration {
+    // 30 days
+    Duration::from_secs(30 * 24 * 60 * 60)
+}
+
+pub fn de_duration_seconds<'de, D: Deserializer<'de>>(d: D) -> Result<Duration, D::Error> {
+    let seconds = u64::deserialize(d)?;
+    Ok(Duration::from_secs(seconds))
 }
 
 #[cfg(test)]
