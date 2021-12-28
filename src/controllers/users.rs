@@ -1,5 +1,5 @@
 use crate::{
-    atom::quotes::quotes_to_atom,
+    atom::{comments::comments_to_atom, quotes::quotes_to_atom},
     config::Config,
     errors::InternalError,
     filters,
@@ -174,4 +174,17 @@ struct RelevantCommentsTemplate {
     session: Session,
     user: User,
     comments: Vec<CommentWithQuotee>,
+}
+
+pub async fn relevant_comments_atom(
+    Extension(config): Extension<Arc<Config>>,
+    Extension(pool): Extension<Pool<Postgres>>,
+    Path(user_id): Path<i32>,
+) -> Result<Atom, InternalError> {
+    let user = User::fetch_one(&pool, user_id).await?;
+    let comments = CommentWithQuotee::fetch_all_for_user_contexts(&pool, user_id).await?;
+    let title = format!("theQuotebook: Comments of interest to {}", user.fullname);
+    let path = format!("/users/{}/relevant_comments", user_id);
+
+    Ok(Atom(comments_to_atom(comments, title, &path, &config)?))
 }

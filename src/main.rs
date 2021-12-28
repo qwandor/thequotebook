@@ -41,6 +41,7 @@ async fn main() -> Result<(), Report> {
         .route("/logout", get(sessions::destroy))
         .route("/google_auth", post(sessions::google_auth))
         .route("/comments", get(home::comments))
+        .route("/comments.atom", get(home::comments_atom))
         .route("/contexts", get(contexts::index))
         .route("/contexts/new", get(contexts::new))
         .route("/contexts/:context_id", get(contexts::show))
@@ -67,6 +68,10 @@ async fn main() -> Result<(), Report> {
         .route(
             "/users/:user_id/relevant_comments",
             get(users::relevant_comments),
+        )
+        .route(
+            "/users/:user_id/relevant_comments.atom",
+            get(users::relevant_comments_atom),
         )
         .route("/quotes", get(quotes::index))
         .route("/quotes.atom", get(quotes::index_atom))

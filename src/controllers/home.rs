@@ -1,8 +1,11 @@
 use crate::{
+    atom::comments::comments_to_atom,
+    config::Config,
     errors::InternalError,
     filters,
     model::{CommentWithQuote, CommentWithQuotee, Context, QuoteWithUsers},
     pagination::{PageOrGap, PaginationState, QueryPage},
+    responses::Atom,
     session::Session,
 };
 use askama::Template;
@@ -12,6 +15,7 @@ use axum::{
 };
 use paginate::Pages;
 use sqlx::{Pool, Postgres};
+use std::sync::Arc;
 
 const QUOTES_PER_PAGE: usize = 5;
 const PAGINATION_WINDOW: usize = 2;
@@ -97,4 +101,15 @@ pub async fn comments(
 struct CommentsTemplate {
     session: Session,
     comments: Vec<CommentWithQuotee>,
+}
+
+pub async fn comments_atom(
+    Extension(config): Extension<Arc<Config>>,
+    Extension(pool): Extension<Pool<Postgres>>,
+) -> Result<Atom, InternalError> {
+    let comments = CommentWithQuotee::fetch_all(&pool).await?;
+    let title = format!("theQuotebook: All comments");
+    let path = "/comments";
+
+    Ok(Atom(comments_to_atom(comments, title, path, &config)?))
 }
