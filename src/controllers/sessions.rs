@@ -126,11 +126,17 @@ struct TokenClaims {
     pub exp: u64,
 }
 
-pub async fn destroy(cookies: Cookies) -> Result<Redirect, InternalError> {
+pub async fn destroy(
+    cookies: Cookies,
+    Query(query): Query<RedirectQuery>,
+) -> Result<Redirect, InternalError> {
     cookies.remove(Cookie::new("session", ""));
 
     cookies.add(Cookie::new("notice", "You have been logged out."));
 
-    // TODO: Have some parameter to control where to redirect back to.
-    Ok(Redirect::to("/".parse().unwrap()))
+    let redirect: Uri = query.redirect.as_deref().unwrap_or("/").parse()?;
+    if redirect.host().is_some() || redirect.scheme().is_some() {
+        return Err(InternalError::Internal(eyre!("Invalid redirect path")));
+    }
+    Ok(Redirect::to(redirect))
 }
