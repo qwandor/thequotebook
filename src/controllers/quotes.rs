@@ -37,8 +37,9 @@ pub async fn index_atom(
     Extension(pool): Extension<Pool<Postgres>>,
 ) -> Result<Atom, InternalError> {
     let quotes = QuoteWithUsers::fetch_all(&pool).await?;
+    let title = "theQuotebook: All quotes".to_string();
 
-    Ok(Atom(quotes_to_atom(quotes, &config)?))
+    Ok(Atom(quotes_to_atom(quotes, title, &config)?))
 }
 
 pub async fn show(

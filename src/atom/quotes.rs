@@ -5,7 +5,11 @@ use atom_syndication::{
 };
 use chrono::MIN_DATETIME;
 
-pub fn quotes_to_atom(quotes: Vec<QuoteWithUsers>, config: &Config) -> Result<Feed, InternalError> {
+pub fn quotes_to_atom(
+    quotes: Vec<QuoteWithUsers>,
+    title: String,
+    config: &Config,
+) -> Result<Feed, InternalError> {
     let last_updated = quotes
         .iter()
         .map(|quote| quote.quote.updated_at)
@@ -13,7 +17,7 @@ pub fn quotes_to_atom(quotes: Vec<QuoteWithUsers>, config: &Config) -> Result<Fe
         .unwrap_or(MIN_DATETIME);
     let feed_url = config.absolute_url("/quotes.atom");
     Ok(FeedBuilder::default()
-        .title("theQuotebook: All quotes")
+        .title(title)
         .link(
             LinkBuilder::default()
                 .rel("self")

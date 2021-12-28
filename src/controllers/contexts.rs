@@ -1,9 +1,12 @@
 use super::quotes::{self, AddQuoteForm};
 use crate::{
+    atom::quotes::quotes_to_atom,
+    config::Config,
     errors::InternalError,
     filters,
     model::{CommentWithQuote, Context, QuoteWithUsers, User},
     pagination::{PageOrGap, PaginationState, QueryPage},
+    responses::Atom,
     session::Session,
 };
 use askama::Template;
@@ -13,6 +16,7 @@ use axum::{
 };
 use paginate::Pages;
 use sqlx::{Pool, Postgres};
+use std::sync::Arc;
 use tower_cookies::{Cookie, Cookies};
 
 const QUOTES_PER_PAGE: usize = 10;
@@ -184,4 +188,16 @@ struct QuotesTemplate {
     session: Session,
     context: Context,
     quotes: Vec<QuoteWithUsers>,
+}
+
+pub async fn quotes_atom(
+    Extension(config): Extension<Arc<Config>>,
+    Extension(pool): Extension<Pool<Postgres>>,
+    Path(context_id): Path<i32>,
+) -> Result<Atom, InternalError> {
+    let context = Context::fetch_one(&pool, context_id).await?;
+    let quotes = QuoteWithUsers::fetch_all_for_context(&pool, context_id).await?;
+    let title = format!("theQuotebook: {} quotes", context.name);
+
+    Ok(Atom(quotes_to_atom(quotes, title, &config)?))
 }
