@@ -14,6 +14,7 @@ use axum::{
     extract::{Extension, Path},
     response::Html,
 };
+use chrono::MIN_DATETIME;
 use sqlx::{Pool, Postgres};
 use std::sync::Arc;
 
@@ -38,9 +39,13 @@ pub async fn index_atom(
     Extension(config): Extension<Arc<Config>>,
     Extension(pool): Extension<Pool<Postgres>>,
 ) -> Result<Atom, InternalError> {
-    // TODO: Should we sort by updated_at rather than created_at?
     let quotes = QuoteWithUsers::fetch_all(&pool).await?;
 
+    let last_updated = quotes
+        .iter()
+        .map(|quote| quote.quote.updated_at)
+        .max()
+        .unwrap_or(MIN_DATETIME);
     let feed_url = config.absolute_url("/quotes.atom");
     let feed = FeedBuilder::default()
         .title("theQuotebook: All quotes")
@@ -65,6 +70,7 @@ pub async fn index_atom(
                 .uri(config.absolute_url("/"))
                 .build(),
         )
+        .updated(last_updated)
         .entries(
             quotes
                 .into_iter()
@@ -72,7 +78,6 @@ pub async fn index_atom(
                 .collect::<Result<Vec<_>, InternalError>>()?,
         )
         .build();
-    // TODO: Set updated timestamp.
 
     Ok(Atom(feed))
 }
