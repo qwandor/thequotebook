@@ -110,8 +110,9 @@ pub async fn quotes_atom(
     let user = User::fetch_one(&pool, user_id).await?;
     let quotes = QuoteWithUsers::fetch_all_for_quotee(&pool, user_id).await?;
     let title = format!("theQuotebook: Quotes by {}", user.fullname);
+    let path = format!("/users/{}/quotes", user_id);
 
-    Ok(Atom(quotes_to_atom(quotes, title, &config)?))
+    Ok(Atom(quotes_to_atom(quotes, title, &path, &config)?))
 }
 
 pub async fn relevant_quotes(
@@ -146,8 +147,9 @@ pub async fn relevant_quotes_atom(
     let user = User::fetch_one(&pool, user_id).await?;
     let quotes = QuoteWithUsers::fetch_all_for_user_contexts(&pool, user_id).await?;
     let title = format!("theQuotebook: Quotes of interest to {}", user.fullname);
+    let path = format!("/users/{}/relevant_quotes", user_id);
 
-    Ok(Atom(quotes_to_atom(quotes, title, &config)?))
+    Ok(Atom(quotes_to_atom(quotes, title, &path, &config)?))
 }
 
 pub async fn relevant_comments(

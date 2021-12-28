@@ -39,7 +39,7 @@ pub async fn index_atom(
     let quotes = QuoteWithUsers::fetch_all(&pool).await?;
     let title = "theQuotebook: All quotes".to_string();
 
-    Ok(Atom(quotes_to_atom(quotes, title, &config)?))
+    Ok(Atom(quotes_to_atom(quotes, title, "/quotes", &config)?))
 }
 
 pub async fn show(

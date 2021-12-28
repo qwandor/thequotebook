@@ -198,6 +198,7 @@ pub async fn quotes_atom(
     let context = Context::fetch_one(&pool, context_id).await?;
     let quotes = QuoteWithUsers::fetch_all_for_context(&pool, context_id).await?;
     let title = format!("theQuotebook: {} quotes", context.name);
+    let path = format!("/contexts/{}/quotes", context_id);
 
-    Ok(Atom(quotes_to_atom(quotes, title, &config)?))
+    Ok(Atom(quotes_to_atom(quotes, title, &path, &config)?))
 }

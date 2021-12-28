@@ -8,6 +8,7 @@ use chrono::MIN_DATETIME;
 pub fn quotes_to_atom(
     quotes: Vec<QuoteWithUsers>,
     title: String,
+    path: &str,
     config: &Config,
 ) -> Result<Feed, InternalError> {
     let last_updated = quotes
@@ -15,7 +16,7 @@ pub fn quotes_to_atom(
         .map(|quote| quote.quote.updated_at)
         .max()
         .unwrap_or(MIN_DATETIME);
-    let feed_url = config.absolute_url("/quotes.atom");
+    let feed_url = format!("{}{}.atom", config.base_url, path);
     Ok(FeedBuilder::default()
         .title(title)
         .link(
@@ -29,7 +30,7 @@ pub fn quotes_to_atom(
             LinkBuilder::default()
                 .rel("alternate")
                 .mime_type("text/html".to_string())
-                .href(config.absolute_url("/quotes"))
+                .href(config.absolute_url(path))
                 .build(),
         )
         .id(feed_url)
