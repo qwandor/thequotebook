@@ -226,6 +226,37 @@ impl CommentWithQuotee {
         .fetch_all(pool)
         .await
     }
+
+    /// Fetches all comments on quotes in contexts of which the given user is a member.
+    pub async fn fetch_all_for_user_contexts(
+        pool: &Pool<Postgres>,
+        user_id: i32,
+    ) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, Self>(
+            "SELECT comments.*,
+               comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.quote_text,
+               quotes.quotee_id,
+               users.email_address AS user_email_address,
+               users.username AS user_username,
+               users.fullname AS user_fullname,
+               users.openid AS user_openid,
+               quotee.username AS quotee_username,
+               quotee.fullname AS quotee_fullname,
+               quotee.email_address AS quotee_email_address,
+               quotee.openid AS quotee_openid
+             FROM comments
+               INNER JOIN quotes ON quotes.id = comments.quote_id
+               INNER JOIN users ON users.id = comments.user_id
+               INNER JOIN users AS quotee ON quotee.id = quotes.quotee_id
+               INNER JOIN contexts_users ON contexts_users.context_id = quotes.context_id
+             WHERE contexts_users.user_id = $1
+             ORDER BY comments.created_at DESC",
+        )
+        .bind(user_id)
+        .fetch_all(pool)
+        .await
+    }
 }
 
 impl<'r> FromRow<'r, PgRow> for CommentWithQuotee {

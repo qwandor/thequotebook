@@ -1,0 +1,19 @@
+{% extends "layouts/application.html" %}
+
+{% block title %}: Comments of interest to {{ user.fullname }}{% endblock %}
+
+{% block head %}
+<link rel="alternate" type="application/atom+xml" title="Comments of interest to {{ user.fullname }}" href="/users/{{ user.id }}/relevant_comments.atom" />
+{% endblock %}
+
+{% block header %}
+<h1>All comments of interest to {{ user.fullname }}</h1>
+{% endblock %}
+
+{% block body %}
+<p>
+  These are all the comments on quotes in your quotebooks.
+</p>
+
+{% include "comments/list_all.html" %}
+{% endblock %}

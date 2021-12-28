@@ -1,7 +1,7 @@
 use crate::{
     errors::InternalError,
     filters,
-    model::{CommentWithQuote, Context, QuoteWithUsers, User},
+    model::{CommentWithQuote, CommentWithQuotee, Context, QuoteWithUsers, User},
     pagination::{PageOrGap, PaginationState, QueryPage},
     session::Session,
 };
@@ -120,4 +120,28 @@ struct RelevantQuotesTemplate {
     session: Session,
     user: User,
     quotes: Vec<QuoteWithUsers>,
+}
+
+pub async fn relevant_comments(
+    Extension(pool): Extension<Pool<Postgres>>,
+    session: Session,
+    Path(user_id): Path<i32>,
+) -> Result<Html<String>, InternalError> {
+    let user = User::fetch_one(&pool, user_id).await?;
+    let comments = CommentWithQuotee::fetch_all_for_user_contexts(&pool, user_id).await?;
+
+    let template = RelevantCommentsTemplate {
+        session,
+        user,
+        comments,
+    };
+    Ok(Html(template.render()?))
+}
+
+#[derive(Template)]
+#[template(path = "users/relevant_comments.html")]
+struct RelevantCommentsTemplate {
+    session: Session,
+    user: User,
+    comments: Vec<CommentWithQuotee>,
 }
