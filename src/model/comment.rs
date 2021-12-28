@@ -84,6 +84,61 @@ impl CommentWithQuote {
         .await
     }
 
+    /// Fetches the 5 most recent comments made by the given user.
+    pub async fn fetch_5_for_user(pool: &Pool<Postgres>, user_id: i32) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, CommentWithQuote>(
+            "SELECT comments.*,
+               comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.quote_text,
+               quotes.context_id,
+               users.email_address AS user_email_address,
+               users.username AS user_username,
+               users.fullname AS user_fullname,
+               users.openid AS user_openid,
+               contexts.name AS context_name,
+               contexts.description AS context_description
+             FROM comments
+               INNER JOIN quotes ON quotes.id = comments.quote_id
+               INNER JOIN users ON users.id = comments.user_id
+               INNER JOIN contexts ON contexts.id = quotes.context_id
+             WHERE comments.user_id = $1
+             ORDER BY comments.created_at DESC
+             LIMIT 5",
+        )
+        .bind(user_id)
+        .fetch_all(pool)
+        .await
+    }
+
+    /// Fetches the 5 most recent comments on quotes in the given context.
+    pub async fn fetch_5_for_context(
+        pool: &Pool<Postgres>,
+        context_id: i32,
+    ) -> sqlx::Result<Vec<Self>> {
+        sqlx::query_as::<_, CommentWithQuote>(
+            "SELECT comments.*,
+               comments.created_at AT TIME ZONE 'UTC' AS created_at,
+               quotes.quote_text,
+               quotes.context_id,
+               users.email_address AS user_email_address,
+               users.username AS user_username,
+               users.fullname AS user_fullname,
+               users.openid AS user_openid,
+               contexts.name AS context_name,
+               contexts.description AS context_description
+             FROM comments
+               INNER JOIN quotes ON quotes.id = comments.quote_id
+               INNER JOIN users ON users.id = comments.user_id
+               INNER JOIN contexts ON contexts.id = quotes.context_id
+             WHERE quotes.context_id = $1
+             ORDER BY comments.created_at DESC
+             LIMIT 5",
+        )
+        .bind(context_id)
+        .fetch_all(pool)
+        .await
+    }
+
     /// Fetches the 5 most recent comments on quotes in contexts of which the given user is a
     /// member.
     pub async fn fetch_5_for_user_contexts(

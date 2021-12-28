@@ -49,27 +49,7 @@ pub async fn show(
     let quotes =
         QuoteWithUsers::fetch_page_for_context(&pool, context_id, &pages, &current_page).await?;
     let users = User::fetch_all_for_context(&pool, context_id).await?;
-    let comments = sqlx::query_as::<_, CommentWithQuote>(
-        "SELECT comments.*,
-               comments.created_at AT TIME ZONE 'UTC' AS created_at,
-               quotes.quote_text,
-               quotes.context_id,
-               users.email_address AS user_email_address,
-               users.username AS user_username,
-               users.fullname AS user_fullname,
-               users.openid AS user_openid,
-               contexts.name AS context_name,
-               contexts.description AS context_description
-             FROM comments
-               INNER JOIN quotes ON quotes.id = comments.quote_id
-               INNER JOIN users ON users.id = comments.user_id
-               INNER JOIN contexts ON contexts.id = quotes.context_id
-             WHERE quotes.context_id = $1
-             ORDER BY comments.created_at DESC LIMIT 5",
-    )
-    .bind(context_id)
-    .fetch_all(&pool)
-    .await?;
+    let comments = CommentWithQuote::fetch_5_for_context(&pool, context_id).await?;
 
     let template = ShowTemplate {
         session,
