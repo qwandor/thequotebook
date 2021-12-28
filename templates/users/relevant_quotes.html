@@ -1,0 +1,17 @@
+{% extends "layouts/no_sidebars.html" %}
+
+{% block title %}: Quotes of interest to {{ user.fullname }}{% endblock %}
+
+{% block head %}
+<link rel="alternate" type="application/atom+xml" title="Quotes of interest to {{ user.fullname }}" href="/users/{{ user.id }}/relevant_quotes.atom" />
+{% endblock %}
+
+{% block header %}
+<h1>All quotes of interest to {{ user.fullname }}</h1>
+{% endblock %}
+
+{% block body %}
+{% for quote in quotes %}
+{{ quote|formatted_quote(false, true, true, true, true)|safe }}
+{% endfor %}
+{% endblock %}

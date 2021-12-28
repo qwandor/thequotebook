@@ -97,3 +97,27 @@ struct QuotesTemplate {
     user: User,
     quotes: Vec<QuoteWithUsers>,
 }
+
+pub async fn relevant_quotes(
+    Extension(pool): Extension<Pool<Postgres>>,
+    session: Session,
+    Path(user_id): Path<i32>,
+) -> Result<Html<String>, InternalError> {
+    let user = User::fetch_one(&pool, user_id).await?;
+    let quotes = QuoteWithUsers::fetch_all_for_user_contexts(&pool, user_id).await?;
+
+    let template = RelevantQuotesTemplate {
+        session,
+        user,
+        quotes,
+    };
+    Ok(Html(template.render()?))
+}
+
+#[derive(Template)]
+#[template(path = "users/relevant_quotes.html")]
+struct RelevantQuotesTemplate {
+    session: Session,
+    user: User,
+    quotes: Vec<QuoteWithUsers>,
+}
