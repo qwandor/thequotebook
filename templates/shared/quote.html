@@ -6,9 +6,9 @@
     {{ text }}
     {% endif %}
     {% if single %}
-    {{ quotee|link_to_user(true, quotee_link, false, true, 48, "&mdash; ", "author", "")|safe }}
+    {{ quotee|link_to_user(true, quotee_link.clone(), false, true, 48, "&mdash; ", "author", "")|safe }}
     {% else %}
-    {{ quotee|link_to_user(true, quotee_link, false, true, 24, "&mdash; ", "author", "")|safe }}
+    {{ quotee|link_to_user(true, quotee_link.clone(), false, true, 24, "&mdash; ", "author", "")|safe }}
     {% endif %}
   </p>
   <div class="meta">
@@ -17,6 +17,6 @@
     {% else %}
     {{ comments_text }}
     {% endif %}
-    Quoted by {{ quoter|link_to_user(true, quoter_link, false, false, 16, "", "nickname", "")|safe }} on {{ quote.created_at|long_datetime }}{% if show_context %} in <a href="/contexts/{{ context.id }}">{{ context.name }}</a>{% endif %}.
+    Quoted by {{ quoter|link_to_user(true, quoter_link.clone(), false, false, 16, "", "nickname", "")|safe }} on {{ quote.created_at|long_datetime }}{% if show_context %} in <a href="/contexts/{{ context.id }}">{{ context.name }}</a>{% endif %}.
   </div>
 </blockquote>

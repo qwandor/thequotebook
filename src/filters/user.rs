@@ -3,11 +3,11 @@ use crate::model::User;
 
 pub fn link_to_user(
     user: &User,
-    &avatar: &bool,
-    &actually_link: &bool,
-    &swap_names: &bool,
-    &css_avatar: &bool,
-    &avatar_size: &u16,
+    avatar: bool,
+    actually_link: bool,
+    swap_names: bool,
+    css_avatar: bool,
+    avatar_size: u16,
     prefix: &str,
     class: &str,
     base_url: &str,
@@ -49,7 +49,7 @@ pub fn link_to_user(
     })
 }
 
-pub fn gravatar_for(user: &User, &avatar_size: &u16, class: &str) -> askama::Result<String> {
+pub fn gravatar_for(user: &User, avatar_size: u16, class: &str) -> askama::Result<String> {
     let email_address = user.email_address.as_deref().unwrap_or("");
     Ok(gravatar(email_address, avatar_size, class))
 }

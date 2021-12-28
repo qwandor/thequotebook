@@ -37,16 +37,16 @@ pub fn tweet_quote_text(text: &str) -> askama::Result<String> {
 }
 
 pub fn formatted_single_quote(quote: &QuoteWithUsers) -> askama::Result<String> {
-    formatted_quote(&quote, &true, &true, &true, &true, &false)
+    formatted_quote(&quote, true, true, true, true, false)
 }
 
 pub fn formatted_quote(
     &quote: &&QuoteWithUsers,
-    &single: &bool,
-    &quoter_link: &bool,
-    &quotee_link: &bool,
-    &show_context: &bool,
-    &show_comments: &bool,
+    single: bool,
+    quoter_link: bool,
+    quotee_link: bool,
+    show_context: bool,
+    show_comments: bool,
 ) -> askama::Result<String> {
     let quote_link = !single;
     let text = bbcode_to_html(&quote_marks_if_needed(&quote.quote.quote_text)?, true);
