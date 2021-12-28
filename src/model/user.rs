@@ -17,7 +17,7 @@ impl User {
 
     /// Fetches the user with the given ID, if they exist.
     pub async fn fetch_one(pool: &Pool<Postgres>, user_id: i32) -> Result<Self, InternalError> {
-        sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
+        sqlx::query_as::<_, Self>("SELECT * FROM users WHERE id = $1")
             .bind(user_id)
             .fetch_optional(pool)
             .await?
@@ -30,7 +30,7 @@ impl User {
         email_address: &str,
     ) -> Result<Option<Self>, InternalError> {
         Ok(
-            sqlx::query_as::<_, User>("SELECT * FROM users WHERE email_address = $1")
+            sqlx::query_as::<_, Self>("SELECT * FROM users WHERE email_address = $1")
                 .bind(email_address)
                 .fetch_optional(pool)
                 .await?,
@@ -39,7 +39,7 @@ impl User {
 
     /// Fetches all users.
     pub async fn fetch_all(pool: &Pool<Postgres>) -> sqlx::Result<Vec<Self>> {
-        sqlx::query_as::<_, User>("SELECT * FROM users ORDER BY created_at DESC")
+        sqlx::query_as::<_, Self>("SELECT * FROM users ORDER BY created_at DESC")
             .fetch_all(pool)
             .await
     }
@@ -49,7 +49,7 @@ impl User {
         pool: &Pool<Postgres>,
         context_id: i32,
     ) -> sqlx::Result<Vec<Self>> {
-        sqlx::query_as::<_, User>(
+        sqlx::query_as::<_, Self>(
             "SELECT users.*
              FROM users
                INNER JOIN contexts_users ON user_id = users.id

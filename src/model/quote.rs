@@ -23,7 +23,7 @@ pub struct Quote {
 impl Quote {
     /// Fetches the quote with the given ID, if it exists.
     pub async fn fetch_one(pool: &Pool<Postgres>, quote_id: i32) -> Result<Self, InternalError> {
-        sqlx::query_as::<_, Quote>(
+        sqlx::query_as::<_, Self>(
             "SELECT quotes.*,
                quotes.created_at AT TIME ZONE 'UTC' AS created_at,
                quotes.updated_at AT TIME ZONE 'UTC' AS updated_at
@@ -49,7 +49,7 @@ pub struct QuoteWithUsers {
 impl QuoteWithUsers {
     /// Fetches the quote with the given ID, if it exists.
     pub async fn fetch_one(pool: &Pool<Postgres>, quote_id: i32) -> Result<Self, InternalError> {
-        sqlx::query_as::<_, QuoteWithUsers>(
+        sqlx::query_as::<_, Self>(
             "SELECT quotes.*,
                quotes.created_at AT TIME ZONE 'UTC' AS created_at,
                quotes.updated_at AT TIME ZONE 'UTC' AS updated_at,
@@ -78,7 +78,7 @@ impl QuoteWithUsers {
 
     /// Fetches all quotes.
     pub async fn fetch_all(pool: &Pool<Postgres>) -> sqlx::Result<Vec<Self>> {
-        sqlx::query_as::<_, QuoteWithUsers>(
+        sqlx::query_as::<_, Self>(
             "SELECT quotes.*,
                quotes.created_at AT TIME ZONE 'UTC' AS created_at,
                quotes.updated_at AT TIME ZONE 'UTC' AS updated_at,

@@ -12,7 +12,7 @@ pub struct Context {
 impl Context {
     /// Fetches the context with the given ID, if it exists.
     pub async fn fetch_one(pool: &Pool<Postgres>, context_id: i32) -> Result<Self, InternalError> {
-        sqlx::query_as::<_, Context>(
+        sqlx::query_as::<_, Self>(
             "SELECT contexts.*,
                (SELECT COUNT(*) FROM quotes WHERE quotes.context_id = contexts.id) as quotes_count
             FROM contexts WHERE id = $1",

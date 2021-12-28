@@ -32,7 +32,7 @@ impl CommentWithQuote {
         quote_id: i32,
         comment_id: i32,
     ) -> Result<Self, InternalError> {
-        sqlx::query_as::<_, CommentWithQuote>(
+        sqlx::query_as::<_, Self>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
                comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
@@ -63,7 +63,7 @@ impl CommentWithQuote {
         pool: &Pool<Postgres>,
         quote_id: i32,
     ) -> sqlx::Result<Vec<Self>> {
-        sqlx::query_as::<_, CommentWithQuote>(
+        sqlx::query_as::<_, Self>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
                comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
@@ -89,7 +89,7 @@ impl CommentWithQuote {
 
     /// Fetches the 5 most recent comments made by the given user.
     pub async fn fetch_5_for_user(pool: &Pool<Postgres>, user_id: i32) -> sqlx::Result<Vec<Self>> {
-        sqlx::query_as::<_, CommentWithQuote>(
+        sqlx::query_as::<_, Self>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
                comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
@@ -119,7 +119,7 @@ impl CommentWithQuote {
         pool: &Pool<Postgres>,
         context_id: i32,
     ) -> sqlx::Result<Vec<Self>> {
-        sqlx::query_as::<_, CommentWithQuote>(
+        sqlx::query_as::<_, Self>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
                comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
@@ -150,7 +150,7 @@ impl CommentWithQuote {
         pool: &Pool<Postgres>,
         user_id: i32,
     ) -> sqlx::Result<Vec<Self>> {
-        sqlx::query_as::<_, CommentWithQuote>(
+        sqlx::query_as::<_, Self>(
             "SELECT comments.*,
                comments.created_at AT TIME ZONE 'UTC' AS created_at,
                comments.updated_at AT TIME ZONE 'UTC' AS updated_at,
