@@ -1,8 +1,11 @@
 use crate::{
+    atom::quotes::quotes_to_atom,
+    config::Config,
     errors::InternalError,
     filters,
     model::{CommentWithQuote, CommentWithQuotee, Context, QuoteWithUsers, User},
     pagination::{PageOrGap, PaginationState, QueryPage},
+    responses::Atom,
     session::Session,
 };
 use askama::Template;
@@ -12,6 +15,7 @@ use axum::{
 };
 use paginate::Pages;
 use sqlx::{Pool, Postgres};
+use std::sync::Arc;
 
 const QUOTES_PER_PAGE: usize = 10;
 const PAGINATION_WINDOW: usize = 2;
@@ -98,6 +102,18 @@ struct QuotesTemplate {
     quotes: Vec<QuoteWithUsers>,
 }
 
+pub async fn quotes_atom(
+    Extension(config): Extension<Arc<Config>>,
+    Extension(pool): Extension<Pool<Postgres>>,
+    Path(user_id): Path<i32>,
+) -> Result<Atom, InternalError> {
+    let user = User::fetch_one(&pool, user_id).await?;
+    let quotes = QuoteWithUsers::fetch_all_for_quotee(&pool, user_id).await?;
+    let title = format!("theQuotebook: Quotes by {}", user.fullname);
+
+    Ok(Atom(quotes_to_atom(quotes, title, &config)?))
+}
+
 pub async fn relevant_quotes(
     Extension(pool): Extension<Pool<Postgres>>,
     session: Session,
@@ -120,6 +136,18 @@ struct RelevantQuotesTemplate {
     session: Session,
     user: User,
     quotes: Vec<QuoteWithUsers>,
+}
+
+pub async fn relevant_quotes_atom(
+    Extension(config): Extension<Arc<Config>>,
+    Extension(pool): Extension<Pool<Postgres>>,
+    Path(user_id): Path<i32>,
+) -> Result<Atom, InternalError> {
+    let user = User::fetch_one(&pool, user_id).await?;
+    let quotes = QuoteWithUsers::fetch_all_for_user_contexts(&pool, user_id).await?;
+    let title = format!("theQuotebook: Quotes of interest to {}", user.fullname);
+
+    Ok(Atom(quotes_to_atom(quotes, title, &config)?))
 }
 
 pub async fn relevant_comments(

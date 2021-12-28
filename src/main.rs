@@ -55,9 +55,14 @@ async fn main() -> Result<(), Report> {
         .route("/users", get(users::index))
         .route("/users/:user_id", get(users::show))
         .route("/users/:user_id/quotes", get(users::quotes))
+        .route("/users/:user_id/quotes.atom", get(users::quotes_atom))
         .route(
             "/users/:user_id/relevant_quotes",
             get(users::relevant_quotes),
+        )
+        .route(
+            "/users/:user_id/relevant_quotes.atom",
+            get(users::relevant_quotes_atom),
         )
         .route(
             "/users/:user_id/relevant_comments",
