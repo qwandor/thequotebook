@@ -41,7 +41,7 @@ pub async fn index_atom(
     // TODO: Should we sort by updated_at rather than created_at?
     let quotes = QuoteWithUsers::fetch_all(&pool).await?;
 
-    let feed_url = format!("{}quotes.atom", config.base_url);
+    let feed_url = config.absolute_url("/quotes.atom");
     let feed = FeedBuilder::default()
         .title("theQuotebook: All quotes")
         .link(
@@ -55,14 +55,14 @@ pub async fn index_atom(
             LinkBuilder::default()
                 .rel("alternate")
                 .mime_type("text/html".to_string())
-                .href(format!("{}quotes", config.base_url))
+                .href(config.absolute_url("/quotes"))
                 .build(),
         )
         .id(feed_url)
         .generator(
             GeneratorBuilder::default()
                 .value("theQuotebook")
-                .uri(config.base_url.clone())
+                .uri(config.absolute_url("/"))
                 .build(),
         )
         .entries(
@@ -78,7 +78,7 @@ pub async fn index_atom(
 }
 
 fn quote_to_atom(base_url: &str, quote: QuoteWithUsers) -> Result<Entry, InternalError> {
-    let url = format!("{}quotes/{}", base_url, quote.quote.id);
+    let url = format!("{}/quotes/{}", base_url, quote.quote.id);
     Ok(EntryBuilder::default()
         .title(format!(
             "{}: {}",
@@ -97,7 +97,7 @@ fn quote_to_atom(base_url: &str, quote: QuoteWithUsers) -> Result<Entry, Interna
         .author(
             PersonBuilder::default()
                 .name(quote.quoter.username_or_fullname())
-                .uri(format!("{}users/{}", base_url, quote.quoter.id))
+                .uri(format!("{}/users/{}", base_url, quote.quoter.id))
                 .build(),
         )
         .content(

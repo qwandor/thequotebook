@@ -43,6 +43,10 @@ impl Config {
             read_to_string(filename).wrap_err_with(|| format!("Reading {}", filename))?;
         Ok(toml::from_str(&config_file)?)
     }
+
+    pub fn absolute_url(&self, path: &str) -> String {
+        format!("{}{}", self.base_url, path)
+    }
 }
 
 fn default_public_dir() -> PathBuf {
@@ -54,7 +58,7 @@ fn default_bind_address() -> SocketAddr {
 }
 
 fn default_base_url() -> String {
-    "http://localhost:3000/".to_string()
+    "http://localhost:3000".to_string()
 }
 
 #[cfg(test)]

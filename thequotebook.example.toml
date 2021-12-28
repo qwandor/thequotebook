@@ -8,7 +8,7 @@ public_dir = "/usr/share/thequotebook"
 bind_address = "0.0.0.0:3000"
 
 # The public URL of the server, to be used for generating links to it.
-base_url = "http://localhost:3000/"
+base_url = "http://localhost:3000"
 
 # The client ID used for Google login.
 google_client_id = "abc123"
