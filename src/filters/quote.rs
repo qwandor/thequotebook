@@ -96,7 +96,7 @@ struct QuoteTemplate {
     comments_text: String,
 }
 
-pub fn chatty_quote(quote: QuoteWithUsers) -> askama::Result<String> {
+pub fn chatty_quote(quote: QuoteWithUsers, base_url: &str) -> askama::Result<String> {
     let text = bbcode_to_html(&quote_marks_if_needed(&quote.quote.quote_text)?, true);
 
     let template = ChattyQuoteTemplate {
@@ -105,6 +105,7 @@ pub fn chatty_quote(quote: QuoteWithUsers) -> askama::Result<String> {
         quotee: quote.quotee.to_owned(),
         context: quote.context.to_owned(),
         text,
+        base_url: base_url.to_owned(),
     };
     template.render()
 }
@@ -117,6 +118,7 @@ struct ChattyQuoteTemplate {
     quotee: User,
     context: Context,
     text: String,
+    base_url: String,
 }
 
 // Some filters need to be in scope for the Template derive macro above.

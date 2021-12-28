@@ -10,6 +10,7 @@ pub fn link_to_user(
     &avatar_size: &u16,
     prefix: &str,
     class: &str,
+    base_url: &str,
 ) -> askama::Result<String> {
     let username = user.username_or_fullname();
     let fullname: &str = &user.fullname;
@@ -33,8 +34,7 @@ pub fn link_to_user(
     }
 
     Ok(if actually_link {
-        // TODO: Support full_url
-        let user_url = format!("/users/{}", user.id);
+        let user_url = format!("{}/users/{}", base_url, user.id);
         format!(
             "<a href=\"{}\" class=\"{}\" title=\"{}\" style=\"{}\">{}</a>",
             user_url, class, title, style, link_text

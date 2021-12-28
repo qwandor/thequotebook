@@ -103,7 +103,7 @@ fn quote_to_atom(base_url: &str, quote: QuoteWithUsers) -> Result<Entry, Interna
         .content(
             ContentBuilder::default()
                 .content_type("html".to_string())
-                .value(chatty_quote(quote)?)
+                .value(chatty_quote(quote, base_url)?)
                 .build(),
         )
         .build())

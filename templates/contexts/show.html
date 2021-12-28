@@ -51,7 +51,7 @@
   <h2>In this quotebook</h2>
   <ul>
 {% for user in users %}
-    <li>{{ user|link_to_user(true, true, false, false, 16, "", "nickname")|safe }}</li>
+    <li>{{ user|link_to_user(true, true, false, false, 16, "", "nickname", "")|safe }}</li>
 {% endfor %}
   </ul>
 </div>
