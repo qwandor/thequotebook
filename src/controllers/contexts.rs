@@ -1,4 +1,4 @@
-use super::quotes::{self, AddQuoteForm};
+use super::quotes::{self, QuoteForm};
 use crate::{
     atom::quotes::quotes_to_atom,
     config::Config,
@@ -66,12 +66,9 @@ pub async fn show(
             current_page,
             window_size: PAGINATION_WINDOW,
         },
-        form: AddQuoteForm {
-            error_messages: "".to_string(),
-            possible_quotee_matches: None,
-            quotee: "".to_string(),
-            context_name: "".to_string(),
+        form: QuoteForm {
             context: Some(context),
+            ..QuoteForm::default()
         },
     };
     Ok(Html(template.render()?))
@@ -86,7 +83,7 @@ struct ShowTemplate {
     users: Vec<User>,
     comments: Vec<CommentWithQuote>,
     pagination: PaginationState,
-    form: AddQuoteForm,
+    form: QuoteForm,
 }
 
 pub async fn new(session: Session) -> Result<Html<String>, InternalError> {

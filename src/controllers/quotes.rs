@@ -74,13 +74,7 @@ pub async fn new(session: Session) -> Result<Html<String>, InternalError> {
 
     let template = NewTemplate {
         session,
-        form: AddQuoteForm {
-            error_messages: "".to_string(),
-            possible_quotee_matches: None,
-            quotee: "".to_string(),
-            context_name: "".to_string(),
-            context: None,
-        },
+        form: QuoteForm::default(),
     };
     Ok(Html(template.render()?))
 }
@@ -89,10 +83,11 @@ pub async fn new(session: Session) -> Result<Html<String>, InternalError> {
 #[template(path = "quotes/new.html")]
 struct NewTemplate {
     session: Session,
-    form: AddQuoteForm,
+    form: QuoteForm,
 }
 
-pub struct AddQuoteForm {
+#[derive(Clone, Debug, Default)]
+pub struct QuoteForm {
     pub error_messages: String,
     pub possible_quotee_matches: Option<Vec<String>>,
     pub quotee: String,
