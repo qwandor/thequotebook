@@ -90,6 +90,11 @@ struct ShowTemplate {
 }
 
 pub async fn new(session: Session) -> Result<Html<String>, InternalError> {
+    // There must be a user logged in.
+    if !session.logged_in() {
+        return Err(InternalError::Unauthorised);
+    }
+
     let template = NewTemplate {
         session,
         form: NewContextForm {
