@@ -1,0 +1,14 @@
+{% extends "layouts/no_sidebars.html" %}
+
+{% block title %}: Editing quote{% endblock %}
+
+{% block header %}
+<h1>Editing quote</h1>
+{% endblock %}
+
+{% block body %}
+{% let button_label = "Save quote" %}
+{% include "quotes/form.html" %}
+
+<a href="/quotes/{{ quote_id }}" class="button">Back to quote</a>
+{% endblock %}

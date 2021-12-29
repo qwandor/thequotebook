@@ -24,7 +24,7 @@
 
   {{ form.error_messages }}
 
-  <textarea name="quote_text" id="quote_text" rows="4" cols="80"></textarea>
+  <textarea name="quote_text" id="quote_text" rows="4" cols="80">{{ form.quote_text }}</textarea>
   <div class="input"><div>
     <label for="quotee_name">by</label>
     <input type="text" name="quotee_name" id="quotee_name" value="{{ form.quotee }}"/>

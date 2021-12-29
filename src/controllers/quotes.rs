@@ -93,4 +93,50 @@ pub struct QuoteForm {
     pub quotee: String,
     pub context_name: String,
     pub context: Option<Context>,
+    pub quote_text: String,
+}
+
+impl From<QuoteWithUsers> for QuoteForm {
+    fn from(quote: QuoteWithUsers) -> Self {
+        Self {
+            error_messages: String::default(),
+            possible_quotee_matches: None,
+            quotee: quote.quotee.fullname,
+            context_name: quote.context.name.clone(),
+            context: Some(quote.context),
+            quote_text: quote.quote.quote_text,
+        }
+    }
+}
+
+pub async fn edit(
+    Extension(pool): Extension<Pool<Postgres>>,
+    session: Session,
+    Path(quote_id): Path<i32>,
+) -> Result<Html<String>, InternalError> {
+    let quote = QuoteWithUsers::fetch_one(&pool, quote_id).await?;
+
+    // There must be a user logged in, and they can only edit their own quotes.
+    let user = session
+        .current_user
+        .clone()
+        .ok_or(InternalError::Unauthorised)?;
+    if user.id != quote.quoter.id {
+        return Err(InternalError::Unauthorised);
+    }
+
+    let template = EditTemplate {
+        session,
+        form: quote.into(),
+        quote_id,
+    };
+    Ok(Html(template.render()?))
+}
+
+#[derive(Template)]
+#[template(path = "quotes/edit.html")]
+struct EditTemplate {
+    session: Session,
+    form: QuoteForm,
+    quote_id: i32,
 }
