@@ -97,7 +97,7 @@ pub async fn new(session: Session) -> Result<Html<String>, InternalError> {
 
     let template = NewTemplate {
         session,
-        form: NewContextForm {
+        form: ContextForm {
             error_messages: "".to_string(),
         },
     };
@@ -108,11 +108,41 @@ pub async fn new(session: Session) -> Result<Html<String>, InternalError> {
 #[template(path = "contexts/new.html")]
 struct NewTemplate {
     session: Session,
-    form: NewContextForm,
+    form: ContextForm,
 }
 
-struct NewContextForm {
+struct ContextForm {
     error_messages: String,
+}
+
+pub async fn edit(
+    Extension(pool): Extension<Pool<Postgres>>,
+    session: Session,
+    Path(context_id): Path<i32>,
+) -> Result<Html<String>, InternalError> {
+    let context = Context::fetch_one(&pool, context_id).await?;
+
+    // There must be a user logged in.
+    if !session.logged_in() {
+        return Err(InternalError::Unauthorised);
+    }
+
+    let template = EditTemplate {
+        session,
+        context,
+        form: ContextForm {
+            error_messages: "".to_string(),
+        },
+    };
+    Ok(Html(template.render()?))
+}
+
+#[derive(Template)]
+#[template(path = "contexts/edit.html")]
+struct EditTemplate {
+    session: Session,
+    context: Context,
+    form: ContextForm,
 }
 
 pub async fn latest(
