@@ -1,0 +1,52 @@
+<form action="/users" method="post">
+  {{ form.error_messages }}
+
+  <div>
+    <label for="fullname">Full name</label>
+    <input type="text" name="fullname" id="fullname"/>
+    <label for="fullname" class="note">Put your real name, so that people can find you.</label>
+  </div>
+  <div>
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username"/>
+    <label for="username" class="note">You can choose any unique name here. Keep it fairly short though.</label>
+  </div>
+  <div>
+    <label for="email_address">Email address</label>
+    <input type="text" name="email_address" id="email_address"/>
+    <label for="email_address" class="note">This is used to find your avatar image for your profile.</label>
+  </div>
+  <div class="checkbox">
+    <label for="email_notification">Email notification</label>
+    <input type="checkbox" name="email_notification" id="email_notification"/>
+    <label for="email_notification" class="note">Should we send you an email when someone quotes you, or comments on one of your quotes?</label>
+  </div>
+  <div>
+    <label for="time_zone">Time zone</label>
+    <%= f.time_zone_select :time_zone %>
+    <label for="time_zone" class="note">So that we can show times in your local time zone.</label>
+  </div>
+  <div>
+    <div class="label">Gravatar</div>
+    <div class="label note">
+      {{ user|gravatar_for(64, "gravatar")|safe }}
+      To change this image <a href="http://en.gravatar.com/site/signup">sign up with gravatar</a>. <a href="http://www.gravatar.com"/>Gravatar</a> (Globally Recognized Avatar) associates an image to your email address, so make sure when you sign up that you use the same email address as above.
+    </div>
+  </div>
+{% match user.openid %}
+{% when Some with (openid) %}
+  <div>
+    <div class="label">OpenID</div>
+    <a href="{{ openid }}" class="item">{{ openid }}</a>
+  </div>
+{% when None %}
+{% endmatch %}
+  <div>
+    <input type="submit" value="{{ button_label }}" class="button" />
+{% match cancel_link %}
+{% when Some with (cancel_link_url) %}
+    <a href="{{ cancel_link_url }}" class="button">{{ cancel_label }}</a>
+{% when None %}
+{% endmatch %}
+  </div>
+</form>

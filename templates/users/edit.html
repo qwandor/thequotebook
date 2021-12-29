@@ -1,0 +1,15 @@
+{% extends "layouts/no_sidebars.html" %}
+
+{% block title %}: Editing profile for {{ user.fullname }}{% endblock %}
+
+{% block header %}
+<h1>Edit Profile</h1>
+{% endblock %}
+
+{% block body %}
+{% let button_label = "Save" %}
+{% let cancel_link = format!("/users/{}", self.user.id) %}
+{% let cancel_link = Some(cancel_link) %}
+{% let cancel_label = "Cancel" %}
+{% include "users/form.html" %}
+{% endblock %}

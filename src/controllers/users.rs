@@ -188,3 +188,38 @@ pub async fn relevant_comments_atom(
 
     Ok(Atom(comments_to_atom(comments, title, &path, &config)?))
 }
+
+pub async fn edit(
+    session: Session,
+    Path(user_id): Path<i32>,
+) -> Result<Html<String>, InternalError> {
+    // There must be a user logged in, and they can only edit their own profile.
+    let user = session
+        .current_user
+        .clone()
+        .ok_or(InternalError::Unauthorised)?;
+    if user.id != user_id {
+        return Err(InternalError::Unauthorised);
+    }
+
+    let template = EditTemplate {
+        session,
+        user,
+        form: UserForm {
+            error_messages: "".to_string(),
+        },
+    };
+    Ok(Html(template.render()?))
+}
+
+#[derive(Template)]
+#[template(path = "users/edit.html")]
+struct EditTemplate {
+    session: Session,
+    user: User,
+    form: UserForm,
+}
+
+struct UserForm {
+    error_messages: String,
+}
