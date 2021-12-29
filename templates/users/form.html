@@ -3,17 +3,17 @@
 
   <div>
     <label for="fullname">Full name</label>
-    <input type="text" name="fullname" id="fullname"/>
+    <input type="text" name="fullname" id="fullname" value="{{ user.fullname }}"/>
     <label for="fullname" class="note">Put your real name, so that people can find you.</label>
   </div>
   <div>
     <label for="username">Username</label>
-    <input type="text" name="username" id="username"/>
+    <input type="text" name="username" id="username" value="{{ user.username.as_deref().unwrap_or_default() }}"/>
     <label for="username" class="note">You can choose any unique name here. Keep it fairly short though.</label>
   </div>
   <div>
     <label for="email_address">Email address</label>
-    <input type="text" name="email_address" id="email_address"/>
+    <input type="text" name="email_address" id="email_address" value="{{ user.email_address.as_deref().unwrap_or_default() }}"/>
     <label for="email_address" class="note">This is used to find your avatar image for your profile.</label>
   </div>
   <div class="checkbox">
