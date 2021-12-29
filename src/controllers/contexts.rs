@@ -97,9 +97,7 @@ pub async fn new(session: Session) -> Result<Html<String>, InternalError> {
 
     let template = NewTemplate {
         session,
-        form: ContextForm {
-            error_messages: "".to_string(),
-        },
+        form: ContextForm::default(),
     };
     Ok(Html(template.render()?))
 }
@@ -111,8 +109,21 @@ struct NewTemplate {
     form: ContextForm,
 }
 
+#[derive(Clone, Debug, Default)]
 struct ContextForm {
     error_messages: String,
+    name: String,
+    description: String,
+}
+
+impl From<Context> for ContextForm {
+    fn from(context: Context) -> Self {
+        Self {
+            error_messages: "".to_string(),
+            name: context.name,
+            description: context.description,
+        }
+    }
 }
 
 pub async fn edit(
@@ -129,10 +140,8 @@ pub async fn edit(
 
     let template = EditTemplate {
         session,
-        context,
-        form: ContextForm {
-            error_messages: "".to_string(),
-        },
+        form: context.into(),
+        context_id,
     };
     Ok(Html(template.render()?))
 }
@@ -141,8 +150,8 @@ pub async fn edit(
 #[template(path = "contexts/edit.html")]
 struct EditTemplate {
     session: Session,
-    context: Context,
     form: ContextForm,
+    context_id: i32,
 }
 
 pub async fn latest(

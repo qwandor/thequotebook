@@ -1,13 +1,13 @@
 {% extends "layouts/no_sidebars.html" %}
 
-{% block title %}: Editing {{ context.name }}{% endblock %}
+{% block title %}: Editing {{ form.name }}{% endblock %}
 
 {% block header %}
 <h1>Edit quotebook</h1>
 {% endblock %}
 
 {% block body %}
-{% let cancel_link = format!("/contexts/{}", self.context.id) %}
+{% let cancel_link = format!("/contexts/{}", self.context_id) %}
 {% let cancel_label = "Return without saving" %}
 {% include "contexts/form.html" %}
 {% endblock %}

@@ -3,12 +3,12 @@
 
   <div>
     <label for="name">Name</label>
-    <input type="text" name="name" id="name"/>
+    <input type="text" name="name" id="name" value="{{ form.name }}"/>
     <label for="name" class="note">Just something short and sweet, but it should be a unique name ('Down Street flat' or 'Imperial Tectonics Limited', not just 'my flat' or 'friends').</label>
   </div>
   <div>
     <label for="description">Description</label>
-    <textarea name="description" id="description"></textarea>
+    <textarea name="description" id="description">{{ form.description }}</textarea>
     <label for="description" class="note">Give everyone a bit more information about what this quotebook is for.</label>
   </div>
   <div>
