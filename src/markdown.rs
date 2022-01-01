@@ -53,6 +53,8 @@ fn to_html<'a>(
                 escape_html(&mut result, &text).unwrap();
                 result += "`";
             }
+            Event::SoftBreak => result += " ",
+            Event::HardBreak => result += if newlines_allowed { "<br/>" } else { " " },
             _ => {}
         }
     }
@@ -156,6 +158,18 @@ mod tests {
         assert_eq!(
             markdown_to_html("one\ntwo\n\nthree", false, &AllowedTags::ALL),
             "one two three".to_string()
+        );
+    }
+
+    #[test]
+    fn linebreaks() {
+        assert_eq!(
+            markdown_to_html("one  \ntwo", true, &AllowedTags::ALL),
+            "one<br/>two".to_string()
+        );
+        assert_eq!(
+            markdown_to_html("one  \ntwo", false, &AllowedTags::ALL),
+            "one two".to_string()
         );
     }
 
