@@ -1213,7 +1213,7 @@ dependencies = [
 [[package]]
 name = "paginate"
 version = "1.0.1"
-source = "git+https://github.com/qwandor/paginate?branch=page_count#c002caf86ff294af0594c19c64a932bcb0d4407f"
+source = "git+https://github.com/qwandor/paginate#c002caf86ff294af0594c19c64a932bcb0d4407f"
 
 [[package]]
 name = "parking_lot"
