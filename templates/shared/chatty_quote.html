@@ -3,6 +3,6 @@ On {{ quote.created_at|long_datetime }},
 quoted
 {{ quotee|link_to_user(true, true, false, false, 16, "", "author", base_url)|safe }}
 as saying
-<a href="{{ base_url }}/quotes/{{ quote.id }}" class="quote">{{ text }}</a>
+<a href="{{ base_url }}/quotes/{{ quote.id }}" class="quote">{{ text|safe }}</a>
 in
 <a href="{{ base_url }}/contexts/{{ context.id }}">{{ context.name }}</a>.

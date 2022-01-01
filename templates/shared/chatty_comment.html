@@ -4,6 +4,6 @@
   commented on
   {{ quotee|link_to_user(true, true, false, false, 16, "", "nickname", base_url)|safe }}'s
   quote
-  <a href="{{ base_url }}/quotes/{{ comment.quote_id }}">{{ quote_text|short_quote }}</a>:
+  <a href="{{ base_url }}/quotes/{{ comment.quote_id }}">{{ quote_text|short_quote|safe }}</a>:
 </p>
-{{ comment.body|comment_format(true) }}
+{{ comment.body|comment_format(true)|safe }}

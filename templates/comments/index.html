@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block header %}
-<h1>Comments for {{ quote.quote_text|comment_title_quote }}</h1>
+<h1>Comments for {{ quote.quote_text|comment_title_quote|safe }}</h1>
 {% endblock %}
 
 {% block body %}

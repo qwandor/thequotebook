@@ -4,7 +4,7 @@
   commented on
   {{ comment.quotee|link_to_user(true, true, false, false, 16, "", "nickname", "")|safe }}'s
   quote
-  <a href="/quotes/{{ comment.comment.quote_id }}">{{ comment.quote_text|short_quote }}</a>:
-  {{ comment.comment.body|comment_format(false) }}
+  <a href="/quotes/{{ comment.comment.quote_id }}">{{ comment.quote_text|short_quote|safe }}</a>:
+  {{ comment.comment.body|comment_format(false)|safe }}
 </p>
 {% endfor %}

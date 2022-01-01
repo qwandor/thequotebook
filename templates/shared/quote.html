@@ -1,9 +1,9 @@
 <blockquote{% if single %} class="single"{% endif %}>
   <p>
     {% if quote_link %}
-    <a href="/quotes/{{ quote.id }}" class="quote">{{ text }}</a>
+    <a href="/quotes/{{ quote.id }}" class="quote">{{ text|safe }}</a>
     {% else %}
-    {{ text }}
+    {{ text|safe }}
     {% endif %}
     {% if single %}
     {{ quotee|link_to_user(true, quotee_link.clone(), false, true, 48, "&mdash; ", "author", "")|safe }}

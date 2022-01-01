@@ -3,7 +3,7 @@
 {% block title %}: Comment{% endblock %}
 
 {% block header %}
-<h1>Comment on {{ comment.quote_text|comment_title_quote }}</h1>
+<h1>Comment on {{ comment.quote_text|comment_title_quote|safe }}</h1>
 {% endblock %}
 
 {% block body %}
@@ -18,7 +18,7 @@
       {% endif %}
     </td>
     <td>
-      {{ comment.comment.body|comment_format(true) }}
+      {{ comment.comment.body|comment_format(true)|safe }}
     </td>
   </tr>
 </table>

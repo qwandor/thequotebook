@@ -1,6 +1,14 @@
-use super::bbcode_to_html;
-use crate::model::{Context, Quote, QuoteWithUsers, User};
+use crate::{
+    markdown::{markdown_to_html, AllowedTags},
+    model::{Context, Quote, QuoteWithUsers, User},
+};
 use askama::Template;
+
+const ALLOWED_TAGS: AllowedTags = AllowedTags {
+    emphasis: true,
+    strong: true,
+    link: false,
+};
 
 pub fn quote_marks_if_needed(text: &str) -> askama::Result<String> {
     Ok(if text.contains('"') {
@@ -23,13 +31,15 @@ fn trim_if_needed(text: &str, max_length: usize) -> String {
 
 pub fn short_quote(text: &str) -> askama::Result<String> {
     let trimmed = trim_if_needed(&quote_marks_if_needed(text)?, 40);
-    Ok(bbcode_to_html(&trimmed, false))
-    //bbcode_to_html({}, :enable, true, false, [:bold, :italics])
+    Ok(markdown_to_html(&trimmed, false, &ALLOWED_TAGS))
 }
 
 pub fn comment_title_quote(text: &str) -> askama::Result<String> {
-    Ok(bbcode_to_html(&quote_marks_if_needed(text)?, false))
-    //bbcode_to_html({}, :enable, true, false, [:bold, :italics])
+    Ok(markdown_to_html(
+        &quote_marks_if_needed(text)?,
+        false,
+        &ALLOWED_TAGS,
+    ))
 }
 
 pub fn tweet_quote_text(text: &str) -> askama::Result<String> {
@@ -49,7 +59,11 @@ pub fn formatted_quote(
     show_comments: bool,
 ) -> askama::Result<String> {
     let quote_link = !single;
-    let text = bbcode_to_html(&quote_marks_if_needed(&quote.quote.quote_text)?, true);
+    let text = markdown_to_html(
+        &quote_marks_if_needed(&quote.quote.quote_text)?,
+        true,
+        &ALLOWED_TAGS,
+    );
     let comments_text = if show_comments {
         if quote.comments_count == 0 {
             "No comments (yet).".to_string()
@@ -97,7 +111,11 @@ struct QuoteTemplate {
 }
 
 pub fn chatty_quote(quote: QuoteWithUsers, base_url: &str) -> askama::Result<String> {
-    let text = bbcode_to_html(&quote_marks_if_needed(&quote.quote.quote_text)?, true);
+    let text = markdown_to_html(
+        &quote_marks_if_needed(&quote.quote.quote_text)?,
+        true,
+        &ALLOWED_TAGS,
+    );
 
     let template = ChattyQuoteTemplate {
         quote: quote.quote.to_owned(),

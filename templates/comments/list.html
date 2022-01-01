@@ -1,7 +1,7 @@
 {% for comment in comments %}
 <blockquote class="comment">
   <div>
-    {{ comment.comment.body|comment_format(true) }}
+    {{ comment.comment.body|comment_format(true)|safe }}
     {{ comment.user|link_to_user(true, true, false, true, 24, "&mdash; ", "author", "")|safe }}
   </div>
   <div class="meta">

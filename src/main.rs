@@ -3,6 +3,7 @@ mod config;
 mod controllers;
 mod errors;
 mod filters;
+mod markdown;
 mod model;
 mod pagination;
 mod responses;
