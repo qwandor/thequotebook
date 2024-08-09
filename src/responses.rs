@@ -1,6 +1,6 @@
 use atom_syndication::Feed;
 use axum::{
-    body::{boxed, Full},
+    body::Body,
     http::{header, HeaderValue},
     response::{IntoResponse, Response},
 };
@@ -10,7 +10,7 @@ pub struct Atom(pub Feed);
 
 impl IntoResponse for Atom {
     fn into_response(self) -> Response {
-        let mut res = Response::new(boxed(Full::from(self.0.to_string())));
+        let mut res = Response::new(Body::from(self.0.to_string()));
         res.headers_mut().insert(
             header::CONTENT_TYPE,
             HeaderValue::from_static("application/atom+xml"),
