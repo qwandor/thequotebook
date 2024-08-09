@@ -57,8 +57,8 @@ pub async fn google_auth(
     Extension(config): Extension<Arc<Config>>,
     Extension(pool): Extension<Pool<Postgres>>,
     Query(query): Query<RedirectQuery>,
-    Form(request): Form<GoogleAuthRequest>,
     cookies: Cookies,
+    Form(request): Form<GoogleAuthRequest>,
 ) -> Result<Response, InternalError> {
     if request.g_csrf_token
         != cookies
@@ -102,7 +102,7 @@ pub async fn google_auth(
         if redirect.host().is_some() || redirect.scheme().is_some() {
             return Err(InternalError::Internal(eyre!("Invalid redirect path")));
         }
-        Ok(Redirect::to(redirect).into_response())
+        Ok(Redirect::to(&redirect.to_string()).into_response())
     } else {
         // TODO: Redirect to the account creation form.
         Ok(format!("No such user: {:?}", google_claims).into_response())
@@ -138,5 +138,5 @@ pub async fn destroy(
     if redirect.host().is_some() || redirect.scheme().is_some() {
         return Err(InternalError::Internal(eyre!("Invalid redirect path")));
     }
-    Ok(Redirect::to(redirect))
+    Ok(Redirect::to(&redirect.to_string()))
 }

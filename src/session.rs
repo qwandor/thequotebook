@@ -1,8 +1,8 @@
 use crate::{config::Config, errors::InternalError, model::User};
 use axum::{
     async_trait,
-    body::Body,
-    extract::{Extension, FromRequest, OriginalUri, RequestParts},
+    extract::{Extension, FromRequestParts, OriginalUri},
+    http::request::Parts,
 };
 use eyre::eyre;
 use jsonwebtoken::{decode, DecodingKey, Validation};
@@ -37,19 +37,19 @@ impl Session {
 }
 
 #[async_trait]
-impl FromRequest<Body> for Session {
+impl<S: Send + Sync> FromRequestParts<S> for Session {
     type Rejection = InternalError;
 
-    async fn from_request(req: &mut RequestParts<Body>) -> Result<Self, Self::Rejection> {
-        let cookies = Cookies::from_request(req)
+    async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
+        let cookies = Cookies::from_request_parts(parts, state)
             .await
             .map_err(|(_, e)| InternalError::Internal(eyre!("{}", e)))?;
-        let Extension(config) = Extension::<Arc<Config>>::from_request(req).await?;
-        let Extension(pool) = Extension::<Pool<Postgres>>::from_request(req).await?;
-        let OriginalUri(uri) = OriginalUri::from_request(req).await?;
+        let Extension(config) = Extension::<Arc<Config>>::from_request_parts(parts, state).await?;
+        let Extension(pool) = Extension::<Pool<Postgres>>::from_request_parts(parts, state).await?;
+        let OriginalUri(uri) = OriginalUri::from_request_parts(parts, state).await?;
         let current_user = user_from_cookies(&config, &pool, cookies).await;
         Ok(Session {
-            flash: Flash::from_request(req).await?,
+            flash: Flash::from_request_parts(parts, state).await?,
             current_user,
             path: uri
                 .path_and_query()
@@ -66,11 +66,11 @@ pub struct Flash {
 }
 
 #[async_trait]
-impl FromRequest<Body> for Flash {
+impl<S: Send + Sync> FromRequestParts<S> for Flash {
     type Rejection = InternalError;
 
-    async fn from_request(req: &mut RequestParts<Body>) -> Result<Self, Self::Rejection> {
-        let cookies = Cookies::from_request(req)
+    async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
+        let cookies = Cookies::from_request_parts(parts, state)
             .await
             .map_err(|(_, e)| InternalError::Internal(eyre!("{}", e)))?;
 
