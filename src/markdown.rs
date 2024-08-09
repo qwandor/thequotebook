@@ -1,7 +1,5 @@
-use pulldown_cmark::{
-    escape::{escape_href, escape_html},
-    Event, Parser, Tag,
-};
+use pulldown_cmark::{Event, Parser, Tag, TagEnd};
+use pulldown_cmark_escape::{escape_href, escape_html};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct AllowedTags {
@@ -43,7 +41,7 @@ fn to_html<'a>(
                 }
             }
             Event::End(tag) => {
-                if allowed(&tag, allowed_tags) {
+                if allowed_end(&tag, allowed_tags) {
                     end(&mut result, &mut between_paragraphs, &tag)
                 }
             }
@@ -65,8 +63,18 @@ fn allowed(tag: &Tag, allowed_tags: &AllowedTags) -> bool {
     match tag {
         Tag::Emphasis => allowed_tags.emphasis,
         Tag::Strong => allowed_tags.strong,
-        Tag::Link(_, _, _) => allowed_tags.link,
+        Tag::Link { .. } => allowed_tags.link,
         Tag::Paragraph => true,
+        _ => false,
+    }
+}
+
+fn allowed_end(tag: &TagEnd, allowed_tags: &AllowedTags) -> bool {
+    match tag {
+        TagEnd::Emphasis => allowed_tags.emphasis,
+        TagEnd::Strong => allowed_tags.strong,
+        TagEnd::Link => allowed_tags.link,
+        TagEnd::Paragraph => true,
         _ => false,
     }
 }
@@ -80,9 +88,11 @@ fn start(buffer: &mut String, between_paragraphs: &mut bool, tag: &Tag, newlines
                 *buffer += if newlines_allowed { "<br/><br/>" } else { " " };
             }
         }
-        Tag::Link(_link_type, url, title) => {
+        Tag::Link {
+            dest_url, title, ..
+        } => {
             *buffer += "<a href=\"";
-            escape_href(&mut *buffer, url).unwrap();
+            escape_href(&mut *buffer, dest_url).unwrap();
             *buffer += "\"";
             if !title.is_empty() {
                 *buffer += " title=\"";
@@ -95,12 +105,12 @@ fn start(buffer: &mut String, between_paragraphs: &mut bool, tag: &Tag, newlines
     }
 }
 
-fn end(buffer: &mut String, between_paragraphs: &mut bool, tag: &Tag) {
+fn end(buffer: &mut String, between_paragraphs: &mut bool, tag: &TagEnd) {
     match tag {
-        Tag::Emphasis => *buffer += "</em>",
-        Tag::Strong => *buffer += "</strong>",
-        Tag::Paragraph => *between_paragraphs = true,
-        Tag::Link(_, _, _) => *buffer += "</a>",
+        TagEnd::Emphasis => *buffer += "</em>",
+        TagEnd::Strong => *buffer += "</strong>",
+        TagEnd::Paragraph => *between_paragraphs = true,
+        TagEnd::Link => *buffer += "</a>",
         _ => {}
     }
 }
@@ -177,7 +187,7 @@ mod tests {
     fn unsupported_formatting() {
         assert_eq!(
             markdown_to_html("We don't support `code`", false, &AllowedTags::ALL),
-            "We don't support `code`".to_string()
+            "We don&#39;t support `code`".to_string()
         );
     }
 }
