@@ -21,6 +21,7 @@ use eyre::Report;
 use log::info;
 use sqlx::postgres::PgPoolOptions;
 use std::sync::Arc;
+use tokio::net::TcpListener;
 use tower_cookies::CookieManagerLayer;
 use tower_http::services::ServeDir;
 
@@ -103,9 +104,8 @@ async fn main() -> Result<(), Report> {
         .layer(Extension(pool));
 
     info!("Listening on {}", config.bind_address);
-    axum::Server::bind(&config.bind_address)
-        .serve(app.into_make_service())
-        .await?;
+    let listener = TcpListener::bind(&config.bind_address).await?;
+    axum::serve(listener, app.into_make_service()).await?;
 
     Ok(())
 }

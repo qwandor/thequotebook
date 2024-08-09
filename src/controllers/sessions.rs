@@ -90,10 +90,10 @@ pub async fn google_auth(
 
         // TODO: Set Secure, once we enforce https.
         cookies.add(
-            Cookie::build("session", token)
+            Cookie::build(("session", token))
                 .http_only(true)
                 .max_age(config.session_duration.try_into()?)
-                .finish(),
+                .build(),
         );
 
         cookies.add(Cookie::new("notice", "Logged in successfully."));
