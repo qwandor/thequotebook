@@ -3,7 +3,7 @@ use atom_syndication::{
     ContentBuilder, Entry, EntryBuilder, Feed, FeedBuilder, GeneratorBuilder, LinkBuilder,
     PersonBuilder,
 };
-use chrono::MIN_DATETIME;
+use chrono::{DateTime, Utc};
 
 pub fn quotes_to_atom(
     quotes: Vec<QuoteWithUsers>,
@@ -15,7 +15,7 @@ pub fn quotes_to_atom(
         .iter()
         .map(|quote| quote.quote.updated_at)
         .max()
-        .unwrap_or(MIN_DATETIME);
+        .unwrap_or(DateTime::<Utc>::MIN_UTC);
     let feed_url = format!("{}{}.atom", config.base_url, path);
     Ok(FeedBuilder::default()
         .title(title)

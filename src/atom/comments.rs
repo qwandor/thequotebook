@@ -9,7 +9,7 @@ use atom_syndication::{
     ContentBuilder, Entry, EntryBuilder, Feed, FeedBuilder, GeneratorBuilder, LinkBuilder,
     PersonBuilder,
 };
-use chrono::MIN_DATETIME;
+use chrono::{DateTime, Utc};
 
 pub fn comments_to_atom(
     comments: Vec<CommentWithQuotee>,
@@ -21,7 +21,7 @@ pub fn comments_to_atom(
         .iter()
         .map(|comment| comment.comment.updated_at)
         .max()
-        .unwrap_or(MIN_DATETIME);
+        .unwrap_or(DateTime::<Utc>::MIN_UTC);
     let feed_url = format!("{}{}.atom", config.base_url, path);
     Ok(FeedBuilder::default()
         .title(title)
