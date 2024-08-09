@@ -88,12 +88,12 @@ async fn main() -> Result<(), Report> {
             "/quotes/:quote_id/comments/:comment_id",
             get(comments::show),
         )
-        .nest(
+        .nest_service(
             "/images",
             get_service(ServeDir::new(config.public_dir.join("images")))
                 .handle_error(internal_error),
         )
-        .nest(
+        .nest_service(
             "/stylesheets",
             get_service(ServeDir::new(config.public_dir.join("stylesheets")))
                 .handle_error(internal_error),

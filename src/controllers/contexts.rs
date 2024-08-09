@@ -182,9 +182,7 @@ pub async fn join(
         format!("You are now a member of {}.", context.name),
     ));
 
-    Ok(Redirect::to(
-        format!("/contexts/{}", context_id).parse().unwrap(),
-    ))
+    Ok(Redirect::to(&format!("/contexts/{}", context_id)))
 }
 
 pub async fn leave(
@@ -202,9 +200,7 @@ pub async fn leave(
         format!("You are no longer a member of {}.", context.name),
     ));
 
-    Ok(Redirect::to(
-        format!("/contexts/{}", context_id).parse().unwrap(),
-    ))
+    Ok(Redirect::to(&format!("/contexts/{}", context_id)))
 }
 
 pub async fn quotes(
