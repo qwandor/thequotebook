@@ -108,7 +108,7 @@ pub async fn comments_atom(
     Extension(pool): Extension<Pool<Postgres>>,
 ) -> Result<Atom, InternalError> {
     let comments = CommentWithQuotee::fetch_all(&pool).await?;
-    let title = format!("theQuotebook: All comments");
+    let title = "theQuotebook: All comments".to_owned();
     let path = "/comments";
 
     Ok(Atom(comments_to_atom(comments, title, path, &config)?))

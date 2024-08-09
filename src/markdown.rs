@@ -80,7 +80,7 @@ fn start(buffer: &mut String, between_paragraphs: &mut bool, tag: &Tag, newlines
                 *buffer += if newlines_allowed { "<br/><br/>" } else { " " };
             }
         }
-        Tag::Link(link_type, url, title) => {
+        Tag::Link(_link_type, url, title) => {
             *buffer += "<a href=\"";
             escape_href(&mut *buffer, url).unwrap();
             *buffer += "\"";

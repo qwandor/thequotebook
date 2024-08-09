@@ -94,10 +94,10 @@ async fn user_from_cookies(
     cookies: Cookies,
 ) -> Option<User> {
     let session_token = cookies.get("session")?;
-    let key = DecodingKey::from_secret(&config.secret.as_ref());
+    let key = DecodingKey::from_secret(config.secret.as_bytes());
     let validation = Validation::default();
     let data = decode::<SessionClaims>(session_token.value(), &key, &validation).ok()?;
-    User::fetch_one(&pool, data.claims.sub).await.ok()
+    User::fetch_one(pool, data.claims.sub).await.ok()
 }
 
 /// Claims for our session token.

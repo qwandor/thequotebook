@@ -81,7 +81,7 @@ pub async fn google_auth(
     // User has successfully authenticated with Google, see if they exist in our database.
     if let Some(user) = User::fetch_by_email(&pool, &google_claims.email).await? {
         // Issue a JWT for the user.
-        let key = EncodingKey::from_secret(&config.secret.as_ref());
+        let key = EncodingKey::from_secret(config.secret.as_bytes());
         let header = Header::default();
         let now = SystemTime::now();
         let expiry = now + config.session_duration;
