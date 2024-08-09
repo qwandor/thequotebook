@@ -2253,6 +2253,7 @@ dependencies = [
  "paginate",
  "pretty_env_logger",
  "pulldown-cmark",
+ "pulldown-cmark-escape",
  "regex",
  "serde",
  "sqlx",
