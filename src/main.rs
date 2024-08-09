@@ -10,8 +10,9 @@ mod responses;
 mod session;
 
 use axum::{
+    extract::Extension,
     routing::{get, get_service, post},
-    AddExtensionLayer, Router,
+    Router,
 };
 use config::Config;
 use controllers::{comments, contexts, home, quotes, sessions, users};
@@ -98,8 +99,8 @@ async fn main() -> Result<(), Report> {
                 .handle_error(internal_error),
         )
         .layer(CookieManagerLayer::new())
-        .layer(AddExtensionLayer::new(config.clone()))
-        .layer(AddExtensionLayer::new(pool));
+        .layer(Extension(config.clone()))
+        .layer(Extension(pool));
 
     info!("Listening on {}", config.bind_address);
     axum::Server::bind(&config.bind_address)
