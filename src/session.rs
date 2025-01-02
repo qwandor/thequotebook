@@ -1,6 +1,5 @@
 use crate::{config::Config, errors::InternalError, model::User};
 use axum::{
-    async_trait,
     extract::{Extension, FromRequestParts, OriginalUri},
     http::request::Parts,
 };
@@ -36,7 +35,6 @@ impl Session {
     }
 }
 
-#[async_trait]
 impl<S: Send + Sync> FromRequestParts<S> for Session {
     type Rejection = InternalError;
 
@@ -65,7 +63,6 @@ pub struct Flash {
     pub error: Option<String>,
 }
 
-#[async_trait]
 impl<S: Send + Sync> FromRequestParts<S> for Flash {
     type Rejection = InternalError;
 
