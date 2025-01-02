@@ -12,7 +12,7 @@ categories = ["web-programming"]
 [dependencies]
 askama = "0.12.1"
 atom_syndication = "0.12.6"
-axum = "0.7.9"
+axum = "0.8.1"
 chrono = "0.4.39"
 color-backtrace = "0.6.1"
 eyre = "0.6.5"
