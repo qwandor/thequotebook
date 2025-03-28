@@ -1,10 +1,9 @@
 <div id="nav">
-{% match session.current_user %}
-{% when Some with (current_user) %}
+{% if let Some(current_user) = session.current_user %}
   <a href="/users/{{ current_user.id }}">Logged in as <strong>{{ current_user.username_or_fullname() }}</strong></a>
   <a href="/users/{{ current_user.id }}/edit" class="button">Edit profile</a>
   <a href="/logout?redirect={{ session.path|urlencode }}" title="Log out" class="button">Log out</a>
-{% when None %}
+{% else %}
   <a href="/login?redirect={{ session.path|urlencode }}" title="Log in" class="button">Log in</a>
-{% endmatch %}
+{% endif %}
 </div>

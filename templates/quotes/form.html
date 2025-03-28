@@ -1,8 +1,7 @@
 <form action="/quotes" method="post" class="border clearfix">
   <h2><label for="quote_text">Add Quote</label></h2>
 
-  {% match form.possible_quotee_matches %}
-  {% when Some with (possible_quotee_matches) %}
+  {% if let Some(possible_quotee_matches) = form.possible_quotee_matches %}
     <p class="text">
       Sorry, we cannot find anyone called '{{ form.quotee }}'.
     </p>
@@ -19,8 +18,7 @@
     <p class="text">
       Would you like to <%= link_to "create a new person called '#{h(params[:quotee])}'", new_user_path(:mode => 'partial', :fullname => params[:quotee]) %>?
     </p>
-  {% when None %}
-  {% endmatch %}
+  {% endif %}
 
   {{ form.error_messages }}
 
@@ -31,13 +29,12 @@
   </div></div>
   <div class="input"><div>
     <label for="context_name">in</label>
-{% match form.context %}
-{% when Some with (context) %}
+{% if let Some(context) = form.context %}
     <input type="text" name="context_dummy" id="context_name" value="{{ context.name }}" disabled="disabled" />
     <input type="hidden" name="context_name" value="{{ context.name }}" />
-{% when None %}
+{% else %}
     <input type="text" name="context_name" id="context_name" value="{{ form.context_name }}"/>
-{% endmatch %}
+{% endif %}
   </div></div>
 
   <input type="submit" class="button" value="{{ button_label }}" />

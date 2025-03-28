@@ -28,8 +28,7 @@
 </ul>
 
 <ul class="commands">
-{% match session.current_user %}
-{% when Some with (current_user) %}
+{% if let Some(current_user) = session.current_user %}
   <li>
 {% if users.contains(current_user) %}
     <form action="/contexts/{{ context.id }}/leave" method="post"><input type="submit" value="Leave this quotebook" class="button" /></form>
@@ -37,8 +36,7 @@
     <form action="/contexts/{{ context.id }}/join" method="post"><input type="submit" value="Join this quotebook" class="button" /></form>
 {% endif %}
   </li>
-{% when None %}
-{% endmatch %}
+{% endif %}
 
   <li>
     <a href="/contexts/{{ context.id }}/edit" class="button">Edit {{ context.name }}</a>
