@@ -10,22 +10,18 @@
   <div class="vcard">
     <h1>
       <span class="fn">{{ user.fullname }}</span>
-{% match user.username %}
-{% when Some with (username) %}
+{% if let Some(username) = user.username %}
       <div class="tagline">{{ user|gravatar_for(24, "photo")|safe }}<span class="nickname">{{ username }}</span></div>
-{% when None %}
-{% endmatch %}
+{% endif %}
     </h1>
 
-{% match user.openid %}
-{% when Some with (openid) %}
+{% if let Some(openid) = user.openid %}
     <!--TODO: How to display this nicely?-->
     <p style="display: none;">
       <b>OpenID:</b>
       <a href="{{ openid }}" class="url" rel="me">{{ openid }}</a>
     </p>
-{% when None %}
-{% endmatch %}
+{% endif %}
   </div>
 {% endblock %}
 

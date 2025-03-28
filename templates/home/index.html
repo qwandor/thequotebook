@@ -1,12 +1,10 @@
 {% extends "layouts/home.html" %}
 
 {% block head %}
-{%   match session.current_user %}
-{%   when Some with (current_user) %}
+{%   if let Some(current_user) = session.current_user %}
 <link rel="alternate" type="application/atom+xml" title="Quotes of interest to {{ current_user.fullname }}" href="/users/{{ current_user.id }}/relevant_quotes.atom" />
 <link rel="alternate" type="application/atom+xml" title="Comments of interest to {{ current_user.fullname }}" href="/users/{{ current_user.id }}/relevant_comments.atom" />
-{%   when None %}
-{%   endmatch %}
+{%   endif %}
 {% endblock %}
 
 {% block body %}
@@ -18,7 +16,7 @@
 {%   endfor %}
   <ul class="pagination">
     {% include "shared/pages.html" %}
-    <li><a href="{% match session.current_user %}{% when Some with (current_user) %}/users/{{ current_user.id }}/relevant_quotes{% when None %}/quotes{% endmatch %}" class="button">All</a>
+    <li><a href="{% if let Some(current_user) = session.current_user %}/users/{{ current_user.id }}/relevant_quotes{% else %}/quotes{% endif %}" class="button">All</a>
   </ul>
 {% endif %}
 {% endblock %}
@@ -63,14 +61,12 @@
   {% let show_context = true %}
   {% include "comments/list_sidebar.html" %}
 
-  {% match session.current_user %}
-  {% when Some with (current_user) %}
+  {% if let Some(current_user) = session.current_user %}
   <hr />
   <ul>
     <li><a href="/users/{{ current_user.id }}/relevant_comments">All comments on your quotebooks</a></li>
   </ul>
-  {% when None %}
-  {% endmatch %}
+  {% endif %}
 </div>
 {% endif %}
 

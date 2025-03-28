@@ -29,16 +29,12 @@
 <div id="content">
   {% if session.flash.notice.is_some() || session.flash.error.is_some() %}
   <div id="notices">
-{%   match session.flash.notice %}
-{%   when Some with (notice) %}
+{%   if let Some(notice) = session.flash.notice %}
     <div class="notice">{{ notice }}</div><!--TODO: Use p rather than div -->
-{%   when None %}
-{%   endmatch %}
-{%   match session.flash.error %}
-{%   when Some with (error) %}
+{%   endif %}
+{%   if let Some(error) = session.flash.error %}
     <div class="error">{{ error }}</div>
-{%   when None %}
-{%   endmatch %}
+{%   endif %}
   </div>
 {% endif %}
 

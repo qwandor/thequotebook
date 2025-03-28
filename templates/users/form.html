@@ -33,20 +33,16 @@
       To change this image <a href="http://en.gravatar.com/site/signup">sign up with gravatar</a>. <a href="http://www.gravatar.com"/>Gravatar</a> (Globally Recognized Avatar) associates an image to your email address, so make sure when you sign up that you use the same email address as above.
     </div>
   </div>
-{% match user.openid %}
-{% when Some with (openid) %}
+{% if let Some(openid) = user.openid %}
   <div>
     <div class="label">OpenID</div>
     <a href="{{ openid }}" class="item">{{ openid }}</a>
   </div>
-{% when None %}
-{% endmatch %}
+{% endif %}
   <div>
     <input type="submit" value="{{ button_label }}" class="button" />
-{% match cancel_link %}
-{% when Some with (cancel_link_url) %}
+{% if let Some(cancel_link_url) = cancel_link %}
     <a href="{{ cancel_link_url }}" class="button">{{ cancel_label }}</a>
-{% when None %}
-{% endmatch %}
+{% endif %}
   </div>
 </form>
