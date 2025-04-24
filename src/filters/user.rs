@@ -1,8 +1,10 @@
 use super::escape;
 use crate::model::User;
+use askama::Values;
 
 pub fn link_to_user(
     user: &User,
+    _values: &dyn Values,
     avatar: bool,
     actually_link: bool,
     swap_names: bool,
@@ -49,7 +51,12 @@ pub fn link_to_user(
     })
 }
 
-pub fn gravatar_for(user: &User, avatar_size: u16, class: &str) -> askama::Result<String> {
+pub fn gravatar_for(
+    user: &User,
+    _values: &dyn Values,
+    avatar_size: u16,
+    class: &str,
+) -> askama::Result<String> {
     let email_address = user.email_address.as_deref().unwrap_or("");
     Ok(gravatar(email_address, avatar_size, class))
 }
