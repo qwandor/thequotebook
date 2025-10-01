@@ -98,7 +98,7 @@ async fn user_from_cookies(
 }
 
 /// Claims for our session token.
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct SessionClaims {
     iat: u64,
     exp: u64,
