@@ -2,7 +2,7 @@ use crate::{
     markdown::{markdown_to_html, AllowedTags},
     model::{Context, Quote, QuoteWithUsers, User},
 };
-use askama::{Template, Values, NO_VALUES};
+use askama::{filter_fn, Template, Values, NO_VALUES};
 
 const ALLOWED_TAGS: AllowedTags = AllowedTags {
     emphasis: true,
@@ -10,7 +10,12 @@ const ALLOWED_TAGS: AllowedTags = AllowedTags {
     link: false,
 };
 
-pub fn quote_marks_if_needed(text: &str, _values: &dyn Values) -> askama::Result<String> {
+#[filter_fn]
+pub fn quote_marks_if_needed(text: &str, values: &dyn Values) -> askama::Result<String> {
+    quote_marks_if_needed_impl(text, values)
+}
+
+pub fn quote_marks_if_needed_impl(text: &str, _values: &dyn Values) -> askama::Result<String> {
     Ok(if text.contains('"') {
         text.to_string()
     } else {
@@ -29,32 +34,60 @@ fn trim_if_needed(text: &str, max_length: usize) -> String {
     }
 }
 
+#[filter_fn]
 pub fn short_quote(text: &str, values: &dyn Values) -> askama::Result<String> {
-    let trimmed = trim_if_needed(&quote_marks_if_needed(text, values)?, 40);
+    let trimmed = trim_if_needed(&quote_marks_if_needed_impl(text, values)?, 40);
     Ok(markdown_to_html(&trimmed, false, &ALLOWED_TAGS))
 }
 
+#[filter_fn]
 pub fn comment_title_quote(text: &str, values: &dyn Values) -> askama::Result<String> {
     Ok(markdown_to_html(
-        &quote_marks_if_needed(text, values)?,
+        &quote_marks_if_needed_impl(text, values)?,
         false,
         &ALLOWED_TAGS,
     ))
 }
 
+#[filter_fn]
 pub fn tweet_quote_text(text: &str, values: &dyn Values) -> askama::Result<String> {
-    Ok(trim_if_needed(&quote_marks_if_needed(text, values)?, 80))
+    Ok(trim_if_needed(
+        &quote_marks_if_needed_impl(text, values)?,
+        80,
+    ))
 }
 
+#[filter_fn]
 pub fn formatted_single_quote(
     quote: &QuoteWithUsers,
     values: &dyn Values,
 ) -> askama::Result<String> {
-    formatted_quote(&quote, values, true, true, true, true, false)
+    formatted_quote_impl(&quote, values, true, true, true, true, false)
 }
 
+#[filter_fn]
 pub fn formatted_quote(
-    &quote: &&QuoteWithUsers,
+    quote: &&QuoteWithUsers,
+    values: &dyn Values,
+    single: bool,
+    quoter_link: bool,
+    quotee_link: bool,
+    show_context: bool,
+    show_comments: bool,
+) -> askama::Result<String> {
+    formatted_quote_impl(
+        quote,
+        values,
+        single,
+        quoter_link,
+        quotee_link,
+        show_context,
+        show_comments,
+    )
+}
+
+fn formatted_quote_impl(
+    quote: &&QuoteWithUsers,
     values: &dyn Values,
     single: bool,
     quoter_link: bool,
@@ -64,7 +97,7 @@ pub fn formatted_quote(
 ) -> askama::Result<String> {
     let quote_link = !single;
     let text = markdown_to_html(
-        &quote_marks_if_needed(&quote.quote.quote_text, values)?,
+        &quote_marks_if_needed_impl(&quote.quote.quote_text, values)?,
         true,
         &ALLOWED_TAGS,
     );
@@ -116,7 +149,7 @@ struct QuoteTemplate {
 
 pub fn chatty_quote(quote: QuoteWithUsers, base_url: &str) -> askama::Result<String> {
     let text = markdown_to_html(
-        &quote_marks_if_needed(&quote.quote.quote_text, NO_VALUES)?,
+        &quote_marks_if_needed_impl(&quote.quote.quote_text, NO_VALUES)?,
         true,
         &ALLOWED_TAGS,
     );
