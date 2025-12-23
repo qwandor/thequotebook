@@ -1,6 +1,7 @@
 use crate::markdown::{markdown_to_html, AllowedTags};
-use askama::Values;
+use askama::{filter_fn, Values};
 
+#[filter_fn]
 pub fn comment_format(
     body: &str,
     _values: &dyn Values,

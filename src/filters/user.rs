@@ -1,7 +1,8 @@
 use super::escape;
 use crate::model::User;
-use askama::Values;
+use askama::{filter_fn, Values};
 
+#[filter_fn]
 pub fn link_to_user(
     user: &User,
     _values: &dyn Values,
@@ -51,6 +52,7 @@ pub fn link_to_user(
     })
 }
 
+#[filter_fn]
 pub fn gravatar_for(
     user: &User,
     _values: &dyn Values,
