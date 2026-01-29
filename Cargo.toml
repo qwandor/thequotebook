@@ -10,7 +10,7 @@ keywords = ["quotes", "website"]
 categories = ["web-programming"]
 
 [dependencies]
-askama = "0.15.3"
+askama = "0.15.4"
 atom_syndication = "0.12.7"
 axum = "0.8.8"
 chrono = "0.4.43"
