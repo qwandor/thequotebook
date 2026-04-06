@@ -14,7 +14,7 @@ askama = "0.15.6"
 atom_syndication = "0.12.7"
 axum = "0.8.8"
 chrono = "0.4.44"
-color-backtrace = "0.7.2"
+color-backtrace = "0.7.3"
 eyre = "0.6.5"
 jsonwebtoken = { version = "10.3.0", features = ["rust_crypto"] }
 jsonwebtoken-google = "0.1.5"
