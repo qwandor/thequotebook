@@ -16,7 +16,7 @@ axum = "0.8.9"
 chrono = "0.4.44"
 color-backtrace = "0.7.3"
 eyre = "0.6.5"
-jsonwebtoken = { version = "10.3.0", features = ["rust_crypto"] }
+jsonwebtoken = { version = "10.4.0", features = ["rust_crypto"] }
 jsonwebtoken-google = "0.1.5"
 log = "0.4.29"
 md5 = "0.8.0"
